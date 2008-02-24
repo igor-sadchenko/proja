@@ -13,6 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "twFormDemo", "twFormDemo\tw
 		{83EBFFA7-D4C4-4AE7-A6E7-765561756E94} = {83EBFFA7-D4C4-4AE7-A6E7-765561756E94}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentations", "Documentations", "{FB7AE57F-95ED-4C8F-B856-6A56F788799F}"
+	ProjectSection(SolutionItems) = preProject
+		..\FCIS_Touchwork_Design Template.doc = ..\FCIS_Touchwork_Design Template.doc
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
