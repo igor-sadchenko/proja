@@ -1,0 +1,111 @@
+#include "stdafx.h"
+#include "ApplicationManager.h"
+#include "VideoDlg.h"
+#include <exception>
+#include <windows.h>
+using namespace std;
+HWND ApplicationManager::txtConsole = 0;
+INIT_SINGLETON(ApplicationManager)
+
+void ApplicationManager::WriteLine(TCHAR *szFormat, ...)
+{
+	TCHAR   szBuffer [1024] ;
+	va_list pArgList ;
+
+	va_start (pArgList, szFormat) ;
+	wvsprintf (szBuffer, szFormat, pArgList) ;
+	va_end (pArgList) ;
+
+	::SendMessage (txtConsole, EM_SETSEL, (WPARAM) -1, (LPARAM) -1) ;
+	::SendMessage (txtConsole, EM_REPLACESEL, FALSE, (LPARAM) szBuffer) ;
+	::SendMessage (txtConsole, EM_SCROLLCARET, 0, 0) ;
+}
+
+void ApplicationManager::SetTextConsoleHandle(HWND handle)
+{
+	txtConsole = handle;
+}
+
+void ApplicationManager::InitializeApplication()
+{
+	m_input = TwInput::getInstancePtr();
+	m_WindowsMessagesMgr = WindowsMessagesManager::getInstancePtr();
+	m_input->Start(this);
+}
+
+
+void ApplicationManager::OnSampleArrived(BYTE* pdata,int size,BITMAPINFOHEADER* pbmpinfo,double time)
+{
+	switch(pbmpinfo->biCompression)
+	{
+
+	
+	case BI_BITFIELDS:
+		MessageBox(0,L"bitf",0,0);
+		break;
+	case BI_JPEG:
+		MessageBox(0,L"jbeg",0,0);
+		break;
+	case BI_PNG:
+		MessageBox(0,L"png",0,0);
+		break;
+	case BI_RGB:
+		MessageBox(0,L"rgb",0,0);
+		break;
+	case BI_RLE4:
+		MessageBox(0,L"rle 4",0,0);
+		break;
+	case BI_RLE8:
+		MessageBox(0,L"rle8",0,0);
+		break;
+	}
+	static float lasttime = 0.0f;
+	static float timespan = 0;
+
+	float now = ((float)GetTickCount())/1000.0f;
+	float framerate = 1.0f /(now-lasttime);
+
+	timespan += now-lasttime;
+	lasttime = now;
+
+	if(timespan >= 1.0f)
+	{
+		timespan = 0;
+		wostringstream str;
+		str<<setiosflags( ios::fixed )<< framerate ;//(float)TwInput::getInstance().m_video.GetSourceFramerate();
+		CVideoDlg::getInstance().m_CamFrameRate.SetWindowText(str.str().c_str());
+		wostringstream str2;
+		str2<<setiosflags( ios::fixed )<< (float)TwInput::getInstance().m_video.GetActualFramerate();
+		CVideoDlg::getInstance().m_actualFrameRate.SetWindowText(str2.str().c_str());
+
+	}	
+
+	
+// 	if(pbmpinfo->biBitCount == 24)
+// 	{
+// 		ApplicationManager::WriteLine(L"valid frame\r\n");
+// 
+// 	}else
+		DebugBreak();
+
+	Sleep(100);
+	
+//	if(m_blobDetector == NULL)
+//		m_blobDetector = new BlobDetector(pbmpinfo);
+////	DebugBreak();
+////	try
+////	{
+//		if(pbmpinfo->biBitCount == 24)
+//		{
+//		
+//		}
+//		else
+//			ApplicationManager::WriteLine(L"not RGB-24");
+//		ApplicationManager::WriteLine(L"\r\n");
+//	//}catch (exception e) {	}
+}
+
+void ApplicationManager::OnFrame()
+{
+	
+}
