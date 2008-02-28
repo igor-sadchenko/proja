@@ -32,19 +32,19 @@ namespace twFormDemo
             //ctrl.SetAsBitmap(Bitmap.FromFile(@"C:\Documents and Settings\All Users\Documents\My Pictures\Sample Pictures\Blue hills.jpg"));
             //this.Controls.Add(ctrl);
 
-            //ctrl = new TouchableControl();
-            //ctrl.Location = new Point(30, 30);
-            //ctrl.BackColor = Color.LightGreen;
-            //ctrl.SetAsBitmap(Bitmap.FromFile(@"C:\Documents and Settings\All Users\Documents\My Pictures\Sample Pictures\Sunset.jpg"));
-            //this.Controls.Add(ctrl);
-
             ctrl = new TouchableControl();
-            ctrl.Location = new Point(0, 0);
-            ctrl.Width = Screen.PrimaryScreen.WorkingArea.Width;
-            ctrl.Height = Screen.PrimaryScreen.WorkingArea.Height;
-            ctrl.BackColor = Color.LightSteelBlue;
-            ctrl.SetAsBitmap(Bitmap.FromFile(@"C:\Documents and Settings\All Users\Documents\My Pictures\Sample Pictures\Water lilies.jpg"));
+            ctrl.Location = new Point(30, 30);
+            ctrl.BackColor = Color.Black;
+            ctrl.SetAsBitmap(Bitmap.FromFile(@"C:\Documents and Settings\All Users\Documents\My Pictures\Sample Pictures\Sunset.jpg"));
             this.Controls.Add(ctrl);
+
+            //ctrl = new TouchableControl();
+            //ctrl.Location = new Point(0, 0);
+            //ctrl.Width = Screen.PrimaryScreen.WorkingArea.Width;
+            //ctrl.Height = Screen.PrimaryScreen.WorkingArea.Height;
+            //ctrl.BackColor = Color.LightSteelBlue;
+            //ctrl.SetAsBitmap(Bitmap.FromFile(@"C:\Documents and Settings\All Users\Documents\My Pictures\Sample Pictures\Water lilies.jpg"));
+            //this.Controls.Add(ctrl);
         }
 
         private void Form1_TouchDown(object sender, TouchEventArgs e)
@@ -68,7 +68,8 @@ namespace twFormDemo
             rot += 10;
             Matrix m = new Matrix();
             m.Rotate(rot);
-            ctrl.Transform(m);
+      //      ctrl.Transform(m);
+            ctrl.Rotate(10);
             ctrl.rot = rot;
         }
     }
