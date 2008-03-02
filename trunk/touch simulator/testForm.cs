@@ -18,7 +18,35 @@ namespace touch_simulator
 
 		private void testForm_TouchDown(object sender, TouchEventArgs e)
 		{
-			MessageBox.Show("down");
+			using(Graphics g = this.CreateGraphics())
+			using(Font font = new Font("Tahoma",10))
+			using(Brush brush = new SolidBrush(Color.Black))
+			{
+				g.DrawString("DN",font,brush,e.point);
+			}
+
+		}
+
+		private void testForm_TouchMove(object sender, TouchEventArgs e)
+		{
+			using (Graphics g = this.CreateGraphics())
+			using (Font font = new Font("Tahoma", 10))
+			using (Brush brush = new SolidBrush(Color.Black))
+			{
+				g.DrawString("MV", font, brush, e.point);
+			}
+
+		}
+
+		private void testForm_TouchUp(object sender, TouchEventArgs e)
+		{
+			using (Graphics g = this.CreateGraphics())
+			using (Font font = new Font("Tahoma", 10))
+			using (Brush brush = new SolidBrush(Color.Black))
+			{
+				g.DrawString("Up", font, brush, e.point);
+			}
+
 		}
 	}
 }

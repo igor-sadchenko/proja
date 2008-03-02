@@ -37,6 +37,8 @@ namespace touch_simulator
 			this.ClientSize = new System.Drawing.Size(411, 298);
 			this.Name = "testForm";
 			this.Text = "testForm";
+			this.TouchMove += new twForm.TouchEventHandler(this.testForm_TouchMove);
+			this.TouchUp += new twForm.TouchEventHandler(this.testForm_TouchUp);
 			this.TouchDown += new twForm.TouchEventHandler(this.testForm_TouchDown);
 			this.ResumeLayout(false);
 

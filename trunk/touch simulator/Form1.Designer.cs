@@ -33,7 +33,6 @@ namespace touch_simulator
 			this.frameTrackbar = new System.Windows.Forms.TrackBar();
 			this.btnRun = new System.Windows.Forms.CheckBox();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
-			this.chkAutoProgress = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.frameTrackbar)).BeginInit();
 			this.SuspendLayout();
@@ -78,22 +77,11 @@ namespace touch_simulator
 			// 
 			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
 			// 
-			// chkAutoProgress
-			// 
-			this.chkAutoProgress.AutoSize = true;
-			this.chkAutoProgress.Location = new System.Drawing.Point(192, 25);
-			this.chkAutoProgress.Name = "chkAutoProgress";
-			this.chkAutoProgress.Size = new System.Drawing.Size(94, 17);
-			this.chkAutoProgress.TabIndex = 4;
-			this.chkAutoProgress.Text = "Auto Progress";
-			this.chkAutoProgress.UseVisualStyleBackColor = true;
-			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(292, 273);
-			this.Controls.Add(this.chkAutoProgress);
 			this.Controls.Add(this.btnRun);
 			this.Controls.Add(this.frameTrackbar);
 			this.Controls.Add(this.pictureBox);
@@ -116,7 +104,6 @@ namespace touch_simulator
 		private System.Windows.Forms.TrackBar frameTrackbar;
 		private System.Windows.Forms.CheckBox btnRun;
 		private System.Windows.Forms.Timer timer1;
-		private System.Windows.Forms.CheckBox chkAutoProgress;
 	}
 }
 

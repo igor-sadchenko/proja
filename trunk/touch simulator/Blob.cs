@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace touch_simulator
 {
-	public class Blob
+	public class Blob:IEquatable<Blob>
 	{
 		public static int radius = 10;
 		public Point center;
@@ -42,7 +42,18 @@ namespace touch_simulator
 			else
 				return false;
 		}
-		
-		
+
+
+
+		#region IEquatable<Blob> Members
+
+		public bool Equals(Blob other)
+		{
+			if (id == other.id)
+				return true;
+			return false;
+		}
+
+		#endregion
 	}
 }
