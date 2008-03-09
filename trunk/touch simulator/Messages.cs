@@ -19,7 +19,7 @@ namespace touch_simulator
 	public class Messages
 	{
 		
-		public static void SendToNextWindow(Form sender,Blob blob)
+		public static void SendToNextWindow(Form sender,Control pointContainer ,Blob blob)
 		{
 			if (blob.type >= TWMessagesType.WM_TOUCH_FIRST && blob.type <= TWMessagesType.WM_TOUCH_LAST)
 			{
@@ -27,6 +27,30 @@ namespace touch_simulator
 				//here i can hide the simulator .. query for window at point .. send .. then unhide the simulator
 				IntPtr HWnd = GetWindow(sender.Handle, (uint)GetWindow_Cmd.GW_HWNDNEXT);
 
+				//map the points
+				POINT p = new POINT(blob.center.X, blob.center.Y);
+				MapWindowPoints(sender.Handle, HWnd, ref p, 1);
+
+				uint Msg = (uint)blob.type;
+				uint LParam = (uint)((p.Y << 16) | (p.X & 0x0000FFFF));
+				uint WParam = (uint)((1 << 16) | (blob.id & 0x0000FFFF));
+				PostMessage(HWnd, Msg, WParam, LParam);
+			}
+		}
+
+		public static void SendToChildWindows(Control sender, Blob blob)
+		{
+			if (blob.type >= TWMessagesType.WM_TOUCH_FIRST && blob.type <= TWMessagesType.WM_TOUCH_LAST)
+			{
+				//find the window to send to .. mostly obsecured by the simulator
+				//here i can hide the simulator 
+				sender.Visible = false;
+				//.. query for window at point .. send .. 
+				POINT ScreenPos = new POINT(blob.center.X, blob.center.Y);
+				ClientToScreen(sender.Handle ,ref ScreenPos);
+				IntPtr HWnd = WindowFromPoint(ScreenPos);
+				//then unhide the simulator
+				sender.Visible = true;
 				//map the points
 				POINT p = new POINT(blob.center.X, blob.center.Y);
 				MapWindowPoints(sender.Handle, HWnd, ref p, 1);
@@ -56,6 +80,12 @@ namespace touch_simulator
 
 		[DllImport("user32.dll", SetLastError = true)]
 		static extern IntPtr GetWindow(IntPtr hWnd, uint uCmd);
+
+		[DllImport("user32.dll")]
+		static extern IntPtr WindowFromPoint(POINT Point);
+
+		[DllImport("user32.dll")]
+		static extern bool ClientToScreen(IntPtr hWnd, ref POINT lpPoint);
 
 		enum GetWindow_Cmd : uint
 		{

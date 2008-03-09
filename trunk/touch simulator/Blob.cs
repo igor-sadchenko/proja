@@ -6,6 +6,7 @@ using System.Drawing;
 
 namespace touch_simulator
 {
+	[Serializable]
 	public class Blob:IEquatable<Blob>
 	{
 		public static int radius = 10;

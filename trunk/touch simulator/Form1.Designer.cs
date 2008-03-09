@@ -33,6 +33,9 @@ namespace touch_simulator
 			this.frameTrackbar = new System.Windows.Forms.TrackBar();
 			this.btnRun = new System.Windows.Forms.CheckBox();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
+			this.btnLoad = new System.Windows.Forms.Button();
+			this.btnSave = new System.Windows.Forms.Button();
+			this.chkNotifyChildren = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.frameTrackbar)).BeginInit();
 			this.SuspendLayout();
@@ -53,6 +56,7 @@ namespace touch_simulator
 			// 
 			// frameTrackbar
 			// 
+			this.frameTrackbar.BackColor = System.Drawing.SystemColors.Window;
 			this.frameTrackbar.Location = new System.Drawing.Point(12, 0);
 			this.frameTrackbar.Maximum = 1;
 			this.frameTrackbar.Name = "frameTrackbar";
@@ -77,11 +81,45 @@ namespace touch_simulator
 			// 
 			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
 			// 
+			// btnLoad
+			// 
+			this.btnLoad.Location = new System.Drawing.Point(203, 22);
+			this.btnLoad.Name = "btnLoad";
+			this.btnLoad.Size = new System.Drawing.Size(41, 20);
+			this.btnLoad.TabIndex = 4;
+			this.btnLoad.Text = "Load";
+			this.btnLoad.UseVisualStyleBackColor = true;
+			this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
+			// 
+			// btnSave
+			// 
+			this.btnSave.Location = new System.Drawing.Point(242, 22);
+			this.btnSave.Name = "btnSave";
+			this.btnSave.Size = new System.Drawing.Size(44, 20);
+			this.btnSave.TabIndex = 5;
+			this.btnSave.Text = "Save";
+			this.btnSave.UseVisualStyleBackColor = true;
+			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+			// 
+			// chkNotifyChildren
+			// 
+			this.chkNotifyChildren.AutoSize = true;
+			this.chkNotifyChildren.BackColor = System.Drawing.SystemColors.Window;
+			this.chkNotifyChildren.Location = new System.Drawing.Point(111, 0);
+			this.chkNotifyChildren.Name = "chkNotifyChildren";
+			this.chkNotifyChildren.Size = new System.Drawing.Size(86, 17);
+			this.chkNotifyChildren.TabIndex = 6;
+			this.chkNotifyChildren.Text = "Notify Childs";
+			this.chkNotifyChildren.UseVisualStyleBackColor = false;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(292, 273);
+			this.Controls.Add(this.chkNotifyChildren);
+			this.Controls.Add(this.btnSave);
+			this.Controls.Add(this.btnLoad);
 			this.Controls.Add(this.btnRun);
 			this.Controls.Add(this.frameTrackbar);
 			this.Controls.Add(this.pictureBox);
@@ -104,6 +142,9 @@ namespace touch_simulator
 		private System.Windows.Forms.TrackBar frameTrackbar;
 		private System.Windows.Forms.CheckBox btnRun;
 		private System.Windows.Forms.Timer timer1;
+		private System.Windows.Forms.Button btnLoad;
+		private System.Windows.Forms.Button btnSave;
+		private System.Windows.Forms.CheckBox chkNotifyChildren;
 	}
 }
 

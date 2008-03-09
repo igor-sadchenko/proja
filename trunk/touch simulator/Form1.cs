@@ -14,6 +14,8 @@ namespace touch_simulator
 		Blob m_currnetBlob = null;
 		testForm test_form = new testForm();
 		int m_currentID = 0;
+
+		SimulatorSettings settings;
 		public Form1()
 		{
 			InitializeComponent();
@@ -64,7 +66,10 @@ namespace touch_simulator
 		{
 			foreach (Blob b in m_blobs[frameTrackbar.Value])
 			{
-				Messages.SendToNextWindow(this, b);
+				if (chkNotifyChildren.Checked)
+					Messages.SendToChildWindows(pictureBox, b);
+				else
+					Messages.SendToNextWindow(this,pictureBox, b);
 			}
 
 		}
@@ -213,13 +218,30 @@ namespace touch_simulator
 				pictureBox.Invalidate();
 			}
 
+		}
 
+		private void btnLoad_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog dlg = new OpenFileDialog();
 
+			if(dlg.ShowDialog() == DialogResult.OK)
+			{
+				settings = SimulatorSettings.Load(dlg.FileName);
+				m_blobs = settings.blobList;
+				frameTrackbar.Maximum = settings.Max;
+				pictureBox.Invalidate();
+				pictureBox.Update();
+			}
+		}
 
-
-
-
-
+		private void btnSave_Click(object sender, EventArgs e)
+		{
+			settings = new SimulatorSettings(m_blobs,frameTrackbar.Maximum);
+			SaveFileDialog dlg = new SaveFileDialog();
+			if(dlg.ShowDialog() == DialogResult.OK)
+			{
+				settings.Save(dlg.FileName);
+			}
 		}
 	}
 }

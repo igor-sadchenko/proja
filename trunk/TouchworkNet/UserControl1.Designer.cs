@@ -1,13 +1,13 @@
-namespace twFormDemo
+namespace Touchwork
 {
-    partial class TouchableControl
+	partial class TouchworkForm
     {
-        /// <summary> 
+        /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -22,7 +22,7 @@ namespace twFormDemo
 
         #region Component Designer generated code
 
-        /// <summary> 
+        /// <summary>
         /// Required method for Designer support - do not modify 
         /// the contents of this method with the code editor.
         /// </summary>
@@ -30,15 +30,12 @@ namespace twFormDemo
         {
             this.SuspendLayout();
             // 
-            // TouchableControl
+            // UserControl1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Transparent;
-            this.Name = "TouchableControl";
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TouchableControl_MouseDown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TouchableControl_MouseMove);
-            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TouchableControl_MouseUp);
+            this.Name = "UserControl1";
+            this.Size = new System.Drawing.Size(419, 325);
             this.ResumeLayout(false);
 
         }
