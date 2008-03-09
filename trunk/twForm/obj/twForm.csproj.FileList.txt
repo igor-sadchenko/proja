@@ -1,7 +1,0 @@
-bin\Debug\twForm.dll
-bin\Debug\twForm.pdb
-obj\Debug\ResolveAssemblyReference.cache
-obj\Debug\twForm.csproj.GenerateResource.Cache
-obj\Debug\twForm.dll
-obj\Debug\twForm.pdb
-obj\Debug\twForm.twForm.resources
