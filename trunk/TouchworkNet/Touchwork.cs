@@ -2,24 +2,38 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
-namespace Touchwork
+namespace TouchworkSDK
 {
-	class Touchwork
+	public class Touchwork
 	{
-		void NotifyOnTouch(ITouchable control)
+		static public void NotifyOnTouch(ITouchable control)
 		{
-			//WndProcHooker.HookWndProc(control, OnTouch, Win32.WM_LBUTTONDOWN);
-
-			//WndProcHooker.UnhookWndProc(control, WindowsMessage.TOUCH);
+			WndProcHooker.HookWndProc(control);
 		}
 
 
-		public int OnTouch(
-			IntPtr hwnd, uint msg, uint wParam, int lParam, ref bool handled)
+		static public int TouchworkWindowProc(
+			ITouchable touchable, IntPtr hwnd, uint msg, uint wParam, uint lParam, ref bool handled)
 		{
-			return -1;//return -1 if not proccesed .. 0 if processed
+			TouchEventArgs e; // This event should be filled
+			switch ((TouchMessage)msg)
+			{
+				case TouchMessage.WM_TOUCHDOWN:
+					e = new TouchEventArgs(lParam, wParam);
+					handled = touchable.OnTouchDown(touchable, e);
+					break;
+				case TouchMessage.WM_TOUCHMOVE:
+					e = new TouchEventArgs(lParam, wParam);
+					handled = touchable.OnTouchMove(touchable, e);
+					break;
+				case TouchMessage.WM_TOUCHUP:
+					e = new TouchEventArgs(lParam, wParam);
+					handled = touchable.OnTouchUp(touchable, e);
+					break;
+
+			}
+			return 0;
+
 		}
-
-
 	}
 }

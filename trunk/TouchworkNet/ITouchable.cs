@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Touchwork
+namespace TouchworkSDK
 {
 	public interface ITouchable
 	{
-		bool OnTouchDown(TouchEventArgs e);
-		bool OnTouchUp(TouchEventArgs e);
-		bool OnTouchMove(TouchEventArgs e);
+		bool OnTouchDown(object sender,TouchEventArgs e);
+		bool OnTouchUp(object sender,TouchEventArgs e);
+		bool OnTouchMove(object sender,TouchEventArgs e);
 	}
 }

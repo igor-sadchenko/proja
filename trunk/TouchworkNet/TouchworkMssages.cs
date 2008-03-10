@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Touchwork
+namespace TouchworkSDK
 {
 	public enum TouchMessage
 	{

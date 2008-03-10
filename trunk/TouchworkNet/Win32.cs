@@ -4,13 +4,13 @@ using System.Text;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace Touchwork
+namespace TouchworkSDK
 {
 	// Contains managed wrappers and implementations of Win32
 	// structures, delegates, constants and platform invokes
 	// used by the GradientFill and Subclassing samples.
 
-	public sealed class Win32
+	internal sealed class Win32
 	{
 		// A callback to a Win32 window procedure (wndproc):
 		// Parameters:
@@ -19,7 +19,7 @@ namespace Touchwork
 		//   wParam - The message's parameters (part 1).
 		//   lParam - The message's parameters (part 2).
 		//  Returns an integer as described for the given message in MSDN.
-		public delegate int WndProc(IntPtr hwnd, uint msg, uint wParam, int lParam);
+		public delegate int WndProc(IntPtr hwnd, uint msg, uint wParam, uint lParam);
 
 		[DllImport("user32.dll")]
 		public extern static IntPtr SetWindowLong(
@@ -28,11 +28,11 @@ namespace Touchwork
 
 		[DllImport("user32.dll")]
 		public extern static int CallWindowProc(
-			IntPtr lpPrevWndFunc, IntPtr hwnd, uint msg, uint wParam, int lParam);
+			IntPtr lpPrevWndFunc, IntPtr hwnd, uint msg, uint wParam, uint lParam);
 
 		[DllImport("user32.dll")]
 		public extern static int DefWindowProc(
-			IntPtr hwnd, uint msg, uint wParam, int lParam);
+			IntPtr hwnd, uint msg, uint wParam, uint lParam);
 
 		[DllImport("user32.dll", SetLastError = true)]
 		public extern static int SendMessage(

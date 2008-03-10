@@ -6,7 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Touchwork
+namespace TouchworkSDK
 {
     public delegate void TouchEventHandler(Object sender, TouchEventArgs e);
    
@@ -52,7 +52,7 @@ namespace Touchwork
             {
                 if (OnTouchDown())
                 {
-                    e = new TouchEventArgs(m.LParam.ToInt32() , m.WParam.ToInt32()); 
+					e = new TouchEventArgs((uint)m.LParam.ToInt32(), (uint)m.WParam.ToInt32()); 
                     TouchDown(this, e);
                     base.WndProc(ref m);
                 }
@@ -63,7 +63,7 @@ namespace Touchwork
             {
                 if (OnTouchMove())
                 {
-                    e = new TouchEventArgs(m.LParam.ToInt32() , m.WParam.ToInt32() ); 
+					e = new TouchEventArgs((uint)m.LParam.ToInt32(), (uint)m.WParam.ToInt32()); 
                     TouchMove(this, e);
                     base.WndProc(ref m);
                 }
@@ -74,7 +74,7 @@ namespace Touchwork
             {
                 if (OnTouchUp())
                 {
-                    e = new TouchEventArgs(m.LParam.ToInt32() , m.WParam.ToInt32() ); 
+					e = new TouchEventArgs((uint)m.LParam.ToInt32(), (uint)m.WParam.ToInt32()); 
                     TouchUp(this, e);
                     base.WndProc(ref m);
                 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 
-namespace Touchwork
+namespace TouchworkSDK
 {
     public class TouchEventArgs : EventArgs
     {
@@ -11,7 +11,7 @@ namespace Touchwork
         public int pressure;
         public int ID;
 
-        public TouchEventArgs(int lparam, int wparam)
+        public TouchEventArgs(uint lparam, uint wparam)
         {
             uint x = 0, y = 0;
             GetHighLow(lparam, ref y, ref x);
@@ -25,7 +25,7 @@ namespace Touchwork
             this.ID = (int)id; 
         }
 
-        private void GetHighLow(int number, ref uint h, ref uint l)
+        private void GetHighLow(uint number, ref uint h, ref uint l)
         {
             uint temp = (uint)number;
             l = temp & 0x0000FFFF;

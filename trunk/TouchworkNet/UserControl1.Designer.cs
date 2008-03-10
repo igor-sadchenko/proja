@@ -1,4 +1,4 @@
-namespace Touchwork
+namespace TouchworkSDK
 {
 	partial class TouchworkForm
     {

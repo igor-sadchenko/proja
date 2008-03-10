@@ -4,9 +4,9 @@ using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
-namespace Touchwork
+namespace TouchworkSDK
 {
-	class WndProcHooker
+	internal class WndProcHooker
 	{
 		/// <summary>
 		/// The callback used when a hooked window's message map contains the
@@ -23,7 +23,7 @@ namespace Touchwork
 		/// <returns>A value specified for the given message in the MSDN
 		/// documentation</returns>
 		public delegate int WndProcCallback(
-			IntPtr hwnd, uint msg, uint wParam, int lParam, ref bool handled);
+			IntPtr hwnd, uint msg, uint wParam, uint lParam, ref bool handled);
 
 		/// <summary>
 		/// This is the global list of all the window procedures we have
@@ -44,10 +44,11 @@ namespace Touchwork
 			new Dictionary<Control, HookedProcInformation>();
 
 
+
 		public static void HookWndProc(
-			Control ctl, WndProcCallback callback, TouchMessage msg)
+			ITouchable ctl)
 		{
-			HookWndProc(ctl, callback, (uint)msg);
+			HookWndProc((Control)ctl, (ITouchable)ctl);
 		}
 
 		/// <summary>
@@ -61,7 +62,7 @@ namespace Touchwork
 		/// message is received for the specified window</param>
 		/// <param name="msg">The message we are hooking.</param>
 		public static void HookWndProc(
-			Control ctl, WndProcCallback callback, uint msg)
+			Control ctl, ITouchable callback)
 		{
 			HookedProcInformation hpi = null;
 			if (ctlDict.ContainsKey(ctl))
@@ -73,7 +74,7 @@ namespace Touchwork
 				// We havne't seen this control before. Create a new
 				// HookedProcInformation for it
 				hpi = new HookedProcInformation(ctl,
-					new Win32.WndProc(WndProcHooker.WindowProc));
+					new Win32.WndProc(WndProcHooker.WindowProc),callback);
 				ctl.HandleCreated += new EventHandler(ctl_HandleCreated);
 				ctl.HandleDestroyed += new EventHandler(ctl_HandleDestroyed);
 				ctl.Disposed += new EventHandler(ctl_Disposed);
@@ -90,9 +91,6 @@ namespace Touchwork
 				ctlDict[ctl] = hpi;
 			else
 				hwndDict[ctl.Handle] = hpi;
-
-			// add the message/callback into the message map
-			hpi.messageMap[msg] = callback;
 		}
 
 		/// <summary>
@@ -169,19 +167,15 @@ namespace Touchwork
 		/// the message, the message is forwarded on to the previous wndproc.
 		/// </returns>
 		private static int WindowProc(
-			IntPtr hwnd, uint msg, uint wParam, int lParam)
+			IntPtr hwnd, uint msg, uint wParam, uint lParam)
 		{
 			if (hwndDict.ContainsKey(hwnd))
 			{
 				HookedProcInformation hpi = hwndDict[hwnd];
-				if (hpi.messageMap.ContainsKey(msg))
-				{
-					WndProcCallback callback = hpi.messageMap[msg];
-					bool handled = false;
-					int retval = callback(hwnd, msg, wParam, lParam, ref handled);
-					if (handled)
-						return retval;
-				}
+				bool handled = false;
+				int retval = Touchwork.TouchworkWindowProc(hpi.touchable,hwnd,msg,wParam,lParam,ref handled);
+				if (handled)
+					return retval;
 
 				// if we didn't hook the message passed or we did, but the
 				// callback didn't set the handled property to true, call
@@ -189,44 +183,10 @@ namespace Touchwork
 				return hpi.CallOldWindowProc(hwnd, msg, wParam, lParam);
 			}
 			System.Diagnostics.Debug.Assert(
-				false, "WindowProc called for hwnd we don't know about");
+				false, "Touchwork recieved a message for a hwnd we don't know about");
 			return Win32.DefWindowProc(hwnd, msg, wParam, lParam);
 		}
 
-		public static void UnhookWndProc(Control ctl, TouchMessage msg)
-		{
-			UnhookWndProc(ctl, (uint)msg);
-		}
-		/// <summary>
-		/// This method removes the specified message from the message map for
-		/// the specified hwnd.
-		/// </summary>
-		/// <param name="ctl">The control whose message we are unhooking
-		/// </param>
-		/// <param name="msg">The message no longer want to hook</param>
-		public static void UnhookWndProc(Control ctl, uint msg)
-		{
-			// look for the HookedProcInformation in the control and hwnd
-			// dictionaries
-			HookedProcInformation hpi = null;
-			if (ctlDict.ContainsKey(ctl))
-				hpi = ctlDict[ctl];
-			else if (hwndDict.ContainsKey(ctl.Handle))
-				hpi = hwndDict[ctl.Handle];
-			// if we couldn't find a HookedProcInformation, throw
-			if (hpi == null)
-				throw new ArgumentException("No hook exists for this control");
-
-			// look for the message we are removing in the messageMap
-			if (hpi.messageMap.ContainsKey(msg))
-				hpi.messageMap.Remove(msg);
-			else
-				// if we couldn't find the message, throw
-				throw new ArgumentException(
-					string.Format(
-					"No hook exists for message ({0}) on this control",
-					msg));
-		}
 		/// <summary>
 		/// Restores the previous wndproc for the specified window.
 		/// </summary>
@@ -243,7 +203,7 @@ namespace Touchwork
 			else if (hwndDict.ContainsKey(ctl.Handle))
 				hpi = hwndDict[ctl.Handle];
 			if (hpi == null)
-				throw new ArgumentException("No hook exists for this control");
+				throw new ArgumentException("this control never subscribed to Touch events");
 
 			// If we found our HookedProcInformation in ctlDict and we are
 			// disposing remove it from ctlDict
@@ -268,10 +228,7 @@ namespace Touchwork
 		/// </summary>
 		class HookedProcInformation
 		{
-			/// <summary>
-			/// The message map for the window
-			/// </summary>
-			public Dictionary<uint, WndProcCallback> messageMap;
+			public ITouchable touchable;
 			/// <summary>
 			/// The old window procedure for the window
 			/// </summary>
@@ -292,11 +249,11 @@ namespace Touchwork
 			/// <param name="ctl">The handle to the window being hooked</param>
 			/// <param name="wndproc">The window procedure to replace the
 			/// original one for the control</param>
-			public HookedProcInformation(Control ctl, Win32.WndProc wndproc)
+			public HookedProcInformation(Control ctl, Win32.WndProc wndproc , ITouchable _touchable)
 			{
 				control = ctl;
 				newWndProc = wndproc;
-				messageMap = new Dictionary<uint, WndProcCallback>();
+				touchable = _touchable;
 			}
 
 			/// <summary>
@@ -337,7 +294,7 @@ namespace Touchwork
 			/// <returns>The value returned by the control's original wndproc
 			/// </returns>
 			public int CallOldWindowProc(
-				IntPtr hwnd, uint msg, uint wParam, int lParam)
+				IntPtr hwnd, uint msg, uint wParam, uint lParam)
 			{
 				return Win32.CallWindowProc(
 					oldWndProc, hwnd, msg, wParam, lParam);
