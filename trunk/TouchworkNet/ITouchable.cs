@@ -6,8 +6,8 @@ namespace TouchworkSDK
 {
 	public interface ITouchable
 	{
-		bool OnTouchDown(object sender,TouchEventArgs e);
-		bool OnTouchUp(object sender,TouchEventArgs e);
-		bool OnTouchMove(object sender,TouchEventArgs e);
+		void OnTouchDown(object sender,TouchEventArgs e);
+		void OnTouchUp(object sender,TouchEventArgs e);
+		void OnTouchMove(object sender,TouchEventArgs e);
 	}
 }

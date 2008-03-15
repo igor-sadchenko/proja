@@ -9,7 +9,7 @@ namespace touch_simulator
 	[Serializable]
 	public class Blob:IEquatable<Blob>
 	{
-		public static int radius = 10;
+		public int Pressure = 10;
 		public Point center;
 		public bool isSelected = false;
 		public bool isVisible = true;
@@ -21,20 +21,23 @@ namespace touch_simulator
 		{
 			center = _center;
 			id = _id;
+			
 		}
 		public Blob(Blob b)
 		{
 			center = b.center;
 			id = b.id;
+			Pressure = b.Pressure;
 		}
 		public void Draw(Graphics g, Brush brush)
 		{
+			int radius = Pressure;
 			g.FillEllipse(brush, center.X-radius, center.Y - radius, 2*radius , 2*radius);
 		}
 
 		public bool ContainsPoint(Point p)
 		{
-			
+			int radius = Pressure;
 			int dx = Math.Abs(center.X - p.X);
 			int dy = Math.Abs(center.Y - p.Y);
 			int dist =(int) Math.Sqrt(dx * dx + dy * dy);

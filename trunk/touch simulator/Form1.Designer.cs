@@ -36,6 +36,7 @@ namespace touch_simulator
 			this.btnLoad = new System.Windows.Forms.Button();
 			this.btnSave = new System.Windows.Forms.Button();
 			this.chkNotifyChildren = new System.Windows.Forms.CheckBox();
+			this.txtMonitor = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.frameTrackbar)).BeginInit();
 			this.SuspendLayout();
@@ -46,7 +47,7 @@ namespace touch_simulator
 			this.pictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.pictureBox.Location = new System.Drawing.Point(0, 0);
 			this.pictureBox.Name = "pictureBox";
-			this.pictureBox.Size = new System.Drawing.Size(292, 273);
+			this.pictureBox.Size = new System.Drawing.Size(345, 325);
 			this.pictureBox.TabIndex = 0;
 			this.pictureBox.TabStop = false;
 			this.pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
@@ -105,6 +106,8 @@ namespace touch_simulator
 			// 
 			this.chkNotifyChildren.AutoSize = true;
 			this.chkNotifyChildren.BackColor = System.Drawing.SystemColors.Window;
+			this.chkNotifyChildren.Checked = true;
+			this.chkNotifyChildren.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.chkNotifyChildren.Location = new System.Drawing.Point(111, 0);
 			this.chkNotifyChildren.Name = "chkNotifyChildren";
 			this.chkNotifyChildren.Size = new System.Drawing.Size(86, 17);
@@ -112,11 +115,22 @@ namespace touch_simulator
 			this.chkNotifyChildren.Text = "Notify Childs";
 			this.chkNotifyChildren.UseVisualStyleBackColor = false;
 			// 
+			// txtMonitor
+			// 
+			this.txtMonitor.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.txtMonitor.Location = new System.Drawing.Point(0, 252);
+			this.txtMonitor.Multiline = true;
+			this.txtMonitor.Name = "txtMonitor";
+			this.txtMonitor.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.txtMonitor.Size = new System.Drawing.Size(345, 73);
+			this.txtMonitor.TabIndex = 7;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(292, 273);
+			this.ClientSize = new System.Drawing.Size(345, 325);
+			this.Controls.Add(this.txtMonitor);
 			this.Controls.Add(this.chkNotifyChildren);
 			this.Controls.Add(this.btnSave);
 			this.Controls.Add(this.btnLoad);
@@ -145,6 +159,7 @@ namespace touch_simulator
 		private System.Windows.Forms.Button btnLoad;
 		private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.CheckBox chkNotifyChildren;
+		private System.Windows.Forms.TextBox txtMonitor;
 	}
 }
 

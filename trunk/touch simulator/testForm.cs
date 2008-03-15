@@ -15,44 +15,46 @@ namespace touch_simulator
 		{
 			InitializeComponent();
 			Touchwork.NotifyOnTouch(this);
+			Touchwork.NotifyOnTouch(pictureBox1,this);
 		}
 
 
 		#region ITouchable Members
 
-		bool ITouchable.OnTouchDown(object sender, TouchEventArgs e)
+		void ITouchable.OnTouchDown(object sender, TouchEventArgs e)
 		{
-			using (Graphics g = this.CreateGraphics())
+			Control ctrl = sender as Control;
+			using (Graphics g = ctrl.CreateGraphics())
 			using (Font font = new Font("Tahoma", 10))
 			using (Brush brush = new SolidBrush(Color.Black))
 			{
 				g.DrawString("DN", font, brush, e.point);
 			}
-			return false;
 		}
 
-		bool ITouchable.OnTouchUp(object sender, TouchEventArgs e)
+		void ITouchable.OnTouchUp(object sender, TouchEventArgs e)
 		{
-			using (Graphics g = this.CreateGraphics())
+			Control ctrl = sender as Control;
+			using (Graphics g = ctrl.CreateGraphics())
 			using (Font font = new Font("Tahoma", 10))
 			using (Brush brush = new SolidBrush(Color.Black))
 			{
 				g.DrawString("Up", font, brush, e.point);
 			}
-			return false;
 		}
 
-		bool ITouchable.OnTouchMove(object sender, TouchEventArgs e)
+		void ITouchable.OnTouchMove(object sender, TouchEventArgs e)
 		{
-			using (Graphics g = this.CreateGraphics())
+			Control ctrl = sender as Control;
+			using (Graphics g = ctrl.CreateGraphics())
 			using (Font font = new Font("Tahoma", 10))
 			using (Brush brush = new SolidBrush(Color.Black))
 			{
 				g.DrawString("MV", font, brush, e.point);
 			}
-			return false;
 		}
 
 		#endregion
+
 	}
 }

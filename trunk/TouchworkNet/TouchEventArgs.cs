@@ -10,7 +10,7 @@ namespace TouchworkSDK
         public Point point;
         public int pressure;
         public int ID;
-
+		public bool handled = false;
         public TouchEventArgs(uint lparam, uint wparam)
         {
             uint x = 0, y = 0;

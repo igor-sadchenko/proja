@@ -173,7 +173,7 @@ namespace TouchworkSDK
 			{
 				HookedProcInformation hpi = hwndDict[hwnd];
 				bool handled = false;
-				int retval = Touchwork.TouchworkWindowProc(hpi.touchable,hwnd,msg,wParam,lParam,ref handled);
+				int retval = Touchwork.TouchworkWindowProc(hpi.touchable,hpi.Control,hwnd,msg,wParam,lParam,ref handled);
 				if (handled)
 					return retval;
 
@@ -242,6 +242,11 @@ namespace TouchworkSDK
 			/// Control whose wndproc we are hooking
 			/// </summary>
 			private Control control;
+
+			public Control Control
+			{
+				get { return control; }
+			}
 
 			/// <summary>
 			/// Constructs a new HookedProcInformation object

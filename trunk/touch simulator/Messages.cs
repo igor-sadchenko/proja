@@ -33,7 +33,7 @@ namespace touch_simulator
 
 				uint Msg = (uint)blob.type;
 				uint LParam = (uint)((p.Y << 16) | (p.X & 0x0000FFFF));
-				uint WParam = (uint)((1 << 16) | (blob.id & 0x0000FFFF));
+				uint WParam = (uint)((blob.Pressure << 16) | (blob.id & 0x0000FFFF));
 				PostMessage(HWnd, Msg, WParam, LParam);
 			}
 		}
@@ -44,25 +44,29 @@ namespace touch_simulator
 			{
 				//find the window to send to .. mostly obsecured by the simulator
 				//here i can hide the simulator 
-				sender.Visible = false;
+				//--done by the caller
 				//.. query for window at point .. send .. 
 				POINT ScreenPos = new POINT(blob.center.X, blob.center.Y);
 				ClientToScreen(sender.Handle ,ref ScreenPos);
 				IntPtr HWnd = WindowFromPoint(ScreenPos);
+				StringBuilder strBuilder = new StringBuilder();
+				GetWindowText(HWnd, strBuilder, 100);
+				Form1.s_txtMonitor.AppendText(HWnd + " - "+ strBuilder.ToString() +"\r\n");
 				//then unhide the simulator
-				sender.Visible = true;
+				//--done by the caller
 				//map the points
 				POINT p = new POINT(blob.center.X, blob.center.Y);
 				MapWindowPoints(sender.Handle, HWnd, ref p, 1);
 
 				uint Msg = (uint)blob.type;
 				uint LParam = (uint)((p.Y << 16) | (p.X & 0x0000FFFF));
-				uint WParam = (uint)((1 << 16) | (blob.id & 0x0000FFFF));
+				uint WParam = (uint)((blob.Pressure << 16) | (blob.id & 0x0000FFFF));
 				PostMessage(HWnd, Msg, WParam, LParam);
 			}
 		}
 
-		
+		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
 		
 		[DllImport("user32.dll", SetLastError = true)]
 		public extern static int SendMessage(

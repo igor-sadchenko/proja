@@ -14,17 +14,19 @@ namespace touch_simulator
 		Blob m_currnetBlob = null;
 		testForm test_form = new testForm();
 		int m_currentID = 0;
-
+		public static TextBox s_txtMonitor = null;
 		SimulatorSettings settings;
 		public Form1()
 		{
 			InitializeComponent();
+			s_txtMonitor = txtMonitor;
 			frameTrackbar.Value = 0;
 			m_blobs.Add(new LinkedList<Blob>());
 
 			this.Opacity = 0.5;
 			timer1.Interval = 1000;
-			test_form.Show();
+			//test_form.Show();
+
 		}
 
 		private void frameTrackbar_Scroll(object sender, EventArgs e)
@@ -64,12 +66,21 @@ namespace touch_simulator
 
 		private void SimulateFrame()
 		{
-			foreach (Blob b in m_blobs[frameTrackbar.Value])
+			if (chkNotifyChildren.Checked)
 			{
-				if (chkNotifyChildren.Checked)
+				this.Visible = false;
+				foreach (Blob b in m_blobs[frameTrackbar.Value])
+				{
 					Messages.SendToChildWindows(pictureBox, b);
-				else
-					Messages.SendToNextWindow(this,pictureBox, b);
+				}
+				this.Visible = true;
+			}
+			else
+			{
+				foreach (Blob b in m_blobs[frameTrackbar.Value])
+				{
+					Messages.SendToNextWindow(this, pictureBox, b);
+				}
 			}
 
 		}
@@ -218,6 +229,30 @@ namespace touch_simulator
 				pictureBox.Invalidate();
 			}
 
+			else if (e.KeyCode == Keys.Oemplus || e.KeyCode == Keys.Add)
+			{
+				m_currnetBlob.Pressure+= 2;
+				pictureBox.Invalidate();
+				for (int i = frameTrackbar.Value + 1; i < frameTrackbar.Maximum; i++)
+				{
+					LinkedListNode<Blob> node = m_blobs[i].Find(m_currnetBlob);
+					if (node == null)
+						break;
+					node.Value.Pressure = m_currnetBlob.Pressure;
+				}
+			}
+			else if (e.KeyCode == Keys.OemMinus || e.KeyCode == Keys.Subtract)
+			{
+				m_currnetBlob.Pressure -= 2;
+				pictureBox.Invalidate();
+				for (int i = frameTrackbar.Value + 1; i < frameTrackbar.Maximum; i++)
+				{
+					LinkedListNode<Blob> node = m_blobs[i].Find(m_currnetBlob);
+					if (node == null)
+						break;
+					node.Value.Pressure = m_currnetBlob.Pressure;
+				}
+			}
 		}
 
 		private void btnLoad_Click(object sender, EventArgs e)
