@@ -216,6 +216,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TouchableNode.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\tw_demo.cpp"
 				>
 			</File>
@@ -243,6 +247,10 @@
 			</File>
 			<File
 				RelativePath=".\MultiMouse.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TouchableNode.h"
 				>
 			</File>
 			<File

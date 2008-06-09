@@ -69,6 +69,7 @@ void ApplicationManager::OnFrame(BYTE* pdata,int size)
 	//------agent ... act ?
 		
 	m_twAgent->RaiseEvents(m_blobTracker->currentBlobs,m_blobTracker->deletedBlobs);				
+	WriteLine(L"Number of Blobs: %d\r\n",m_blobTracker->currentBlobs.size());
 
 	WriteLine(L"IDs ");
 	list<Blob>::iterator itr;
@@ -76,7 +77,8 @@ void ApplicationManager::OnFrame(BYTE* pdata,int size)
 	{
 		WriteLine(L" - %d", itr->m_id);
 	}
-	WriteLine(L"\r\n");
+
+	
 
 
 	

@@ -31,23 +31,9 @@ LGPL like the rest of the OGRE engine.
 #include <OgreCEGUIRenderer.h>
 #include "MultiMouse.h"
 #include <hash_map>
+#include "TouchableNode.h"
 using namespace std;
 
-class TouchableNode
-{
-public:
-	SceneNode* m_SceneNode;
-	vector<Vector3> m_positions;
-	vector<Vector3> m_old_positions;
-	bool isChanged;
-
-	TouchableNode(SceneNode*);
-	void Update();
-	int AddControlPoint(Vector3 &pos);
-	void RemoveControlPoint(int at);
-	void MoveControlPoint(int at,Vector3& new_pos);
-
-};
 
 class tw_demoApp : public BaseApplication, public Ogre::Singleton<tw_demoApp>
 {
