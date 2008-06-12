@@ -139,15 +139,33 @@ namespace config2 {
 				 {
 					 MessageBox::Show(L"camera device init failed\r\n");
 				 }
-				 
+			
+				 if (FAILED(g_video.AppendSampleGrabber( &g_Listner )))
+				 {
+					 MessageBox::Show(L"Couldnt append the Hi-Pass filter"); // edit the filter name
+				 }
+
 				 if(FAILED(g_video.AppendPreview( (HWND)pictureBox1->Handle.ToPointer())))
 				 {
-					 MessageBox::Show(L"window init failed");
+					 MessageBox::Show(L"window 1 init failed");
+				 }
+				 if (FAILED(g_video.AppendSampleGrabber( &g_Highpass)))
+				 {
+					 MessageBox::Show(L"Couldnt append the Hi-Pass filter"); // edit the filter name
+				 }
+
+			
+				 m_f1 = gcnew Form_2_Highpass();
+				 m_f1->Show(this);
+				 
+				 if(FAILED(g_video.AppendPreview( (HWND)m_f1->pictureBox1->Handle.ToPointer())))
+				 {
+					 MessageBox::Show(L"window 2 init failed");
 				 }
 				 if(FAILED(g_video.Play()))
 				 {
 					 MessageBox::Show(L"play failed");
-				 }
+				 }				
 
 
 			 }
@@ -178,8 +196,7 @@ private: System::Void button1_Click(System::Object^  sender, System::EventArgs^ 
 // 			 {
 // 				 MessageBox::Show("crop failed");
 // 			 }
-			m_f1 = gcnew Form_2_Highpass();
-			m_f1->Show(this);
+			
 
 		 }
 };

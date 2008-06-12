@@ -41,7 +41,9 @@ namespace config2 {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::PictureBox^  pictureBox1;
+	public: System::Windows::Forms::PictureBox^  pictureBox1;
+	protected: 
+
 	protected: 
 	private: System::Windows::Forms::TrackBar^  trackBar1;
 	private: System::Windows::Forms::Label^  label1;
@@ -114,6 +116,7 @@ namespace config2 {
 				 g_settings.m_Highpass = trackBar1->Value;
 			 }
 	private: System::Void Form_2_Highpass_Load(System::Object^  sender, System::EventArgs^  e) {
+
 				
 			 }
 	

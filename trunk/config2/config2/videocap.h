@@ -19,11 +19,9 @@ namespace Video
 	class SampleListener
 	{
 	public:
+		BITMAPINFOHEADER* m_pbmpinfo;
 		virtual void OnSampleArrived(BYTE*pdata,long size)=0;
-		virtual void OnFormatChanges(BITMAPINFOHEADER* pbmpinfo)=0;
-		int m_index;
-		void AddTo(CVideoCapture& video);
-		void RemoveFrom(CVideoCapture& video);
+		virtual void OnFormatChanges(BITMAPINFOHEADER* pbmpinfo);
 	};
 
 	class SampleCallback:public ISampleGrabberCB

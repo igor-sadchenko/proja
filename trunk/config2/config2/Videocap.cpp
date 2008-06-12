@@ -461,11 +461,11 @@ HRESULT CVideoCapture::InitCaptureGraphBuilder()
 				return hr;
 
 			//get a video renderer
-			hr = m_pGraph->QueryInterface(IID_IVideoWindow, (LPVOID *) &m_pVWnd);
-			if (FAILED(hr))
-			{
-				return hr;
-			}
+// 			hr = m_pGraph->QueryInterface(IID_IVideoWindow, (LPVOID *) &m_pVWnd);
+// 			if (FAILED(hr))
+// 			{
+// 				return hr;
+// 			}
 
 			//get a NULL renderer
 			IBaseFilter *pGrabberF = NULL;
@@ -874,6 +874,10 @@ HRESULT Video::CVideoCapture::AppendPreview( HWND hwnd)
 	if(FAILED(hr))
 		return hr;
 
+	hr = m_pBuilder->FindPin(pTee,PIN_DIRECTION::PINDIR_OUTPUT,NULL,NULL,FALSE,0,&m_last_out_pin);
+	if(FAILED(hr))
+		return hr;
+
 
 	m_filter_count++;
 
@@ -911,7 +915,7 @@ HRESULT Video::CVideoCapture::AppendPreview( HWND hwnd)
 		return hr;
 
 
-	hr = m_pBuilder->FindPin(pTee,PIN_DIRECTION::PINDIR_OUTPUT,NULL,NULL,FALSE,0,&m_last_out_pin);
+	hr = m_pBuilder->FindPin(pTee,PIN_DIRECTION::PINDIR_OUTPUT,NULL,NULL,FALSE,1,&m_last_out_pin);
 	if(FAILED(hr))
 		return hr;
 
@@ -967,10 +971,36 @@ HRESULT Video::CVideoCapture::AppendSink()
 		return hr;
 
 	hr = m_pGraph->Connect(m_last_out_pin,pInPin);
+
+	switch(hr)
+	{
+	case VFW_S_PARTIAL_RENDER:
+		::MessageBox(0,L"VFW_S_PARTIAL_RENDER",0,0);
+		break;
+	case E_ABORT:
+		::MessageBox(0,L"E_ABORT",0,0);
+		break;
+	case VFW_E_CANNOT_CONNECT:
+		::MessageBox(0,L"VFW_E_CANNOT_CONNECT",0,0);
+	    break;
+	case VFW_E_NOT_IN_GRAPH:
+		::MessageBox(0,L"VFW_E_NOT_IN_GRAPH",0,0);
+		break;
+	case E_POINTER:
+		::MessageBox(0,L"E_POINTER NULL",0,0);
+		break;
+
+
+	}
 	if(FAILED(hr))
 		return hr;
 
 	m_last_out_pin = NULL;
 
 	return S_OK;
+}
+
+void Video::SampleListener::OnFormatChanges( BITMAPINFOHEADER* pbmpinfo )
+{
+	m_pbmpinfo = pbmpinfo;
 }

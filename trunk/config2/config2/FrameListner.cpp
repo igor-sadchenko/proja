@@ -3,23 +3,20 @@
 
 void FrameListner::OnSampleArrived( BYTE*pdata,long size )
 {
-	//the frame listener code goes here
+	//the frame listener code goes here // use m_bmpinfo
+	//this->m_pbmpinfo  // aho :D
+	for(int i = 0;i < size ; i++)
+		pdata[i] = 255;
 
 }
 
-void FrameListner::OnFormatChanges( BITMAPINFOHEADER* pbmpinfo )
-{
-	
-}
 
 void HighPassListner::OnSampleArrived( BYTE*pdata,long size )
 {
 	//the highpass code goes here
 
-
+	//this some code can use g_settings .. which will be saved to the filllle :D
+	for(int i = 0;i < size ; i++)
+		pdata[i] = 0;
 }
 
-void HighPassListner::OnFormatChanges( BITMAPINFOHEADER* pbmpinfo )
-{
-
-}
