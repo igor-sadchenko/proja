@@ -20,7 +20,7 @@ BlobDetector::~BlobDetector(void)
 
 BlobDetector::BlobDetector(BITMAPINFOHEADER* b)
 {
-	s_Brightness = 150;
+	//s_Brightness = 150;
 	BlobCount = -1;
 	m_bitmapInfo = b;
 	m_WidthBytes = b->biWidth*3;

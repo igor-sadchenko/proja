@@ -7,7 +7,7 @@
 #include "stdafx.h"
 #include "resource.h"
 #include <Dbt.h>
-
+#include <AtlCtrls.h>
 #include "VideoDlg.h"
 
 #define BUILD_AS_LIB
@@ -17,6 +17,7 @@ CVideoDlg* Singleton<CVideoDlg>::m_instance;
 
 LRESULT CVideoDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
+	m_isCropping = false;
 	// center the dialog on the screen
 	CenterWindow();
 
@@ -29,7 +30,14 @@ LRESULT CVideoDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	SetIcon(hIconSmall, FALSE);
 
 
-ApplicationManager::txtConsole =GetDlgItem(IDC_Monitor);
+	//set the picture box
+	
+	m_pic_box.m_hWnd =  GetDlgItem(IDC_STATIC1);;
+	
+	
+
+	//---
+	ApplicationManager::txtConsole =GetDlgItem(IDC_Monitor);
 	m_comb_cams.m_hWnd = GetDlgItem(IDC_COMBO1);
 	fillCamerasComb();
 
@@ -82,8 +90,9 @@ LRESULT CVideoDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& 
 	ApplicationManager::WriteLine(L"b4 OK %d\r\n", SUCCEEDED(TwInput::getInstance().m_video.GetStatus()) );
 	int sel = m_comb_cams.GetCurSel();
 	HWND hpicture_box = GetDlgItem(IDC_STATIC1);
-	ApplicationManager::WriteLine(L"%d\r\n",hpicture_box);
-	if(FAILED(TwInput::getInstance().m_video.SetPreviewWindow(hpicture_box)))
+	
+	ApplicationManager::WriteLine(L"%d\r\n",m_pic_box.m_hWnd);
+	if(FAILED(TwInput::getInstance().m_video.SetPreviewWindow(m_pic_box.m_hWnd)))
 	{
 		show("window init failed");
 	}
@@ -201,4 +210,76 @@ LRESULT CVideoDlg::OnScroll( UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
 
 	}
 	return TRUE;
+}
+
+LRESULT CVideoDlg::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
+{
+	::MessageBox(0,0,0,0);
+	POINT ptCursor = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+	RECT rect = { 0 };
+	m_pic_box.GetWindowRect(&rect);
+	if(PtInRect(&rect, ptCursor))
+	{
+		m_isCropping = true;
+		m_crop_rect.left = ptCursor.x - rect.left;
+		m_crop_rect.top = ptCursor.y - rect.top ;
+		m_crop_rect.right = m_crop_rect.left;
+		m_crop_rect.bottom = m_crop_rect.top;
+	}
+	return 1;
+}
+
+LRESULT CVideoDlg::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
+{
+	if(m_isCropping)
+	{
+
+	
+		if(FAILED(TwInput::getInstance().m_video.SetCrop(m_crop_rect)))
+			::MessageBox(0,L"Crop FAILED",0,0);
+			m_isCropping = false;
+	}
+	return 1;
+}
+
+
+LRESULT CVideoDlg::OnMouseMove(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+
+	POINT ptCursor = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+	RECT rect = { 0 };
+	m_pic_box.GetWindowRect(&rect);
+	if( m_isCropping && PtInRect(&rect, ptCursor) && (wParam & MK_LBUTTON))
+	{
+		m_crop_rect.right = ptCursor.x - rect.left;
+		m_crop_rect.bottom = ptCursor.y - rect.top;
+
+	}
+
+	bHandled = FALSE;
+	return 1;
+}
+
+LRESULT CVideoDlg::On_CROP_btn_clicked( WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/ )
+{
+	RECT rect = {0,0,100,100};
+	HRESULT hr = TwInput::getInstance().m_video.SetCrop(rect);
+	if(FAILED(hr))
+		::MessageBox(0,L"Crop FAILED",0,0);
+	switch(hr)
+	{
+	case VFW_E_INVALIDMEDIATYPE:
+		::MessageBox(0,L"VFW_E_INVALIDMEDIATYPE ",0,0);
+		break;
+	case VFW_E_NOT_CONNECTED:
+		::MessageBox(0,L"VFW_E_NOT_CONNECTED",0,0);
+		break;
+	case VFW_E_NOT_STOPPED:
+		::MessageBox(0,L"VFW_E_NOT_STOPPED",0,0);
+	    break;
+	case VFW_E_WRONG_STATE:
+		::MessageBox(0,L"VFW_E_WRONG_STATE",0,0);
+	    break;
+	}
+	return 0;
 }

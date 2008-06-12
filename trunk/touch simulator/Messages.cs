@@ -7,26 +7,57 @@ using System.Runtime.InteropServices;
 namespace touch_simulator
 {
 
-	public enum TWMessagesType :uint
-    {
+	public enum TWMessagesType : uint
+	{
 		WM_NONE = 0,
-		WM_TOUCH_FIRST,
-        WM_TOUCHUP = 0x8000 ,
-        WM_TOUCHDOWN , 
-        WM_TOUCHMOVE ,
+		WM_TOUCH_FIRST = 0x8000,
+		WM_TOUCHUP = 0x8000,
+		WM_TOUCHDOWN,
+		WM_TOUCHMOVE,
 		WM_TOUCH_LAST,
-    }
+		//------
+		WM_MOUSE_FIRST = 0x0200,
+		WM_MOUSEMOVE = 0x0200,
+		WM_LBUTTONDOWN = 0x0201,
+		WM_LBUTTONUP = 0x0202,
+		WM_MOUSE_LAST,
+	}
+
 	public class Messages
 	{
-		
+
+		public static bool send_Mouse_Messages = false;  // change the message box if u changed this or add a loader
+		public static int targetWindow = 0;
+		public static uint TouchToMouse(TWMessagesType msg)
+		{
+			TWMessagesType ret = TWMessagesType.WM_NONE;
+			switch(msg)
+			{
+				case TWMessagesType.WM_TOUCHDOWN:
+					ret = TWMessagesType.WM_LBUTTONDOWN;
+					break;
+				case TWMessagesType.WM_TOUCHMOVE:
+					ret = TWMessagesType.WM_MOUSEMOVE;
+					break;
+
+				case TWMessagesType.WM_TOUCHUP:
+					ret = TWMessagesType.WM_LBUTTONUP;
+					break;
+
+			}
+			return (uint) ret;
+		}
 		public static void SendToNextWindow(Form sender,Control pointContainer ,Blob blob)
 		{
 			if (blob.type >= TWMessagesType.WM_TOUCH_FIRST && blob.type <= TWMessagesType.WM_TOUCH_LAST)
 			{
 				//find the window to send to .. mostly obsecured by the simulator
 				//here i can hide the simulator .. query for window at point .. send .. then unhide the simulator
-				IntPtr HWnd = GetWindow(sender.Handle, (uint)GetWindow_Cmd.GW_HWNDNEXT);
-
+				IntPtr HWnd;
+				if (Messages.targetWindow == 0)
+					HWnd = GetWindow(sender.Handle, (uint)GetWindow_Cmd.GW_HWNDNEXT);
+				else
+					HWnd = (IntPtr)Messages.targetWindow;
 				//map the points
 				POINT p = new POINT(blob.center.X, blob.center.Y);
 				MapWindowPoints(sender.Handle, HWnd, ref p, 1);
@@ -35,6 +66,14 @@ namespace touch_simulator
 				uint LParam = (uint)((p.Y << 16) | (p.X & 0x0000FFFF));
 				uint WParam = (uint)((blob.Pressure << 16) | (blob.id & 0x0000FFFF));
 				PostMessage(HWnd, Msg, WParam, LParam);
+				if (send_Mouse_Messages)
+				{
+					uint WParam2  = 0;
+					if(blob.type == TWMessagesType.WM_TOUCHMOVE)
+						WParam2 = 0x0001;
+					uint mouse_msg = TouchToMouse(blob.type);
+					PostMessage(HWnd, mouse_msg, WParam2, LParam);
+				}
 			}
 		}
 
@@ -46,12 +85,19 @@ namespace touch_simulator
 				//here i can hide the simulator 
 				//--done by the caller
 				//.. query for window at point .. send .. 
-				POINT ScreenPos = new POINT(blob.center.X, blob.center.Y);
-				ClientToScreen(sender.Handle ,ref ScreenPos);
-				IntPtr HWnd = WindowFromPoint(ScreenPos);
+				IntPtr HWnd ;
+				if (Messages.targetWindow == 0)
+				{
+					POINT ScreenPos = new POINT(blob.center.X, blob.center.Y);
+					ClientToScreen(sender.Handle, ref ScreenPos);
+					HWnd = WindowFromPoint(ScreenPos);
+				}
+				else
+					HWnd = (IntPtr)Messages.targetWindow;
 				StringBuilder strBuilder = new StringBuilder();
-				GetWindowText(HWnd, strBuilder, 100);
-				Form1.s_txtMonitor.AppendText(HWnd + " - "+ strBuilder.ToString() +"\r\n");
+
+				//GetWindowText(HWnd, strBuilder, 100);
+				//Form1.s_txtMonitor.AppendText(HWnd + " - "+ strBuilder.ToString() +"\r\n");
 				//then unhide the simulator
 				//--done by the caller
 				//map the points
@@ -62,6 +108,14 @@ namespace touch_simulator
 				uint LParam = (uint)((p.Y << 16) | (p.X & 0x0000FFFF));
 				uint WParam = (uint)((blob.Pressure << 16) | (blob.id & 0x0000FFFF));
 				PostMessage(HWnd, Msg, WParam, LParam);
+				if(send_Mouse_Messages)
+				{
+					uint WParam2 = 0;
+					if (blob.type == TWMessagesType.WM_TOUCHMOVE)
+						WParam2 = 0x0001;
+					uint mouse_msg = TouchToMouse(blob.type);
+					PostMessage(HWnd, mouse_msg, WParam2, LParam);
+				}
 			}
 		}
 

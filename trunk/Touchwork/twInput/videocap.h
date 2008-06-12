@@ -95,5 +95,8 @@ namespace Video
 		HRESULT	SetSourceFramerate(double nframes_per_second);
 		HRESULT GetPreviewMode(bool* isPreview);
 		HRESULT GetCaptureMode(bool* isLiveFromCam);
+		HRESULT SetCrop(int x1,int y1,int x2,int y2);
+		HRESULT SetCrop(RECT& rectSource);
+
 	};
 }

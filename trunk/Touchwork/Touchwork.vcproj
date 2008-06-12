@@ -53,11 +53,11 @@
 				PreprocessorDefinitions="WIN32;_WINDOWS;STRICT;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				GenerateXMLDocumentationFiles="false"
 				WarningLevel="3"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -190,6 +190,26 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<AssemblyReference
+			RelativePath="System.dll"
+			AssemblyName="System, Version=2.0.0.0, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL"
+		/>
+		<AssemblyReference
+			RelativePath="System.Data.dll"
+			AssemblyName="System.Data, Version=2.0.0.0, PublicKeyToken=b77a5c561934e089, processorArchitecture=x86"
+		/>
+		<AssemblyReference
+			RelativePath="System.Drawing.dll"
+			AssemblyName="System.Drawing, Version=2.0.0.0, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
+		/>
+		<AssemblyReference
+			RelativePath="System.Windows.Forms.dll"
+			AssemblyName="System.Windows.Forms, Version=2.0.0.0, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL"
+		/>
+		<AssemblyReference
+			RelativePath="System.XML.dll"
+			AssemblyName="System.Xml, Version=2.0.0.0, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL"
+		/>
 	</References>
 	<Files>
 		<Filter
@@ -394,6 +414,46 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\VideoForm.cpp"
+			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					MinimalRebuild="false"
+					ExceptionHandling="2"
+					BasicRuntimeChecks="0"
+					UsePrecompiledHeader="0"
+					DebugInformationFormat="3"
+					CompileAsManaged="1"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					MinimalRebuild="false"
+					ExceptionHandling="2"
+					BasicRuntimeChecks="0"
+					UsePrecompiledHeader="0"
+					DebugInformationFormat="3"
+					CompileAsManaged="1"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\VideoForm.h"
+			FileType="3"
+			>
+			<File
+				RelativePath=".\VideoForm.resx"
+				SubType="Designer"
+				>
+			</File>
+		</File>
 	</Files>
 	<Globals>
 		<Global

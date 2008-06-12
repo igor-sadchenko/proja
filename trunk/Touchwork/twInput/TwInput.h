@@ -7,7 +7,6 @@ class TwInput
 {
 SINGLETON(TwInput)
 	
-
 public:
 	SampleListener* m_SampleListener;
 

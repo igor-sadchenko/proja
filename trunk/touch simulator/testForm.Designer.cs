@@ -49,6 +49,9 @@ namespace touch_simulator
 			this.Controls.Add(this.pictureBox1);
 			this.Name = "testForm";
 			this.Text = "testForm";
+			this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.testForm_MouseUp);
+			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.testForm_MouseDown);
+			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.testForm_MouseMove);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.ResumeLayout(false);
 

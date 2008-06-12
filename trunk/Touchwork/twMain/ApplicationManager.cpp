@@ -59,25 +59,30 @@ void ApplicationManager::OnFrame(BYTE* pdata,int size)
 	BITMAPINFOHEADER binfo= {sizeof(BITMAPINFOHEADER)};
 	TwInput::getInstance().m_video.GetFormat(&binfo);
 	BlobDetector* myblobDetector = new BlobDetector(&binfo);
-	//BlobDetector* myblobDetector = TwDetector::getInstance().GetBlobDetector();
+	
+	
+	WriteLine(L"rect: %d %d\r\n",binfo.biWidth,
+		binfo.biHeight
+		);
+
 	//thats copying a list!!!!!!!!!! 
-	list<Blob> blobList = myblobDetector->DetectBlobs(pdata);
+//	list<Blob> blobList = myblobDetector->DetectBlobs(pdata);
 
 	//-----track
-	int k = m_blobTracker->UpdateBlobs( &blobList ); // dah fine .. its a pointer .. no copy constructors called
+//	int k = m_blobTracker->UpdateBlobs( &blobList ); // dah fine .. its a pointer .. no copy constructors called
 
 	//------agent ... act ?
 		
-	m_twAgent->RaiseEvents(m_blobTracker->currentBlobs,m_blobTracker->deletedBlobs);				
-	WriteLine(L"Number of Blobs: %d\r\n",m_blobTracker->currentBlobs.size());
-
+//	m_twAgent->RaiseEvents(m_blobTracker->currentBlobs,m_blobTracker->deletedBlobs);				
+//	WriteLine(L"Number of Blobs: %d\r\n",m_blobTracker->currentBlobs.size());
+/*
 	WriteLine(L"IDs ");
 	list<Blob>::iterator itr;
 	for(itr = m_blobTracker->currentBlobs.begin() ; itr != m_blobTracker->currentBlobs.end(); itr++ )
 	{
 		WriteLine(L" - %d", itr->m_id);
 	}
-
+*/
 	
 
 

@@ -736,3 +736,27 @@ HRESULT Video::CVideoCapture::GetCaptureMode( bool* isLiveFromCam )
 	else
 		return S_FALSE;
 }
+
+HRESULT Video::CVideoCapture::SetCrop( int x1,int y1,int x2,int y2 )
+{
+	RECT rcSource = {x1,y1,x2,y2};
+	return SetCrop(rcSource);
+}
+
+HRESULT Video::CVideoCapture::SetCrop( RECT& rcSource )
+{
+	VIDEOINFOHEADER* inf = (VIDEOINFOHEADER*) m_CurrentFormat->pbFormat;
+	RECT rcTarget = {0,0,0,0};
+// 	inf->bmiHeader.biWidth = rcSource.right-rcSource.left;
+// 	inf->bmiHeader.biHeight = rcSource.bottom - rcSource.top;
+// 	inf->bmiHeader.biSizeImage = DIBSIZE(inf->bmiHeader);
+
+	inf->rcSource = rcSource; 
+	inf->rcTarget = rcTarget;
+
+	m_pMCtrl->Stop();
+	HRESULT hr = SetStreamFormats( m_CurrentFormat );
+
+	m_pMCtrl->Run();
+	return hr;
+}

@@ -37,6 +37,8 @@ namespace touch_simulator
 			this.btnSave = new System.Windows.Forms.Button();
 			this.chkNotifyChildren = new System.Windows.Forms.CheckBox();
 			this.txtMonitor = new System.Windows.Forms.TextBox();
+			this.chk_send_Mouse = new System.Windows.Forms.CheckBox();
+			this.btnSelectWnd = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.frameTrackbar)).BeginInit();
 			this.SuspendLayout();
@@ -125,11 +127,35 @@ namespace touch_simulator
 			this.txtMonitor.Size = new System.Drawing.Size(345, 73);
 			this.txtMonitor.TabIndex = 7;
 			// 
+			// chk_send_Mouse
+			// 
+			this.chk_send_Mouse.AutoSize = true;
+			this.chk_send_Mouse.BackColor = System.Drawing.SystemColors.Window;
+			this.chk_send_Mouse.Location = new System.Drawing.Point(111, 22);
+			this.chk_send_Mouse.Name = "chk_send_Mouse";
+			this.chk_send_Mouse.Size = new System.Drawing.Size(81, 17);
+			this.chk_send_Mouse.TabIndex = 8;
+			this.chk_send_Mouse.Text = "Mouse too?";
+			this.chk_send_Mouse.UseVisualStyleBackColor = false;
+			this.chk_send_Mouse.CheckedChanged += new System.EventHandler(this.chk_send_Mouse_CheckedChanged);
+			// 
+			// btnSelectWnd
+			// 
+			this.btnSelectWnd.Location = new System.Drawing.Point(292, 12);
+			this.btnSelectWnd.Name = "btnSelectWnd";
+			this.btnSelectWnd.Size = new System.Drawing.Size(53, 23);
+			this.btnSelectWnd.TabIndex = 9;
+			this.btnSelectWnd.Text = "wnd";
+			this.btnSelectWnd.UseVisualStyleBackColor = true;
+			this.btnSelectWnd.Click += new System.EventHandler(this.btnSelectWnd_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(345, 325);
+			this.Controls.Add(this.btnSelectWnd);
+			this.Controls.Add(this.chk_send_Mouse);
 			this.Controls.Add(this.txtMonitor);
 			this.Controls.Add(this.chkNotifyChildren);
 			this.Controls.Add(this.btnSave);
@@ -137,6 +163,7 @@ namespace touch_simulator
 			this.Controls.Add(this.btnRun);
 			this.Controls.Add(this.frameTrackbar);
 			this.Controls.Add(this.pictureBox);
+			this.HelpButton = true;
 			this.Name = "Form1";
 			this.Text = "Simulator";
 			this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseUp);
@@ -160,6 +187,8 @@ namespace touch_simulator
 		private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.CheckBox chkNotifyChildren;
 		private System.Windows.Forms.TextBox txtMonitor;
+		private System.Windows.Forms.CheckBox chk_send_Mouse;
+		private System.Windows.Forms.Button btnSelectWnd;
 	}
 }
 

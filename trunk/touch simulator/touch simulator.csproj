@@ -35,7 +35,6 @@
     <Reference Include="System.Runtime.Serialization, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="TouchworkNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Blob.cs" />
@@ -61,6 +60,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>testForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="window slector.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>window slector.cs</DependentUpon>
+    </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -83,6 +86,18 @@
     <Compile Include="testForm.Designer.cs">
       <DependentUpon>testForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="window slector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="window slector.Designer.cs">
+      <DependentUpon>window slector.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TouchworkNet\TouchworkNet.csproj">
+      <Project>{66E10586-2B33-4A53-92C7-7DA6FF0F8415}</Project>
+      <Name>TouchworkNet</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

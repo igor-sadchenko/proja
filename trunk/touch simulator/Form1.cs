@@ -68,12 +68,14 @@ namespace touch_simulator
 		{
 			if (chkNotifyChildren.Checked)
 			{
-				this.Visible = false;
+				if (Messages.targetWindow == 0)
+					this.Visible = false;
 				foreach (Blob b in m_blobs[frameTrackbar.Value])
 				{
 					Messages.SendToChildWindows(pictureBox, b);
 				}
-				this.Visible = true;
+				if (Messages.targetWindow == 0)
+					this.Visible = true;
 			}
 			else
 			{
@@ -277,6 +279,18 @@ namespace touch_simulator
 			{
 				settings.Save(dlg.FileName);
 			}
+		}
+
+		private void chk_send_Mouse_CheckedChanged(object sender, EventArgs e)
+		{
+				Messages.send_Mouse_Messages = chk_send_Mouse.Checked;
+		}
+
+		private void btnSelectWnd_Click(object sender, EventArgs e)
+		{
+			window_slector f = new window_slector();
+			if (f.ShowDialog() == DialogResult.OK)
+				Messages.targetWindow = f.hwnd;
 		}
 	}
 }
