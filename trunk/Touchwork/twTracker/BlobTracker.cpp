@@ -3,7 +3,7 @@
 #include <math.h>
 using namespace std;
 
-int BlobTracker::DIST_THRESHOLD = 20;
+int BlobTracker::DIST_THRESHOLD = 100;
 int BlobTracker::MOVE_THRESHOLD = 5;
 int BlobTracker::m_GlobalID = 0;
 
