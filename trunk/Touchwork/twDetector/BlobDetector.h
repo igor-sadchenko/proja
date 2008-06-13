@@ -1,6 +1,7 @@
 #pragma once
 #include "Point.h"
 #include "Blob.h"
+#include <cv.h>
 #include <list>
 using namespace std;
 
@@ -22,8 +23,12 @@ public:
 
 	~BlobDetector(void);
 	BlobDetector(BITMAPINFOHEADER* b);
-	list<Blob> DetectBlobs(BYTE* Buffer) ;
+	list<Blob> DetectBlobs(BYTE* Buffer);
 	bool IsBlob(int y,int x);
+	void InitializeBitmap(BYTE* buffer);
+	void ApplyMonochrome();
+	void ApplyInversion();
+	void ApplyGaussianFilter();
 };
 
 
