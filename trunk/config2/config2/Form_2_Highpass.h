@@ -21,10 +21,26 @@ namespace config2 {
 	/// </summary>
 	public ref class Form_2_Highpass : public System::Windows::Forms::Form
 	{
+	private:
+		int* m_varSettings;
+		System::String^ m_formName;
+
 	public:
 		Form_2_Highpass(void)
 		{
 			InitializeComponent();
+			//
+			//TODO: Add the constructor code here
+			//
+		}
+		Form_2_Highpass(int* varSettings, System::String^ name)
+		{
+			m_varSettings = varSettings;
+			m_formName = name;
+			InitializeComponent();
+			trackBar1->Value = *(g_settings.m_valNoise);
+			this->Text = m_formName + " - Val: " + (trackBar1->Value).ToString();
+
 			//
 			//TODO: Add the constructor code here
 			//
@@ -46,7 +62,7 @@ namespace config2 {
 
 	protected: 
 	private: System::Windows::Forms::TrackBar^  trackBar1;
-	private: System::Windows::Forms::Label^  label1;
+
 
 	private:
 		/// <summary>
@@ -63,42 +79,32 @@ namespace config2 {
 		{
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			this->trackBar1 = (gcnew System::Windows::Forms::TrackBar());
-			this->label1 = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->trackBar1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// pictureBox1
 			// 
-			this->pictureBox1->Location = System::Drawing::Point(3, 84);
+			this->pictureBox1->Location = System::Drawing::Point(12, 68);
 			this->pictureBox1->Name = L"pictureBox1";
-			this->pictureBox1->Size = System::Drawing::Size(354, 275);
+			this->pictureBox1->Size = System::Drawing::Size(295, 254);
 			this->pictureBox1->TabIndex = 0;
 			this->pictureBox1->TabStop = false;
 			// 
 			// trackBar1
 			// 
-			this->trackBar1->Location = System::Drawing::Point(135, 12);
+			this->trackBar1->Location = System::Drawing::Point(5, 12);
+			this->trackBar1->Maximum = 200;
 			this->trackBar1->Name = L"trackBar1";
-			this->trackBar1->Size = System::Drawing::Size(185, 42);
+			this->trackBar1->Size = System::Drawing::Size(308, 45);
 			this->trackBar1->TabIndex = 1;
 			this->trackBar1->Scroll += gcnew System::EventHandler(this, &Form_2_Highpass::trackBar1_Scroll);
-			// 
-			// label1
-			// 
-			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(12, 12);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(49, 13);
-			this->label1->TabIndex = 2;
-			this->label1->Text = L"highpass";
 			// 
 			// Form_2_Highpass
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(356, 359);
-			this->Controls->Add(this->label1);
+			this->ClientSize = System::Drawing::Size(318, 334);
 			this->Controls->Add(this->trackBar1);
 			this->Controls->Add(this->pictureBox1);
 			this->Name = L"Form_2_Highpass";
@@ -113,7 +119,8 @@ namespace config2 {
 		}
 #pragma endregion
 	private: System::Void trackBar1_Scroll(System::Object^  sender, System::EventArgs^  e) {
-				 g_settings.m_Highpass = trackBar1->Value;
+				 *m_varSettings = trackBar1->Value;
+			this->Text = m_formName + " - Val: " + (trackBar1->Value).ToString();
 			 }
 	private: System::Void Form_2_Highpass_Load(System::Object^  sender, System::EventArgs^  e) {
 

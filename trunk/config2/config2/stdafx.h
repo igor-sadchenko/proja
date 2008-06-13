@@ -47,7 +47,8 @@ extern CVideoCapture g_video;
 extern TwSettings g_settings;
 extern  FrameListner g_Listner;
 //todo add here a global instance of the filter .. and copy it (without extern) to the main
-extern  HighPassListner g_Highpass;
+extern  MonochromeListner g_Monochrome;
+extern  NoiseRemovalListner g_Noise;
 
 #include "Form_2_Highpass.h"
 #include "CropForm.h"

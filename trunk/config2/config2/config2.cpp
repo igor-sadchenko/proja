@@ -18,7 +18,8 @@ using namespace config2;
 CVideoCapture g_video;
 FrameListner g_Listner;
 TwSettings g_settings;
-HighPassListner g_Highpass;
+MonochromeListner g_Monochrome;
+NoiseRemovalListner g_Noise;
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,

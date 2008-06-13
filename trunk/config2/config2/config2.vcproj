@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="D:\Touchwork\SourceCode\Touchwork\Debug"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
@@ -42,6 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="0"
@@ -62,7 +63,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="cv.lib cxcore.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(SolutionDir)$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				SubSystem="2"

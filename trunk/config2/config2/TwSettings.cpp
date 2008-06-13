@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "TwSettings.h"
 
-TwSettings::TwSettings(void)
-{
-}
+//TwSettings::TwSettings(void)
+//{
+//}

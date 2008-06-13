@@ -29,7 +29,8 @@ namespace config2 {
 			//TODO: Add the constructor code here
 			//
 		}
-		Form_2_Highpass^ m_f1;
+		Form_2_Highpass^ m_formMonochrome;
+		Form_2_Highpass^ m_formNoise;
 		int preview_index ;
 		int sample_index ;
 
@@ -76,7 +77,7 @@ namespace config2 {
 			this->pictureBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left) 
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->pictureBox1->BorderStyle = System::Windows::Forms::BorderStyle::Fixed3D;
-			this->pictureBox1->Location = System::Drawing::Point(0, 55);
+			this->pictureBox1->Location = System::Drawing::Point(12, 69);
 			this->pictureBox1->Name = L"pictureBox1";
 			this->pictureBox1->Size = System::Drawing::Size(295, 254);
 			this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
@@ -84,7 +85,6 @@ namespace config2 {
 			this->pictureBox1->TabStop = false;
 			this->pictureBox1->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &CropForm::pictureBox1_MouseMove);
 			this->pictureBox1->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &CropForm::pictureBox1_MouseDown);
-
 			this->pictureBox1->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &CropForm::pictureBox1_MouseUp);
 			// 
 			// button1
@@ -117,7 +117,7 @@ namespace config2 {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(292, 308);
+			this->ClientSize = System::Drawing::Size(319, 335);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->button1);
@@ -149,19 +149,34 @@ namespace config2 {
 				 {
 					 MessageBox::Show(L"window 1 init failed");
 				 }
-				 if (FAILED(g_video.AppendSampleGrabber( &g_Highpass)))
+
+				 // Monochrome ...
+				 if (FAILED(g_video.AppendSampleGrabber( &g_Monochrome)))
 				 {
 					 MessageBox::Show(L"Couldnt append the Hi-Pass filter"); // edit the filter name
 				 }
-
-			
-				 m_f1 = gcnew Form_2_Highpass();
-				 m_f1->Show(this);
+				 m_formMonochrome = gcnew Form_2_Highpass(g_settings.m_valNoise, L"Monochrome");
+				 m_formMonochrome->Show(this);
 				 
-				 if(FAILED(g_video.AppendPreview( (HWND)m_f1->pictureBox1->Handle.ToPointer())))
+				 if(FAILED(g_video.AppendPreview( (HWND)m_formMonochrome->pictureBox1->Handle.ToPointer())))
 				 {
 					 MessageBox::Show(L"window 2 init failed");
 				 }
+
+				 // Noise Removal ...
+				 if (FAILED(g_video.AppendSampleGrabber( &g_Noise)))
+				 {
+					 MessageBox::Show(L"Couldnt append the Hi-Pass filter"); // edit the filter name
+				 }
+				 m_formNoise = gcnew Form_2_Highpass(g_settings.m_valNoise, L"Noise Removal");
+				 m_formNoise->Show(this);
+				 
+				 if(FAILED(g_video.AppendPreview( (HWND)m_formNoise->pictureBox1->Handle.ToPointer())))
+				 {
+					 MessageBox::Show(L"window 2 init failed");
+				 }
+				 
+
 				 if(FAILED(g_video.Play()))
 				 {
 					 MessageBox::Show(L"play failed");

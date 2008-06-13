@@ -19,7 +19,7 @@ namespace Video
 	class SampleListener
 	{
 	public:
-		BITMAPINFOHEADER* m_pbmpinfo;
+		BITMAPINFOHEADER m_bmpinfo;
 		virtual void OnSampleArrived(BYTE*pdata,long size)=0;
 		virtual void OnFormatChanges(BITMAPINFOHEADER* pbmpinfo);
 	};

@@ -1002,5 +1002,5 @@ HRESULT Video::CVideoCapture::AppendSink()
 
 void Video::SampleListener::OnFormatChanges( BITMAPINFOHEADER* pbmpinfo )
 {
-	m_pbmpinfo = pbmpinfo;
+	m_bmpinfo = *pbmpinfo;
 }
