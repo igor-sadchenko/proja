@@ -2,7 +2,7 @@
 #include <list>
 using namespace std;
 
-int BlobDetector::s_Brightness = 150;
+int BlobDetector::s_Brightness = 80;
 
 BlobDetector::~BlobDetector(void)
 {
@@ -32,12 +32,90 @@ BlobDetector::BlobDetector(BITMAPINFOHEADER* b)
 
 bool BlobDetector::IsBlob(int y,int x)
 {
-	BYTE b = m_bmpBits[y*m_WidthBytes + x];
+	/*BYTE b = m_bmpBits[y*m_WidthBytes + x];
 	BYTE g = m_bmpBits[y*m_WidthBytes + x+1];
 	BYTE r = m_bmpBits[y*m_WidthBytes + x+2];
 	int brightness = r + g + b;
-	brightness /= 3;
+	brightness /= 3;*/
+
+	int brightness = m_bmpBits[y*m_WidthBytes + x];
 	return brightness > s_Brightness;
+}
+
+void BlobDetector::InitializeBitmap(BYTE* buffer)
+{
+	m_bmpBits = buffer;
+	
+	ApplyMonochrome();
+	ApplyGaussianFilter();
+}
+
+void BlobDetector::ApplyMonochrome()
+{
+	int nh = m_bitmapInfo->biHeight;
+	for(int y = 0; y < nh; y++) 
+	{
+		for(int x = 0; x < m_WidthBytes; x++)
+		{
+			BYTE b = m_bmpBits[y*m_WidthBytes + x];
+			BYTE g = m_bmpBits[y*m_WidthBytes + x+1];
+			BYTE r = m_bmpBits[y*m_WidthBytes + x+2];
+			int avg = r + g + b;
+			avg /= 3;
+			m_bmpBits[y*m_WidthBytes + x] = 
+			m_bmpBits[y*m_WidthBytes + x+1] =
+			m_bmpBits[y*m_WidthBytes + x+2] = avg;
+		}
+	}
+}
+
+void BlobDetector::ApplyInversion()
+{
+	int nh = m_bitmapInfo->biHeight;
+	for(int y = 0; y < nh; y++) 
+	{
+		for(int x = 0; x < m_WidthBytes; x++)
+		{
+			m_bmpBits[y*m_WidthBytes + x] = //255 - m_bmpBits[y*m_WidthBytes + x];
+			m_bmpBits[y*m_WidthBytes + x+1] = //255 - m_bmpBits[y*m_WidthBytes + x+1];
+			m_bmpBits[y*m_WidthBytes + x+2] = 255 - m_bmpBits[y*m_WidthBytes + x+2];
+		}
+	}
+}
+
+void BlobDetector::ApplyGaussianFilter()
+{
+	IplImage* img = cvCreateImage(cvSize(m_bitmapInfo->biWidth, m_bitmapInfo->biHeight), IPL_DEPTH_8U, 3);
+	IplImage* tmp = cvCreateImage(cvSize(m_bitmapInfo->biWidth, m_bitmapInfo->biHeight), IPL_DEPTH_8U, 3);
+	IplImage* dst = cvCreateImage(cvSize(m_bitmapInfo->biWidth, m_bitmapInfo->biHeight), IPL_DEPTH_8U, 3);
+
+    IplConvKernel* element = cvCreateStructuringElementEx( 3, 3, 0, 0, CV_SHAPE_ELLIPSE, 0 );
+    IplConvKernel* element2 = cvCreateStructuringElementEx( 5, 5, 2, 2, CV_SHAPE_ELLIPSE, 0 );
+
+	//img->imageData = (char*) m_bmpBits;
+	cvSetData(img, m_bmpBits, m_WidthBytes);
+
+//	cvSmooth(img, img, CV_GAUSSIAN, 7, 7, 0, 0 );
+//	cvSub(img, tmp, img);
+
+	cvErode(img, img, element, 1);
+	cvSmooth(img, img, CV_GAUSSIAN, 11, 11, 0, 0 );
+	cvDilate(img, img, element, 1);
+	/*
+	cvErode(img, img, element, 2);
+	cvSmooth(img, img, CV_GAUSSIAN, 11, 11, 0, 0 );
+	cvDilate(img, img, element2, 1);
+	cvDilate(img, img, element, 1);
+*/
+	//cvThreshold(img, img, s_Brightness, 255, CV_THRESH_TOZERO); 
+
+	//m_bmpBits = (BYTE*) dst->imageData;
+	int step;
+    CvSize size;
+	cvGetRawData(img, (uchar**)&m_bmpBits, &step, &size);
+	
+	// TODO : Delete pointers ... and change function's name ..
+	return;
 }
 
 list<Blob> BlobDetector::DetectBlobs(BYTE* Buffer) 
