@@ -44,7 +44,7 @@ void ApplicationManager::InitializeApplication()
 
 void ApplicationManager::OnSampleArrived(BYTE* pdata,long size)
 {
-	UpdateFramerates();
+	//UpdateFramerates();
 	
 	//select one or more of the next
 	//DebugBreak();			
@@ -67,6 +67,10 @@ void ApplicationManager::OnFrame(BYTE* pdata,int size)
 
 	//thats copying a list!!!!!!!!!! 
 //	list<Blob> blobList = myblobDetector->DetectBlobs(pdata);
+	
+	myblobDetector->InitializeBitmap(pdata);
+
+	return;
 
 	//-----track
 //	int k = m_blobTracker->UpdateBlobs( &blobList ); // dah fine .. its a pointer .. no copy constructors called
@@ -80,7 +84,7 @@ void ApplicationManager::OnFrame(BYTE* pdata,int size)
 	list<Blob>::iterator itr;
 	for(itr = m_blobTracker->currentBlobs.begin() ; itr != m_blobTracker->currentBlobs.end(); itr++ )
 	{
-		WriteLine(L" - %d", itr->m_id);
+		WriteLine(L" - %d %d", itr->m_id, BlobDetector::s_Brightness);
 	}
 */
 	
