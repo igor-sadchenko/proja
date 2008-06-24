@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Touchwork", "Touchwork\Touchwork.vcproj", "{0B2A99A7-0CB1-47EE-A438-247CA6501794}"
+	ProjectSection(ProjectDependencies) = postProject
+		{26FC0E0F-7379-49B8-A819-55BFD0DBC7F4} = {26FC0E0F-7379-49B8-A819-55BFD0DBC7F4}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentations", "Documentations", "{FB7AE57F-95ED-4C8F-B856-6A56F788799F}"
 	ProjectSection(SolutionItems) = preProject
@@ -12,7 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "touch simulator", "touch si
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchworkNet", "TouchworkNet\TouchworkNet.csproj", "{66E10586-2B33-4A53-92C7-7DA6FF0F8415}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "config", "config\config.vcproj", "{2F820D12-A707-4C7F-8C92-3B084E4F8766}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "config", "Config\config.vcproj", "{2F820D12-A707-4C7F-8C92-3B084E4F8766}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HookDLL", "HookDLL\HookDLL.vcproj", "{26FC0E0F-7379-49B8-A819-55BFD0DBC7F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,6 +69,16 @@ Global
 		{2F820D12-A707-4C7F-8C92-3B084E4F8766}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{2F820D12-A707-4C7F-8C92-3B084E4F8766}.Release|Win32.ActiveCfg = Release|Win32
 		{2F820D12-A707-4C7F-8C92-3B084E4F8766}.Release|Win32.Build.0 = Release|Win32
+		{26FC0E0F-7379-49B8-A819-55BFD0DBC7F4}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{26FC0E0F-7379-49B8-A819-55BFD0DBC7F4}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{26FC0E0F-7379-49B8-A819-55BFD0DBC7F4}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{26FC0E0F-7379-49B8-A819-55BFD0DBC7F4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{26FC0E0F-7379-49B8-A819-55BFD0DBC7F4}.Debug|Win32.Build.0 = Debug|Win32
+		{26FC0E0F-7379-49B8-A819-55BFD0DBC7F4}.Release|Any CPU.ActiveCfg = Release|Win32
+		{26FC0E0F-7379-49B8-A819-55BFD0DBC7F4}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{26FC0E0F-7379-49B8-A819-55BFD0DBC7F4}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{26FC0E0F-7379-49B8-A819-55BFD0DBC7F4}.Release|Win32.ActiveCfg = Release|Win32
+		{26FC0E0F-7379-49B8-A819-55BFD0DBC7F4}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

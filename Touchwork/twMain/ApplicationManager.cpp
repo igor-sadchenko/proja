@@ -34,12 +34,14 @@ void ApplicationManager::InitializeApplication()
 	fin>>m_settings;
 	ostringstream sout;
 	sout<<m_settings;
-	MessageBoxA(0,sout.str().c_str(),0,0);
+	//MessageBoxA(0,sout.str().c_str(),0,0);
 	m_twInput = TwInput::getInstancePtr();
 	m_twAgent = TwAgent::getInstancePtr();
 	m_twTracker = TwTracker::getInstancePtr();
 	//m_WindowsMessagesMgr = WindowsMessagesManager::getInstancePtr();
 	m_blobTracker = m_twTracker->GetBlobTracker();
+
+	//m_twAgent->InitializeHookDll() ;
 
 	m_twInput->Start(this);
 }
@@ -62,36 +64,27 @@ void ApplicationManager::OnFrame(BYTE* pdata,int size)
 	BlobDetector* myblobDetector = new BlobDetector(&m_bmpinfo);
 	
 	
-	WriteLine(L"rect: %d %d\r\n",m_bmpinfo.biWidth,
-		m_bmpinfo.biHeight
-		);
-
-	//thats copying a list!!!!!!!!!! 
-//	list<Blob> blobList = myblobDetector->DetectBlobs(pdata);
-	
 	myblobDetector->InitializeBitmap(pdata);
+	//thats copying a list!!!!!!!!!! 
+	list<Blob> blobList = myblobDetector->DetectBlobs(pdata);
+	
 
-	return;
 
-	//-----track
-//	int k = m_blobTracker->UpdateBlobs( &blobList ); // dah fine .. its a pointer .. no copy constructors called
+//-----track
+	int k = m_blobTracker->UpdateBlobs( &blobList ); // dah fine .. its a pointer .. no copy constructors called
 
 	//------agent ... act ?
 		
-//	m_twAgent->RaiseEvents(m_blobTracker->currentBlobs,m_blobTracker->deletedBlobs);				
+	m_twAgent->RaiseEvents(m_blobTracker->currentBlobs,m_blobTracker->deletedBlobs);				
 //	WriteLine(L"Number of Blobs: %d\r\n",m_blobTracker->currentBlobs.size());
-/*
-	WriteLine(L"IDs ");
+
+	WriteLine(L"\r\nIDs ");
 	list<Blob>::iterator itr;
 	for(itr = m_blobTracker->currentBlobs.begin() ; itr != m_blobTracker->currentBlobs.end(); itr++ )
 	{
-		WriteLine(L" - %d %d", itr->m_id, BlobDetector::s_Brightness);
+		WriteLine(L" - %d", itr->m_id);
 	}
-*/
-	
-
-
-	
+	delete myblobDetector;
 }
 
 void ApplicationManager::UpdateFramerates()
