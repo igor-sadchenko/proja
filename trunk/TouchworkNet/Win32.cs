@@ -38,6 +38,10 @@ namespace TouchworkSDK
 		public extern static int SendMessage(
 			IntPtr hwnd, uint msg, uint wParam, uint lParam);
 
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern uint RegisterWindowMessage(string lpString);
+
 		// Helper function to convert a Windows lParam into a Point.
 		//   lParam - The parameter to convert.
 		// Rreturns a Point where X is the low 16 bits and Y is the

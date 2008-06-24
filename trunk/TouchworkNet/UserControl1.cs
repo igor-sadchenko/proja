@@ -48,7 +48,7 @@ namespace TouchworkSDK
         {
             TouchEventArgs e; // This event should be filled
             bool flag = true;
-            if (  (int)TouchMessage.WM_TOUCHDOWN ==  m.Msg )
+            if (  (int)TouchMessage.WM_TOUCH_DOWN ==  m.Msg )
             {
                 if (OnTouchDown())
                 {
@@ -59,7 +59,7 @@ namespace TouchworkSDK
                 else
                     flag = false; 
             }
-            else if ( (int)TouchMessage.WM_TOUCHMOVE == m.Msg )
+            else if ( (int)TouchMessage.WM_TOUCH_MOVE == m.Msg )
             {
                 if (OnTouchMove())
                 {
@@ -70,7 +70,7 @@ namespace TouchworkSDK
                 else
                     flag = false; 
             }
-            else if ((int)TouchMessage.WM_TOUCHUP == m.Msg )
+            else if ((int)TouchMessage.WM_TOUCH_UP == m.Msg )
             {
                 if (OnTouchUp())
                 {

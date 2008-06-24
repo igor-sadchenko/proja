@@ -5,7 +5,7 @@
 #include <list>
 using namespace std;
 
-int BlobDetector::s_Brightness = 80;
+int BlobDetector::s_Brightness = 145;
 
 BlobDetector::~BlobDetector(void)
 {
@@ -110,7 +110,7 @@ void BlobDetector::ApplyGaussianFilter()
 	cvDilate(img, img, element2, 1);
 	cvDilate(img, img, element, 1);
 */
-	//cvThreshold(img, img, s_Brightness, 255, CV_THRESH_TOZERO); 
+	cvThreshold(img, img, s_Brightness, 255, CV_THRESH_TOZERO); 
 
 	//m_bmpBits = (BYTE*) dst->imageData;
 	int step;
@@ -118,7 +118,11 @@ void BlobDetector::ApplyGaussianFilter()
 	cvGetRawData(img, (uchar**)&m_bmpBits, &step, &size);
 	
 	// TODO : Delete pointers ... and change function's name ..
-	return;
+	cvReleaseImage(&img);
+	cvReleaseImage(&tmp);
+	cvReleaseImage(&dst);
+	cvReleaseStructuringElement(&element);
+	cvReleaseStructuringElement(&element2); // enta momtazz :Dloool
 }
 
 list<Blob> BlobDetector::DetectBlobs(BYTE* Buffer) 
