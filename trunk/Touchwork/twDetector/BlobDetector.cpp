@@ -191,8 +191,8 @@ list<Blob> BlobDetector::DetectBlobs(BYTE* Buffer)
 									 }
 									 else if((p.m_y + pixely[k] >= 0) && (p.m_y + pixely[k] < nh) &&(p.m_x + pixelx[k] >= 0) && (p.m_x + pixelx[k] < nw))
 									 {
-										 //todo !!
-										 m_bmpBitsLabel[p.m_y + pixely[k]][(p.m_x + pixelx[k])/3] == -1;
+										 //FIXED
+										 m_bmpBitsLabel[p.m_y + pixely[k]][(p.m_x + pixelx[k])/3] = -1;
 									 }
 									 start = k;
 								 }
