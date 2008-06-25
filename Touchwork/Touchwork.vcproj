@@ -49,7 +49,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="twTracker;res;twInput;twDetector;twAgent;twMain;media;utility;twConfig"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\OpenCV\cv\include&quot;;twTracker;res;twInput;twDetector;twAgent;twMain;media;utility;twConfig"
 				PreprocessorDefinitions="WIN32;_WINDOWS;STRICT;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -74,6 +74,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\OpenCV\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"

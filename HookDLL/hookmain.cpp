@@ -42,8 +42,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, PVOID fImpLoad) {
 }
 
 
-
-
 UINT WM_TOUCH_UP;	
 UINT WM_TOUCH_DOWN;	
 UINT WM_TOUCH_MOVE;	
@@ -55,22 +53,7 @@ LIB LRESULT CALLBACK TWCallWndProc(int nCode, WPARAM wParam, LPARAM lParam )
 	{
 		BOOL ret;
 		CWPRETSTRUCT* msg = (CWPRETSTRUCT*) lParam ;
-		//switch(msg->message)
-		//{
-		//	//DONT WRITE HEREs
-		//	case WM_TOUCH_DOWN:
-		//		MessageBox(0,L"Click",0,0);
-		//		PostMessage(msg->hwnd, WM_LBUTTONDOWN, wParam, lParam);
-		//		break;
-		//	case WM_TOUCH_UP:
-		//		MessageBox(0,L"Click",0,0);
-		//		PostMessage(msg->hwnd, WM_LBUTTONUP, wParam, lParam);
-		//		break;
-		//	case WM_TOUCH_MOVE:
-		//		MessageBox(0,L"Click",0,0);
-		//		PostMessage(msg->hwnd,WM_MOUSEMOVE , wParam, lParam);
-		//		break;
-		//}
+	
 		if( msg->message == WM_TOUCH_DOWN )
 		{
 			MessageBox(0,L"Click",0,0);
@@ -85,8 +68,7 @@ LIB LRESULT CALLBACK TWCallWndProc(int nCode, WPARAM wParam, LPARAM lParam )
 		{
 			MessageBox(0,L"Click",0,0);
 			PostMessage(msg->hwnd,WM_MOUSEMOVE , wParam, lParam);
-		}
-		
+		}		
 	}
 	return CallNextHookEx(s_hook ,nCode, wParam, lParam);
 }
@@ -94,27 +76,26 @@ LIB LRESULT CALLBACK TWCallWndProc(int nCode, WPARAM wParam, LPARAM lParam )
 
 LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 {
-
 	if(nCode >= 0 )
 	{
 		BOOL ret;
 		MSG* msg = (MSG*) lParam ;
-		/*switch(msg->message)
-		{
-		case WM_TOUCH_DOWN:
-			MessageBox(0,L"Click",0,0);
-			PostMessage(msg->hwnd, WM_LBUTTONDOWN, wParam, lParam);
-			break;
-		case WM_TOUCH_UP:
-			MessageBox(0,L"Click",0,0);
-			PostMessage(msg->hwnd, WM_LBUTTONUP, wParam, lParam);
-			break;
-		case WM_TOUCH_MOVE:
-			MessageBox(0,L"Click",0,0);
-			PostMessage(msg->hwnd,WM_MOUSEMOVE , wParam, lParam);
-			break;
-		}*/
 
+		//Map lParam from video frame to screen
+		LPARAM mappedLParam = lParam; //TO DO: Write MAPPING CODE
+
+		//Hit Test
+		LRESULT res = DefWindowProc(msg->hwnd, WM_NCHITTEST, msg->wParam, mappedLParam);
+
+		//Case a click is on the title bar
+		//We can use res == HTCLIENT to test if the click is
+		//inside the window client area or not.. 
+		if(res == HTCAPTION)
+		{
+			MessageBox(0,L"Title",0,0);
+		}
+
+		//Send Messages
 		if( msg->message == WM_TOUCH_DOWN )
 		{
 			MessageBox(0,L"GNClick",0,0);
