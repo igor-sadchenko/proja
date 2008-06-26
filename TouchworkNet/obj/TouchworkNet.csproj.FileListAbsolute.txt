@@ -1,0 +1,7 @@
+C:\Documents and Settings\JetBrain\Desktop\Touchwork\bin\Debug\TouchworkNet.dll
+C:\Documents and Settings\JetBrain\Desktop\Touchwork\bin\Debug\TouchworkNet.pdb
+C:\Documents and Settings\JetBrain\Desktop\Touchwork\TouchworkNet\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\JetBrain\Desktop\Touchwork\TouchworkNet\obj\Debug\TouchworkSDK.TouchworkForm.resources
+C:\Documents and Settings\JetBrain\Desktop\Touchwork\TouchworkNet\obj\Debug\TouchworkNet.csproj.GenerateResource.Cache
+C:\Documents and Settings\JetBrain\Desktop\Touchwork\TouchworkNet\obj\Debug\TouchworkNet.dll
+C:\Documents and Settings\JetBrain\Desktop\Touchwork\TouchworkNet\obj\Debug\TouchworkNet.pdb
