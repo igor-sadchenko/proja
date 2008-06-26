@@ -8,9 +8,6 @@
 #using "system.dll"
 #using "system.Windows.Forms.dll"
 
-#pragma comment (lib, "cv")
-#pragma comment (lib, "cxcore")
-
 using namespace System;
 using namespace System::ComponentModel;
 using namespace System::Collections;

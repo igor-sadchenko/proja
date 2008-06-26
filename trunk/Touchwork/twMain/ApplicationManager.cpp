@@ -63,8 +63,12 @@ void ApplicationManager::OnFrame(BYTE* pdata,int size)
 	//-----detect
 	BlobDetector* myblobDetector = new BlobDetector(&m_bmpinfo);
 	
-	
+	//image processing
 	myblobDetector->InitializeBitmap(pdata);
+	myblobDetector->ApplyMonochrome();
+	myblobDetector->ApplyGaussianFilter();
+
+	//detection
 	//thats copying a list!!!!!!!!!! 
 	list<Blob> blobList = myblobDetector->DetectBlobs(pdata);
 	
@@ -129,13 +133,13 @@ void ApplicationManager::OnScreenSizeChanges()
 {
 	//get camera size , and screen size and set the Agent mapping
 	
-	float xCamera = m_bmpinfo.biWidth;
-	float yCamera = m_bmpinfo.biHeight;
-	float xScreen = GetSystemMetrics(SM_CXSCREEN);
-	float yScreen = GetSystemMetrics(SM_CYSCREEN);
+	m_twAgent->m_xCamera = m_bmpinfo.biWidth;
+	m_twAgent->m_yCamera = m_bmpinfo.biHeight;
+	m_twAgent->m_xScreen = GetSystemMetrics(SM_CXSCREEN);
+	m_twAgent->m_yScreen = GetSystemMetrics(SM_CYSCREEN);
 
 		
-	m_twAgent->m_xScreenPerCamera = xScreen / xCamera;
-	m_twAgent->m_yScreenPerCamera = yScreen / yCamera;
+	m_twAgent->m_xScreenPerCamera = m_twAgent->m_xScreen / m_twAgent->m_xCamera;
+	m_twAgent->m_yScreenPerCamera = m_twAgent->m_yScreen / m_twAgent->m_yCamera;
 
 }

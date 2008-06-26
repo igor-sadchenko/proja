@@ -31,6 +31,12 @@ public:
 public:
 	HHOOK hook2 ;
 
+	float m_xCamera;
+	float m_yCamera;
+	float m_xScreen;
+	float m_yScreen;
+
+
 	UINT WM_TOUCH_UP ; 
 	UINT WM_TOUCH_DOWN;
 	UINT WM_TOUCH_MOVE;

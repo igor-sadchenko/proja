@@ -7,7 +7,7 @@ public:
 	int m_id;
 	int m_pointscount;
 	float m_dist;
-	Point m_center;
+	twPoint m_center;
 	bool m_checked;
 	bool m_isOld;
 	bool m_isMoved;
@@ -16,8 +16,8 @@ public:
 //Methods
 public:
 	Blob(void);
-	Blob(int,Point);
+	Blob(int,twPoint);
 	~Blob(void);
-	Point CalculateCenter();
+	twPoint CalculateCenter();
 	void CalculateDist();
 };

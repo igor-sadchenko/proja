@@ -1,21 +1,21 @@
 #include "StdAfx.h"
 #include "Point.h"
 
-Point::Point(void)
+twPoint::twPoint(void)
 {
 }
 
-Point::Point(int x,int y)
+twPoint::twPoint(int x,int y)
 {
 	m_x = x;
 	m_y = y;
 }
 
-Point::~Point(void)
+twPoint::~twPoint(void)
 {
 }
 
-POINT Point::getPOINT()
+POINT twPoint::getPOINT()
 {
 	POINT pt = {m_x,m_y};
 	return pt;

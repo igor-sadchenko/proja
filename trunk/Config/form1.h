@@ -32,7 +32,10 @@ namespace config {
 		Form_2_Highpass^ m_formMonochrome;
 		Form_2_Highpass^ m_formNoise;
 		int preview_index ;
-		int sample_index ;
+	private: System::Windows::Forms::CheckBox^  chkFlipX;
+	public: 
+	private: System::Windows::Forms::CheckBox^  chkFlipY;
+			 int sample_index ;
 
 	protected:
 		/// <summary>
@@ -69,6 +72,8 @@ namespace config {
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->chkFlipX = (gcnew System::Windows::Forms::CheckBox());
+			this->chkFlipY = (gcnew System::Windows::Forms::CheckBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -77,9 +82,9 @@ namespace config {
 			this->pictureBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left) 
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->pictureBox1->BorderStyle = System::Windows::Forms::BorderStyle::Fixed3D;
-			this->pictureBox1->Location = System::Drawing::Point(12, 69);
+			this->pictureBox1->Location = System::Drawing::Point(12, 123);
 			this->pictureBox1->Name = L"pictureBox1";
-			this->pictureBox1->Size = System::Drawing::Size(295, 254);
+			this->pictureBox1->Size = System::Drawing::Size(310, 254);
 			this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
 			this->pictureBox1->TabIndex = 0;
 			this->pictureBox1->TabStop = false;
@@ -89,7 +94,7 @@ namespace config {
 			// 
 			// button1
 			// 
-			this->button1->Location = System::Drawing::Point(205, 26);
+			this->button1->Location = System::Drawing::Point(234, 32);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(75, 23);
 			this->button1->TabIndex = 1;
@@ -99,7 +104,7 @@ namespace config {
 			// 
 			// textBox1
 			// 
-			this->textBox1->Location = System::Drawing::Point(0, 29);
+			this->textBox1->Location = System::Drawing::Point(12, 32);
 			this->textBox1->Name = L"textBox1";
 			this->textBox1->Size = System::Drawing::Size(157, 20);
 			this->textBox1->TabIndex = 2;
@@ -113,11 +118,35 @@ namespace config {
 			this->label1->TabIndex = 3;
 			this->label1->Text = L"Crop Area";
 			// 
+			// chkFlipX
+			// 
+			this->chkFlipX->AutoSize = true;
+			this->chkFlipX->Location = System::Drawing::Point(12, 63);
+			this->chkFlipX->Name = L"chkFlipX";
+			this->chkFlipX->Size = System::Drawing::Size(49, 17);
+			this->chkFlipX->TabIndex = 4;
+			this->chkFlipX->Text = L"flip X";
+			this->chkFlipX->UseVisualStyleBackColor = true;
+			this->chkFlipX->CheckedChanged += gcnew System::EventHandler(this, &CropForm::chkFlipX_CheckedChanged);
+			// 
+			// chkFlipY
+			// 
+			this->chkFlipY->AutoSize = true;
+			this->chkFlipY->Location = System::Drawing::Point(12, 86);
+			this->chkFlipY->Name = L"chkFlipY";
+			this->chkFlipY->Size = System::Drawing::Size(49, 17);
+			this->chkFlipY->TabIndex = 5;
+			this->chkFlipY->Text = L"flip Y";
+			this->chkFlipY->UseVisualStyleBackColor = true;
+			this->chkFlipY->CheckedChanged += gcnew System::EventHandler(this, &CropForm::chkFlipY_CheckedChanged);
+			// 
 			// CropForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(319, 335);
+			this->ClientSize = System::Drawing::Size(334, 389);
+			this->Controls->Add(this->chkFlipY);
+			this->Controls->Add(this->chkFlipX);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->button1);
@@ -222,5 +251,12 @@ namespace config {
 
 
 			 }
-	};
+	private: System::Void chkFlipX_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+				 g_settings.m_x_flip = chkFlipX->Checked;
+
+			 }
+private: System::Void chkFlipY_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+			 g_settings.m_y_flip = chkFlipY->Checked;
+		 }
+};
 }

@@ -52,13 +52,22 @@ void TwAgent::NotifyWindowUnderBlob(Blob& blob, UINT messageType)
 		WPARAM wparam = MAKEWPARAM( blob.m_id, blob.m_pointscount );
 		LPARAM lparam = MAKELPARAM( pt.x,pt.y);
 		//notify the screen of the new stuff
-		SendMessage(win.m_hWnd,messageType,wparam,lparam);
+		PostMessage(win.m_hWnd,messageType,wparam,lparam);
 	}
 }
 
 void TwAgent::CameraToScreen( POINT& pt)
 {
+
+	if(ApplicationManager::getInstance().m_settings.m_x_flip)
+	{
+		pt.x = m_xCamera - pt.x;
+	}
 	pt.x = pt.x * m_xScreenPerCamera;
+	if(ApplicationManager::getInstance().m_settings.m_y_flip)
+	{
+		pt.y = m_yCamera - pt.y;
+	}
 	pt.y = pt.y * m_yScreenPerCamera;
 }
 
