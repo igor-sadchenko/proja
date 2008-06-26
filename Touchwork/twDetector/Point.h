@@ -1,14 +1,14 @@
 #pragma once
 
 #include <Windows.h>
-class Point
+class twPoint
 {
 public:
 	int m_x;
 	int m_y;
 public:
-	Point(void);
-	~Point(void);
-	Point(int x,int y);
+	twPoint(void);
+	~twPoint(void);
+	twPoint(int x,int y);
 	POINT getPOINT();
 };

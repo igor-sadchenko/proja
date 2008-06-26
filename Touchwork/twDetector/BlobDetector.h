@@ -1,9 +1,4 @@
 #pragma once
-#include "Point.h"
-#include "Blob.h"
-#include <cv.h>
-#include <list>
-using namespace std;
 
 class BlobDetector
 {
@@ -15,7 +10,7 @@ public:
 	int m_WidthBytes;
 	int BlobCount;
 	static int s_Brightness;
-	Point* Contour;
+	twPoint* Contour;
 	BYTE* m_bmpBits;
 	
 	BYTE** m_bmpBitsLabel;

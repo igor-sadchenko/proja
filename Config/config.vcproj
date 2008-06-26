@@ -232,6 +232,11 @@
 				RelativePath=".\form1.h"
 				FileType="3"
 				>
+				<File
+					RelativePath=".\form1.resx"
+					SubType="Designer"
+					>
+				</File>
 			</File>
 			<File
 				RelativePath=".\FrameListner.h"
@@ -256,6 +261,30 @@
 		<Filter
 			Name="SharedCode"
 			>
+			<File
+				RelativePath="..\Touchwork\twDetector\Blob.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Touchwork\twDetector\Blob.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Touchwork\twDetector\BlobDetector.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Touchwork\twDetector\BlobDetector.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Touchwork\twDetector\Point.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Touchwork\twDetector\Point.h"
+				>
+			</File>
 			<File
 				RelativePath="..\Touchwork\twInput\samplecallback.cpp"
 				>

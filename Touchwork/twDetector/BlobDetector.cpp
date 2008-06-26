@@ -2,8 +2,6 @@
 #pragma comment (lib, "cxcore")
 
 #include "StdAfx.h"
-#include <list>
-using namespace std;
 
 int BlobDetector::s_Brightness = 145;
 
@@ -27,7 +25,7 @@ BlobDetector::BlobDetector(BITMAPINFOHEADER* b)
 	BlobCount = -1;
 	m_bitmapInfo = b;
 	m_WidthBytes = b->biWidth*3;
-	Contour = new Point[m_bitmapInfo->biHeight*m_bitmapInfo->biWidth];
+	Contour = new twPoint[m_bitmapInfo->biHeight*m_bitmapInfo->biWidth];
 	m_bmpBitsLabel = new BYTE*[m_bitmapInfo->biHeight];
 	for(int i = 0; i < m_bitmapInfo->biHeight; i++)   
 		m_bmpBitsLabel[i] = new BYTE[m_bitmapInfo->biWidth];
@@ -48,9 +46,6 @@ bool BlobDetector::IsBlob(int y,int x)
 void BlobDetector::InitializeBitmap(BYTE* buffer)
 {
 	m_bmpBits = buffer;
-	
-	ApplyMonochrome();
-	ApplyGaussianFilter();
 }
 
 void BlobDetector::ApplyMonochrome()
@@ -169,7 +164,7 @@ list<Blob> BlobDetector::DetectBlobs(BYTE* Buffer)
 					 while(count > 0)
 					 {
 						 count--;
-						 Point p = Contour[count];
+						 twPoint p = Contour[count];
 						 
 						 if(p.m_x < nw*3 && p.m_x >=0 && p.m_y < nh && p.m_y >=0)
 						 {
@@ -216,7 +211,7 @@ list<Blob> BlobDetector::DetectBlobs(BYTE* Buffer)
 					 {
 						 BlobCount++;
 
-						 Blob current = Blob(BlobCount,Point((x_sum/all)/3, nh - y_sum/all));
+						 Blob current = Blob(BlobCount,twPoint((x_sum/all)/3, nh - y_sum/all));
 						 current.m_pointscount = all;
 						 list<Blob>::iterator itr;
 						 for(itr= blobList.begin() ; itr != blobList.end(); itr++ )

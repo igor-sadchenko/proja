@@ -16,7 +16,7 @@ Blob::Blob(void)
 	m_isMoved = false;
 }
 
-Blob::Blob(int id,Point center)
+Blob::Blob(int id,twPoint center)
 {
 	m_id = id;
 	m_dist = -1;
@@ -33,10 +33,10 @@ Blob::~Blob(void)
 {
 }
 
-Point Blob::CalculateCenter()
+twPoint Blob::CalculateCenter()
 {
 	//int i;
-	Point center;
+	twPoint center;
 	return center;
 }
 void Blob::CalculateDist()

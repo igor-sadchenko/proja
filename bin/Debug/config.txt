@@ -1,3 +1,5 @@
 crop 0 0 0 0
 highpass 0
 noise 100
+Xflip 0
+Yflip 0

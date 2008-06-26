@@ -47,11 +47,17 @@
 #include <math.h>
 #include <exception>
 
+#include <cv.h>
+#include "Point.h"
+#include "Blob.h"
+
+
 #include "VideoFormat.h"
 #include "videocap.h"
 using namespace std;
 using namespace Video;
 #include "TwSettings.h"
+#include "BlobDetector.h"
 #include "FrameListner.h"
 
 extern CVideoCapture g_video;

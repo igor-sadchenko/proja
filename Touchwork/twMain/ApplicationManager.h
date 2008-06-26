@@ -14,6 +14,7 @@ private:
 	TwAgent* m_twAgent;
 	TwTracker* m_twTracker;
 	BlobTracker* m_blobTracker;
+public:
 	TwSettings m_settings;
 	
 

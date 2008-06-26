@@ -6,7 +6,9 @@ public:
 	RECT m_Crop;
 	int m_Highpass;
 	int* m_valNoise;
-	
+	bool m_y_flip;
+	bool m_x_flip;
+
 	friend istream& operator >>(istream &is,TwSettings &obj);
     friend ostream& operator <<(ostream &os,const TwSettings &obj);
 

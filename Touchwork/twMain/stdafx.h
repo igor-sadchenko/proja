@@ -52,7 +52,7 @@ using namespace std;
 #include<DShow.h>
 #include "Qedit.h"
 #include "AtlBase.h"
-
+#include "cv.h"
 
 #include "singleton.h"
 #include "resource.h"
