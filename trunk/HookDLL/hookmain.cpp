@@ -3,6 +3,7 @@
 #include <atlwin.h>
 #include <string>
 #include <sstream>
+#include <set>
 using namespace std;
 
 #pragma region shared
@@ -12,11 +13,15 @@ HHOOK s_hook = NULL;
 #pragma data_seg()
 #pragma comment(linker, "/section:TWshare,rws")
 #pragma endregion shared
-
 #define LIB extern "C" __declspec(dllexport)
 
-HINSTANCE g_hinstDll=NULL;
+HINSTANCE g_hinstDll = NULL;
 
+set<HWND> selectedHandles;
+DWORD  m_dwLastLButtonDown = ULONG_MAX;
+DWORD  m_dwDblClickMsecs   = GetDoubleClickTime();
+
+ 
 BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, PVOID fImpLoad) {
 
 	switch (fdwReason) {
@@ -51,7 +56,6 @@ LIB LRESULT CALLBACK TWCallWndProc(int nCode, WPARAM wParam, LPARAM lParam )
 {
 	if(nCode >= 0 )
 	{
-		BOOL ret;
 		CWPRETSTRUCT* msg = (CWPRETSTRUCT*) lParam ;
 	
 		if( msg->message == WM_TOUCH_DOWN )
@@ -73,44 +77,121 @@ LIB LRESULT CALLBACK TWCallWndProc(int nCode, WPARAM wParam, LPARAM lParam )
 	return CallNextHookEx(s_hook ,nCode, wParam, lParam);
 }
 
+void PostWindowMessages(MSG* msg)
+{
+	if( msg->message == WM_TOUCH_DOWN )
+	{
+		PostMessage(msg->hwnd, WM_LBUTTONDOWN, msg->wParam, msg->lParam);
+	}
+	else if( msg->message == WM_TOUCH_UP ) 
+	{
+		PostMessage(msg->hwnd, WM_LBUTTONUP, msg->wParam, msg->lParam);
+	}
+	else if( msg->message == WM_TOUCH_MOVE )
+	{
+		PostMessage(msg->hwnd,WM_MOUSEMOVE , msg->wParam, msg->lParam);
+	}
+}
+
+void PostMouseMessages(MSG* msg)
+{
+	//Activate the window first
+	SetActiveWindow(msg->hwnd);
+
+	//For Double Click
+	BOOL bDoubleClick = FALSE;
+	DWORD dwTick = 0;
+
+	//Send Messages
+	if( msg->message == WM_TOUCH_DOWN )
+	{
+		PostMessage(msg->hwnd, WM_LBUTTONDOWN, msg->wParam, msg->lParam);
+		dwTick = GetTickCount();
+		bDoubleClick = ((dwTick - m_dwLastLButtonDown) <= m_dwDblClickMsecs);
+        m_dwLastLButtonDown = dwTick;
+	}
+	else if( msg->message == WM_TOUCH_UP ) 
+	{
+		PostMessage(msg->hwnd, WM_LBUTTONUP, msg->wParam, msg->lParam);
+	}
+	else if( msg->message == WM_TOUCH_MOVE )
+	{
+		PostMessage(msg->hwnd,WM_MOUSEMOVE , msg->wParam, msg->lParam);
+	}
+	if(bDoubleClick)
+		PostMessage(  msg->hwnd, WM_LBUTTONDBLCLK, msg->wParam, msg->lParam);
+}
 
 LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 {
 	if(nCode >= 0 )
 	{
-		BOOL ret;
 		MSG* msg = (MSG*) lParam ;
 
-		//Map lParam from video frame to screen
-		LPARAM mappedLParam = lParam; //TO DO: Write MAPPING CODE
+		set<HWND>::iterator iter;
+		bool windowMode = true;
+		HWND topLevel = GetAncestor(msg->hwnd, GA_ROOT); //OR GA_ROOTOWNER, Still not sure which to use
 
-		//Hit Test
-		LRESULT res = DefWindowProc(msg->hwnd, WM_NCHITTEST, msg->wParam, mappedLParam);
-
-		//Case a click is on the title bar
-		//We can use res == HTCLIENT to test if the click is
-		//inside the window client area or not.. 
-		if(res == HTCAPTION)
+		if(msg->hwnd == topLevel)
 		{
-			MessageBox(0,L"Title",0,0);
+			//Hit Test
+			LRESULT hittest = DefWindowProc(msg->hwnd, WM_NCHITTEST, msg->wParam, lParam);
+			if(hittest == HTCAPTION)
+			{
+				if(msg->message == WM_TOUCH_DOWN || msg->message == WM_TOUCH_MOVE)
+				{
+					windowMode = true;
+					iter = selectedHandles.find(msg->hwnd);
+					if(iter == selectedHandles.end())			//if handle wasn't stored before
+						selectedHandles.insert(msg->hwnd);		//add it to the set
+				}
+				else											//In case of WM_TOUCH_UP
+				{
+					windowMode = false;
+					selectedHandles.erase(msg->hwnd);
+				}
+			}
+			else
+			{
+				windowMode = false;
+			}
+		}
+		else
+		{
+			iter = selectedHandles.find(topLevel);
+			if(iter != selectedHandles.end())					//toplevel Hwnd found in the selectedHandles
+				windowMode = true;
+			else
+				windowMode = false;
 		}
 
-		//Send Messages
-		if( msg->message == WM_TOUCH_DOWN )
-		{
-			MessageBox(0,L"GNClick",0,0);
-			PostMessage(msg->hwnd, WM_LBUTTONDOWN, wParam, lParam);
-		}
-		else if( msg->message == WM_TOUCH_UP ) 
-		{
-			MessageBox(0,L"GMClick",0,0);
-			PostMessage(msg->hwnd, WM_LBUTTONUP, wParam, lParam);
-		}
-		else if( msg->message == WM_TOUCH_MOVE )
-		{
-			MessageBox(0,L"GMClick",0,0);
-			PostMessage(msg->hwnd,WM_MOUSEMOVE , wParam, lParam);
-		}
+		if(windowMode)
+			PostWindowMessages(msg);
+		else
+			PostMouseMessages(msg);
+
+		//Pseudocode
+		//Get TopLevelWindow
+		//if( current Handle is a TopLevel )
+		//	Perform a Hit Test
+		//	if(Hit Test result == HTCAPTION)
+		//		if(blobType == WM_TouchDown || blobType == WM_TouchMoveMouseMode )
+		//			Store this handle in the SelectedHandles List (Check that this Hwnd doesn't exit before)
+		//			Mode = WindowMode
+		//		else
+		//			Remove that Hwnd if it existed before in the SelectedHandles List
+		//			Mode = MouseMode;
+		//else
+		//	Check the TopLevelWindow in the SelectedHandles list
+		//	if( TopLevel found)
+		//		Mode = WindowMode;
+		//	else
+		//		Mode = MouseMode;
+
+		//if(WindowMode)
+		//	PostWindowMessages(..)
+		//else
+		//	PostMouseMessages(..)
 	}
 	return CallNextHookEx(s_hook ,nCode, wParam, lParam);
 }
@@ -123,6 +204,4 @@ LIB void SetMasterWindow(HHOOK hook)
 	WM_TOUCH_DOWN = RegisterWindowMessageA("WM_TOUCH_DOWN" ) ; 
 	WM_TOUCH_MOVE = RegisterWindowMessageA( "WM_TOUCH_MOVE" ) ; 
 }
-
-
 
