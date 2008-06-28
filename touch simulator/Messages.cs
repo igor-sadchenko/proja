@@ -7,30 +7,40 @@ using System.Runtime.InteropServices;
 namespace touch_simulator
 {
 
-	public enum TWMessagesType : uint
+	public struct TWMessagesType
 	{
-		WM_NONE = 0,
-		WM_TOUCH_FIRST = 0x8000,
-		WM_TOUCHUP = 0x8000,
-		WM_TOUCHDOWN,
-		WM_TOUCHMOVE,
-		WM_TOUCH_LAST,
+		public static uint WM_NONE = 0;
+		public static uint WM_TOUCH_FIRST = 0x8000;
+        public static uint WM_TOUCHUP;
+		public static uint WM_TOUCHDOWN;
+		public static uint WM_TOUCHMOVE;
 		//------
-		WM_MOUSE_FIRST = 0x0200,
-		WM_MOUSEMOVE = 0x0200,
-		WM_LBUTTONDOWN = 0x0201,
-		WM_LBUTTONUP = 0x0202,
-		WM_MOUSE_LAST,
+		public static uint WM_MOUSE_FIRST = 0x0200;
+		public static uint WM_MOUSEMOVE = 0x0200;
+		public static uint WM_LBUTTONDOWN = 0x0201;
+		public static uint WM_LBUTTONUP = 0x0202;
+        public static uint WM_MOUSE_LAST = 0x0202;
+
+        public static void InitializeTouchMessages()
+        {
+            WM_TOUCHUP = Messages.RegisterWindowMessage("WM_TOUCH_UP");
+            WM_TOUCHDOWN = Messages.RegisterWindowMessage("WM_TOUCH_DOWN");
+            WM_TOUCHMOVE = Messages.RegisterWindowMessage("WM_TOUCH_MOVE");
+        }
 	}
 
 	public class Messages
 	{
+        public Messages()
+        {
+            TWMessagesType.InitializeTouchMessages(); 
+        }
 
 		public static bool send_Mouse_Messages = false;  // change the message box if u changed this or add a loader
 		public static int targetWindow = 0;
 		public static uint TouchToMouse(TWMessagesType msg)
 		{
-			TWMessagesType ret = TWMessagesType.WM_NONE;
+			uint ret = TWMessagesType.WM_NONE;
 			switch(msg)
 			{
 				case TWMessagesType.WM_TOUCHDOWN:
@@ -45,7 +55,7 @@ namespace touch_simulator
 					break;
 
 			}
-			return (uint) ret;
+			return ret;
 		}
 		public static void SendToNextWindow(Form sender,Control pointContainer ,Blob blob)
 		{
@@ -144,6 +154,10 @@ namespace touch_simulator
 
 		[DllImport("user32.dll")]
 		static extern bool ClientToScreen(IntPtr hWnd, ref POINT lpPoint);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern uint RegisterWindowMessage(string lpString);
+
 
 		enum GetWindow_Cmd : uint
 		{
