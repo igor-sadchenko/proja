@@ -173,7 +173,7 @@ namespace TouchworkSDK
 			{
 				HookedProcInformation hpi = hwndDict[hwnd];
 				bool handled = false;
-				int retval = Touchwork.TouchworkWindowProc(hpi.touchable,hpi.Control,hwnd,msg,wParam,lParam,ref handled, hpi.mFingers);
+				int retval = Touchwork.TouchworkWindowProc(hpi.touchable,hpi.Control,hwnd,msg,wParam,lParam,ref handled, hpi.mTouches);
 				if (handled)
 					return retval;
 
@@ -256,7 +256,7 @@ namespace TouchworkSDK
             /// <summary>
             /// The list of all fingers on a given control
             /// </summary>
-            public List<Finger> mFingers; 
+            public List<Touch> mTouches; 
 
 			/// <summary>
 			/// Constructs a new HookedProcInformation object
@@ -269,7 +269,7 @@ namespace TouchworkSDK
 				control = ctl;
 				newWndProc = wndproc;
 				touchable = _touchable;
-                mFingers = new List<Finger>(); 
+                mTouches = new List<Touch>(); 
 			}
 
 			/// <summary>

@@ -37,17 +37,17 @@ namespace TouchworkSDK
 		}
 
 		static public int TouchworkWindowProc(
-			ITouchable touchable, Control ctrl,IntPtr hwnd, uint msg, uint wParam, uint lParam, ref bool handled, List<Finger> mFingers)
+			ITouchable touchable, Control ctrl,IntPtr hwnd, uint msg, uint wParam, uint lParam, ref bool handled, List<Touch> mTouches)
 		{
 			TouchEventArgs e; // This event should be filled
-            Finger finger; 
+            Touch touch; 
             if (msg == TouchMessage.WM_TOUCH_DOWN)
             {
                 e = new TouchEventArgs(lParam, wParam);
                 touchable.OnTouchDown(ctrl, e);
                 handled = e.handled;
-                finger = new Finger(e.ID, e.point);
-                mFingers.Add(finger); 
+                touch = new Touch(e.ID, e.point);
+                mTouches.Add(touch); 
                 
             }
             else if (msg == TouchMessage.WM_TOUCH_MOVE)
@@ -55,12 +55,12 @@ namespace TouchworkSDK
                 e = new TouchEventArgs(lParam, wParam);
                 touchable.OnTouchMove(ctrl, e);
                 handled = e.handled;
-                for (int i = 0; i < mFingers.Count; i++)
+                for (int i = 0; i < mTouches.Count; i++)
                 {
-                    if (mFingers[i].mID == e.ID)
+                    if (mTouches[i].mID == e.ID)
                     {
-                        mFingers[i].mOldPosition = mFingers[i].mPosition;
-                        mFingers[i].mPosition = e.point; 
+                        mTouches[i].mOldPosition = mTouches[i].mPosition;
+                        mTouches[i].mPosition = e.point; 
                         break;
                     }
                 }
@@ -72,12 +72,12 @@ namespace TouchworkSDK
                 touchable.OnTouchUp(ctrl, e);
                 handled = e.handled;
                 int i;
-                for(i=0 ; i< mFingers.Count ; i++ )
+                for(i=0 ; i< mTouches.Count ; i++ )
                 {
-                    if (mFingers[i].mID == e.ID)
+                    if (mTouches[i].mID == e.ID)
                         break; 
                 }
-                mFingers.RemoveAt(i); 
+                mTouches.RemoveAt(i); 
 
             }
 			return 0;
@@ -85,13 +85,13 @@ namespace TouchworkSDK
 		}
 
         /// <summary>
-        /// Get a Control and return a List of the fingers on that control
+        /// Get a Control and return a List of the touches on that control
         /// </summary>
         /// <param name="ctrl"></param>
         /// <returns></returns>
-        static public List<Finger> GetFingersOnControl(Control ctrl)
+        static public List<Touch> GetTouchesOnControl(Control ctrl)
         {
-            return ((WndProcHooker.HookedProcInformation)WndProcHooker.GetInfoForControl(ctrl)).mFingers; 
+            return ((WndProcHooker.HookedProcInformation)WndProcHooker.GetInfoForControl(ctrl)).mTouches; 
         }
 	}
 }
