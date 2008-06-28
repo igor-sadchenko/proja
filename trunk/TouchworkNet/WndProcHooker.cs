@@ -173,7 +173,7 @@ namespace TouchworkSDK
 			{
 				HookedProcInformation hpi = hwndDict[hwnd];
 				bool handled = false;
-				int retval = Touchwork.TouchworkWindowProc(hpi.touchable,hpi.Control,hwnd,msg,wParam,lParam,ref handled);
+				int retval = Touchwork.TouchworkWindowProc(hpi.touchable,hpi.Control,hwnd,msg,wParam,lParam,ref handled, hpi.mFingers);
 				if (handled)
 					return retval;
 
@@ -221,12 +221,17 @@ namespace TouchworkSDK
 			}
 		}
 
+        public static HookedProcInformation GetInfoForControl(Control ctrl)
+        {
+            return ctlDict[ctrl]; 
+        }
+
 		/// <summary>
 		/// This class remembers the old window procedure for the specified
 		/// window handle and alsow provides the message map for the messages
 		/// hooked on that window.
 		/// </summary>
-		class HookedProcInformation
+		public class HookedProcInformation
 		{
 			public ITouchable touchable;
 			/// <summary>
@@ -248,6 +253,11 @@ namespace TouchworkSDK
 				get { return control; }
 			}
 
+            /// <summary>
+            /// The list of all fingers on a given control
+            /// </summary>
+            public List<Finger> mFingers; 
+
 			/// <summary>
 			/// Constructs a new HookedProcInformation object
 			/// </summary>
@@ -259,6 +269,7 @@ namespace TouchworkSDK
 				control = ctl;
 				newWndProc = wndproc;
 				touchable = _touchable;
+                mFingers = new List<Finger>(); 
 			}
 
 			/// <summary>

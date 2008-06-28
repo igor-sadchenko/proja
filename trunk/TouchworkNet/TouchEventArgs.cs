@@ -24,7 +24,13 @@ namespace TouchworkSDK
             this.pressure = (int)pressure;
             this.ID = (int)id; 
         }
-
+        
+        /// <summary>
+        /// GetHightLow function takes unsigned int and return the High part and Low part 
+        /// </summary>
+        /// <param name="number"></param>
+        /// <param name="h"></param>
+        /// <param name="l"></param>
         private void GetHighLow(uint number, ref uint h, ref uint l)
         {
             uint temp = (uint)number;
