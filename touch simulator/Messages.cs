@@ -31,35 +31,32 @@ namespace touch_simulator
 
 	public class Messages
 	{
-        public Messages()
-        {
-            TWMessagesType.InitializeTouchMessages(); 
-        }
-
+        
 		public static bool send_Mouse_Messages = false;  // change the message box if u changed this or add a loader
 		public static int targetWindow = 0;
-		public static uint TouchToMouse(TWMessagesType msg)
+		public static uint TouchToMouse(uint msg)
 		{
 			uint ret = TWMessagesType.WM_NONE;
-			switch(msg)
+			if(msg == TWMessagesType.WM_TOUCHDOWN)
 			{
-				case TWMessagesType.WM_TOUCHDOWN:
 					ret = TWMessagesType.WM_LBUTTONDOWN;
-					break;
-				case TWMessagesType.WM_TOUCHMOVE:
-					ret = TWMessagesType.WM_MOUSEMOVE;
-					break;
-
-				case TWMessagesType.WM_TOUCHUP:
-					ret = TWMessagesType.WM_LBUTTONUP;
-					break;
-
 			}
+			else
+			if(msg == TWMessagesType.WM_TOUCHMOVE)
+			{
+					ret = TWMessagesType.WM_MOUSEMOVE;
+			}
+			else
+			if(msg == TWMessagesType.WM_TOUCHUP)
+			{
+					ret = TWMessagesType.WM_LBUTTONUP;
+			}
+			
 			return ret;
 		}
 		public static void SendToNextWindow(Form sender,Control pointContainer ,Blob blob)
 		{
-			if (blob.type >= TWMessagesType.WM_TOUCH_FIRST && blob.type <= TWMessagesType.WM_TOUCH_LAST)
+			if (blob.type >= TWMessagesType.WM_TOUCH_FIRST )
 			{
 				//find the window to send to .. mostly obsecured by the simulator
 				//here i can hide the simulator .. query for window at point .. send .. then unhide the simulator
@@ -89,7 +86,7 @@ namespace touch_simulator
 
 		public static void SendToChildWindows(Control sender, Blob blob)
 		{
-			if (blob.type >= TWMessagesType.WM_TOUCH_FIRST && blob.type <= TWMessagesType.WM_TOUCH_LAST)
+			if (blob.type >= TWMessagesType.WM_TOUCH_FIRST)
 			{
 				//find the window to send to .. mostly obsecured by the simulator
 				//here i can hide the simulator 

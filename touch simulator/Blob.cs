@@ -14,7 +14,7 @@ namespace touch_simulator
 		public bool isSelected = false;
 		public bool isVisible = true;
 		public int id;
-		public TWMessagesType type;
+		public uint type;
 
 		public Blob(){}
 		public Blob(Point _center , int _id)
