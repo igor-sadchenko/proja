@@ -166,6 +166,7 @@ namespace touch_simulator
 			this.HelpButton = true;
 			this.Name = "Form1";
 			this.Text = "Simulator";
+			this.Load += new System.EventHandler(this.Form1_Load);
 			this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseUp);
 			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
 			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);

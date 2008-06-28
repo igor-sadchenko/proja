@@ -292,5 +292,10 @@ namespace touch_simulator
 			if (f.ShowDialog() == DialogResult.OK)
 				Messages.targetWindow = f.hwnd;
 		}
+
+		private void Form1_Load(object sender, EventArgs e)
+		{
+			TWMessagesType.InitializeTouchMessages();
+		}
 	}
 }
