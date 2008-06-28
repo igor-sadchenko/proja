@@ -5,13 +5,13 @@ using System.Drawing;
 
 namespace TouchworkSDK
 {
-    public class Finger
+    public class Touch
     {
         public int mID;
         public Point mPosition;
         public Point mOldPosition;
         //public bool isMoved; 
-        public Finger(int id, Point position)
+        public Touch(int id, Point position)
         {
             mID = id;
             mPosition = position;
