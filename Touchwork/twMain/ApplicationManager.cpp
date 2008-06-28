@@ -66,7 +66,7 @@ void ApplicationManager::OnFrame(BYTE* pdata,int size)
 	//image processing
 	myblobDetector->InitializeBitmap(pdata);
 	myblobDetector->ApplyMonochrome();
-	myblobDetector->ApplyGaussianFilter();
+	myblobDetector->ApplyGaussianFilter(m_settings.getNoise());
 
 	//detection
 	//thats copying a list!!!!!!!!!! 
