@@ -23,7 +23,7 @@ public:
 	void InitializeBitmap(BYTE* buffer);
 	void ApplyMonochrome();
 	void ApplyInversion();
-	void ApplyGaussianFilter();
+	void ApplyGaussianFilter(int noise);
 };
 
 
