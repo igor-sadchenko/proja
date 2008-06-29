@@ -34,7 +34,7 @@ void ApplicationManager::InitializeApplication()
 	fin>>m_settings;
 	ostringstream sout;
 	sout<<m_settings;
-	//MessageBoxA(0,sout.str().c_str(),0,0);
+	//MessageBoxA(0,sout.str().c_str(),0,0); 
 	m_twInput = TwInput::getInstancePtr();
 	m_twAgent = TwAgent::getInstancePtr();
 	m_twTracker = TwTracker::getInstancePtr();
@@ -42,6 +42,9 @@ void ApplicationManager::InitializeApplication()
 	m_blobTracker = m_twTracker->GetBlobTracker();
 
 	//m_twAgent->InitializeHookDll() ;
+
+	//REMOVED THE COMMMENT FOR TESTING
+	m_twAgent->InitializeHookDll() ;
 
 	m_twInput->Start(this);
 }
