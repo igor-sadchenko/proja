@@ -35,7 +35,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Finger.cs" />
+    <Compile Include="Touch.cs" />
     <Compile Include="TouchworkMssages.cs" />
     <Compile Include="ITouchable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

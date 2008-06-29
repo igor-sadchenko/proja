@@ -15,13 +15,19 @@ namespace TouchworkSDK
             TouchMessage.InitializeTouchMessages(); 
         }
         /// <summary>
-        /// NotifyOnTouch Allows a given ITouchable control to recieve touch events.
+        /// Allows a given ITouchable control to recieve touch events.
         /// </summary>
         /// <param name="touchableControl"></param>
 		static public void NotifyOnTouch(ITouchable touchableControl)
 		{
 			WndProcHooker.HookWndProc(touchableControl);
 		}
+
+        /// <summary>
+        /// Allows a given ITouchable control to recieve touch events.
+        /// </summary>
+        /// <param name="control"></param>
+        /// <param name="callback"></param>
         static public void NotifyOnTouch(Control control, ITouchable callback)
         {
             WndProcHooker.HookWndProc(control, callback);
@@ -36,6 +42,18 @@ namespace TouchworkSDK
 			WndProcHooker.UnhookWndProc(ctrl,false);
 		}
 
+        /// <summary>
+        /// This function is used to raise the touch events in any application using this dll
+        /// </summary>
+        /// <param name="touchable"></param>
+        /// <param name="ctrl"></param>
+        /// <param name="hwnd"></param>
+        /// <param name="msg"></param>
+        /// <param name="wParam"></param>
+        /// <param name="lParam"></param>
+        /// <param name="handled"></param>
+        /// <param name="mTouches"></param>
+        /// <returns></returns>
 		static public int TouchworkWindowProc(
 			ITouchable touchable, Control ctrl,IntPtr hwnd, uint msg, uint wParam, uint lParam, ref bool handled, List<Touch> mTouches)
 		{
