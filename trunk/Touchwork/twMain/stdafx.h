@@ -40,8 +40,8 @@ extern CAppModule _Module;
 #include <sstream>
 #include <iomanip>
 #include <fstream>
-#include<vector>
-#include<list>
+#include <vector>
+#include <list>
 #include <math.h>
 #include <sstream>	
 #include <exception>
@@ -49,7 +49,7 @@ extern CAppModule _Module;
 
 using namespace std;
 
-#include<DShow.h>
+#include <DShow.h>
 #include "Qedit.h"
 #include "AtlBase.h"
 #include "cv.h"
@@ -70,7 +70,6 @@ using namespace Video;
 #include "TwDetector.h"
 #include "TwTracker.h"
 #include "ApplicationManager.h"
-
 
 #include "Touchwork.h"
 
