@@ -19,6 +19,6 @@ void NoiseRemovalListner::OnSampleArrived( BYTE*pdata,long size )
 {
 	BlobDetector detector(&m_bmpinfo);
 	detector.InitializeBitmap(pdata);
-	detector.ApplyGaussianFilter();
+	detector.ApplyGaussianFilter(g_settings.getNoise());
 }
 
