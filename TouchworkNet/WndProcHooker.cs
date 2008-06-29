@@ -44,7 +44,13 @@ namespace TouchworkSDK
 			new Dictionary<Control, HookedProcInformation>();
 
 
-
+        /// <summary>
+        /// Makes a connection between a message on a specified window handle
+        /// and the callback to be called when that message is received. If the
+        /// window was not previously hooked it is added to the global list of
+        /// all the window procedures hooked.
+        /// </summary>
+        /// <param name="ctl"></param>
 		public static void HookWndProc(
 			ITouchable ctl)
 		{
@@ -221,6 +227,11 @@ namespace TouchworkSDK
 			}
 		}
 
+        /// <summary>
+        /// Helper function to get the HookedProInformation of a given Control
+        /// </summary>
+        /// <param name="ctrl"></param>
+        /// <returns></returns>
         public static HookedProcInformation GetInfoForControl(Control ctrl)
         {
             return ctlDict[ctrl]; 

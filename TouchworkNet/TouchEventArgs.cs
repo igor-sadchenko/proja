@@ -11,6 +11,12 @@ namespace TouchworkSDK
         public int pressure;
         public int ID;
 		public bool handled = false;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="lparam"></param>
+        /// <param name="wparam"></param>
         public TouchEventArgs(uint lparam, uint wparam)
         {
             uint x = 0, y = 0;
@@ -26,7 +32,7 @@ namespace TouchworkSDK
         }
         
         /// <summary>
-        /// GetHightLow function takes unsigned int and return the High part and Low part 
+        /// Private helper function  that takes unsigned int and return the High part and Low part 
         /// </summary>
         /// <param name="number"></param>
         /// <param name="h"></param>
