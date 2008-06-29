@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <set>
+#include <map>
 using namespace std;
 
 #pragma region shared
@@ -18,6 +19,7 @@ HHOOK s_hook = NULL;
 
 HINSTANCE g_hinstDll = NULL;
 set<HWND> selectedHandles;
+map<HWND, POINT> previousClick;
 
 //For Double Click
 DWORD  s_dwLastLTouchUp = ULONG_MAX;
@@ -52,48 +54,58 @@ UINT WM_TOUCH_UP;
 UINT WM_TOUCH_DOWN;	
 UINT WM_TOUCH_MOVE;	
 
-
 LIB LRESULT CALLBACK TWCallWndProc(int nCode, WPARAM wParam, LPARAM lParam )
 {
 	return CallNextHookEx(s_hook ,nCode, wParam, lParam);
 }
 
-void PostWindowMessages(MSG* msg)
+void PostWindowMessages(MSG* msg, HWND topLevelWindow)
 {
 	//Perform a hit test at the current position
 	LRESULT hittest = DefWindowProc(msg->hwnd, WM_NCHITTEST, msg->wParam, msg->lParam);
 
-	//If touch is NOT on the title bar & message is either Down or Up.. then discard
+	//If the current touch is NOT on the title bar & message is either Down or Up.. then discard (use for resizing)
 	if( msg->message == WM_TOUCH_DOWN )
 	{
 		if(hittest == HTCAPTION)
-			PostMessage(msg->hwnd, WM_LBUTTONDOWN, msg->wParam, msg->lParam);
+			PostMessage(msg->hwnd, WM_NCLBUTTONDOWN, msg->wParam, msg->lParam);
+		else
+		{
+			previousClick[topLevelWindow].x = LOWORD(msg->lParam);
+			previousClick[topLevelWindow].y = HIWORD(msg->lParam);
+		}
 	}
 	else if( msg->message == WM_TOUCH_UP ) 
 	{
 		if(hittest == HTCAPTION)
-			PostMessage(msg->hwnd, WM_LBUTTONUP, msg->wParam, msg->lParam);
+			PostMessage(msg->hwnd, WM_NCLBUTTONUP, msg->wParam, msg->lParam);
+		else
+		{
+			previousClick.erase(topLevelWindow);
+		}
 	}
 	else if( msg->message == WM_TOUCH_MOVE )
 	{
-		if(hittest == HTCAPTION)	//Case Moving Window
-			PostMessage(msg->hwnd,WM_MOUSEMOVE , msg->wParam, msg->lParam);
-		else						//Must be Window Resizing
+		if(hittest == HTCAPTION)	//Moving Window
+			PostMessage(msg->hwnd ,WM_NCMOUSEMOVE , msg->wParam, msg->lParam);
+		else						//Resizing Window 
 		{
-			//TO DOOOOOO
-			//MessageBox(0,L"Resize",0,0);
-			//PostMessage(msg->hwnd,WM_MOUSEMOVE , msg->wParam, msg->lParam);
+			RECT rect;
+			GetWindowRect(topLevelWindow, &rect);
+			int width  = rect.right  - rect.left;
+			int height = rect.bottom - rect.top;
+
+			POINT previousTouch = previousClick[topLevelWindow];
+			long dx = previousTouch.x - LOWORD(msg->lParam);
+			long dy = previousTouch.y - HIWORD(msg->lParam);
+
+			width = width - dx;
+			height = height - dy;
+
+			SetWindowPos(topLevelWindow, NULL, LOWORD(rect.top), LOWORD(rect.top), width, height, FALSE);
+			previousClick[topLevelWindow].x = LOWORD(msg->lParam);
+			previousClick[topLevelWindow].y = HIWORD(msg->lParam);
 		}
-
-		/*
-		//Calling this function means that a finger 
-		//is already on the title bar (either the current one or a previous one)
-
-		//If (the current touch is the one on the titlebar)
-		//	perform a move window (WM_MouseMove should handle this, no need to use MoveWindow(..))
-		//else
-		//	Resize (This should be handled in the code)
-		*/
 	}
 }
 
@@ -131,7 +143,7 @@ void PostMouseMessages(MSG* msg)
 	}
 	else if( msg->message == WM_TOUCH_MOVE )
 	{
-		PostMessage(msg->hwnd,WM_MOUSEMOVE , msg->wParam, msg->lParam);
+		PostMessage(msg->hwnd, WM_MOUSEMOVE, msg->wParam, msg->lParam);
 	}
 }
 
@@ -139,11 +151,10 @@ LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 {
 	if(nCode >= 0 )
 	{
-		MSG* msg = (MSG*) lParam ;
-
 		set<HWND>::iterator iter;
 		bool windowMode = true;
 
+		MSG* msg = (MSG*) lParam ;
 		HWND topLevel = GetAncestor(msg->hwnd, GA_ROOTOWNER ); //MODIFIED: GA_ROOTOWNER not GA_ROOT
 
 		if(msg->hwnd == topLevel)
@@ -180,7 +191,7 @@ LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 		}
 
 		if(windowMode)
-			PostWindowMessages(msg);
+			PostWindowMessages(msg, topLevel);
 		else
 			PostMouseMessages(msg);
 
