@@ -41,8 +41,6 @@ void ApplicationManager::InitializeApplication()
 	//m_WindowsMessagesMgr = WindowsMessagesManager::getInstancePtr();
 	m_blobTracker = m_twTracker->GetBlobTracker();
 
-	//m_twAgent->InitializeHookDll() ;
-
 	//REMOVED THE COMMMENT FOR TESTING
 	m_twAgent->InitializeHookDll() ;
 
