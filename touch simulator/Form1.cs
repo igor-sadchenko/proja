@@ -19,6 +19,7 @@ namespace touch_simulator
 		public Form1()
 		{
 			InitializeComponent();
+            TWMessagesType.InitializeTouchMessages(); 
 			s_txtMonitor = txtMonitor;
 			frameTrackbar.Value = 0;
 			m_blobs.Add(new LinkedList<Blob>());
@@ -295,7 +296,6 @@ namespace touch_simulator
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			TWMessagesType.InitializeTouchMessages();
 		}
 	}
 }
