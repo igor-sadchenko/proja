@@ -1,8 +1,8 @@
 #pragma once
 // Singleton
-class ApplicationManager:public SampleListener
+class ApplicationManager:public SampleListener, public Singleton<ApplicationManager>
 {
-	SINGLETON(ApplicationManager)
+	
 public:
 	
 	// Text Monitor
@@ -10,10 +10,10 @@ public:
 private:
 	
 	//WindowsMessagesManager* m_WindowsMessagesMgr;
-	TwInput* m_twInput;
-	TwAgent* m_twAgent;
-	TwTracker* m_twTracker;
-	BlobTracker* m_blobTracker;
+	TwInput m_twInput;
+	TwAgent m_twAgent;
+	TwTracker m_twTracker;
+	TwDetector m_twDetector;
 public:
 	TwSettings m_settings;
 	
@@ -30,6 +30,8 @@ public:
 	void InitializeApplication();
 	void UpdateFramerates();
 	void OnScreenSizeChanges();
-	
+	void LoadSettings();
+	static TwSettings& getSettings();
+	void DisplayDetectionResults();
 };
 

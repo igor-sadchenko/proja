@@ -2,16 +2,17 @@
 #include "BlobDetector.h"
 
 // Singleton
-class TwDetector 
+class TwDetector :public Singleton<TwDetector>
 {
-	SINGLETON(TwDetector)
+	
 private:
 	BlobDetector* m_blobDetector;
 	
 
 public:
 	BlobDetector* GetBlobDetector();
+	void Initialize();
+	void Detect(BITMAPINFOHEADER* binfo, BYTE* pdata ,list<Blob>&);
+	
 	void SetFormat(BITMAPINFOHEADER*);
-	void SetBlobBrightness(int value);
-	int GetBlobBrightness();
 };

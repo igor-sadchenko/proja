@@ -3,15 +3,15 @@ int BlobTracker::DIST_THRESHOLD = 100;
 int BlobTracker::MOVE_THRESHOLD = 5;
 int BlobTracker::m_GlobalID = 0;
 
-BlobTracker::BlobTracker(void)
+RangeBlobTracker::RangeBlobTracker(void)
 {
 }
 
-BlobTracker::~BlobTracker(void)
+RangeBlobTracker::~RangeBlobTracker(void)
 {
 }
 
-int BlobTracker::UpdateBlobs(list<Blob> *newBlobs)
+int RangeBlobTracker::UpdateBlobs(list<Blob> *newBlobs)
 {
 	deletedBlobs.clear(); //new frame, new blobs to delete
 

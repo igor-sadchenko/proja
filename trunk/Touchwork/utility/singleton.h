@@ -1,6 +1,7 @@
 
 //use this in the begining of the .CPP
-#define INIT_SINGLETON(T) T T::m_instance;
+#define INIT_SINGLETON2(T) T T::m_instance;
+#define INIT_SINGLETON(T) T* T::m_instance;
 
 //use this in the class devtlaration
 #define SINGLETON(T) private: static T m_instance;	\

@@ -2,9 +2,8 @@
 #pragma once
 
 // Singleton
-class TwInput
+class TwInput:public Singleton<TwInput>
 {
-SINGLETON(TwInput)
 	
 public:
 	SampleListener* m_SampleListener;

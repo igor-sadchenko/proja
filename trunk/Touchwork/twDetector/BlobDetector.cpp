@@ -3,9 +3,9 @@
 
 #include "StdAfx.h"
 
-int BlobDetector::s_Brightness = 145;
+int BlobDetector::m_Threshold = 145;
 
-BlobDetector::~BlobDetector(void)
+ComponentLabelingBlobDetector::~ComponentLabelingBlobDetector(void)
 {
 	if(Contour)
 		delete[] Contour;
@@ -19,7 +19,7 @@ BlobDetector::~BlobDetector(void)
 	}
 }
 
-BlobDetector::BlobDetector(BITMAPINFOHEADER* b)
+ComponentLabelingBlobDetector::ComponentLabelingBlobDetector(BITMAPINFOHEADER* b)
 {
 	//s_Brightness = 150;
 	BlobCount = -1;
@@ -31,7 +31,7 @@ BlobDetector::BlobDetector(BITMAPINFOHEADER* b)
 		m_bmpBitsLabel[i] = new BYTE[m_bitmapInfo->biWidth];
 }
 
-bool BlobDetector::IsBlob(int y,int x)
+bool ComponentLabelingBlobDetector::IsBlob(int y,int x)
 {
 	/*BYTE b = m_bmpBits[y*m_WidthBytes + x];
 	BYTE g = m_bmpBits[y*m_WidthBytes + x+1];
@@ -40,15 +40,15 @@ bool BlobDetector::IsBlob(int y,int x)
 	brightness /= 3;*/
 
 	int brightness = m_bmpBits[y*m_WidthBytes + x];
-	return brightness > s_Brightness;
+	return brightness > m_Threshold;
 }
 
-void BlobDetector::InitializeBitmap(BYTE* buffer)
+void ComponentLabelingBlobDetector::InitializeBitmap(BYTE* buffer)
 {
 	m_bmpBits = buffer;
 }
 
-void BlobDetector::ApplyMonochrome()
+void ComponentLabelingBlobDetector::ApplyMonochrome()
 {
 	int nh = m_bitmapInfo->biHeight;
 	for(int y = 0; y < nh; y++) 
@@ -67,7 +67,7 @@ void BlobDetector::ApplyMonochrome()
 	}
 }
 
-void BlobDetector::ApplyInversion()
+void ComponentLabelingBlobDetector::ApplyInversion()
 {
 	int nh = m_bitmapInfo->biHeight;
 	for(int y = 0; y < nh; y++) 
@@ -81,7 +81,7 @@ void BlobDetector::ApplyInversion()
 	}
 }
 
-void BlobDetector::ApplyGaussianFilter(int noise)
+void ComponentLabelingBlobDetector::ApplyGaussianFilter(int noise)
 {
 	IplImage* img = cvCreateImage(cvSize(m_bitmapInfo->biWidth, m_bitmapInfo->biHeight), IPL_DEPTH_8U, 3);
 	IplImage* tmp = cvCreateImage(cvSize(m_bitmapInfo->biWidth, m_bitmapInfo->biHeight), IPL_DEPTH_8U, 3);
@@ -120,12 +120,12 @@ void BlobDetector::ApplyGaussianFilter(int noise)
 	cvReleaseStructuringElement(&element2); // enta momtazz :Dloool
 }
 
-list<Blob> BlobDetector::DetectBlobs(BYTE* Buffer) 
+void ComponentLabelingBlobDetector::DetectBlobs(BYTE* Buffer,list<Blob>& blobList) 
 {
 	m_bmpBits = Buffer;
 	int nh = m_bitmapInfo->biHeight;
 	int nw = m_bitmapInfo->biWidth;
-	list<Blob> blobList;
+	//list<Blob> blobList;
 	BlobCount = -1; 
 	int C = 1, i,j;
 	int start;  
@@ -245,5 +245,13 @@ list<Blob> BlobDetector::DetectBlobs(BYTE* Buffer)
 		}
 	}
 
-	return blobList;
+}
+
+void ComponentLabelingBlobDetector::PreprocessBitmap()
+{
+#ifndef TW_CONFIG
+
+	ApplyMonochrome();
+	ApplyGaussianFilter(ApplicationManager::getSettings().getNoise());
+#endif
 }

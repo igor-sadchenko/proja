@@ -13,23 +13,17 @@ using namespace std;
 
 
 // Singleton
-class TwAgent
+	class TwAgent:public Singleton<TwAgent>
 {
 //SINGLETON(TwAgent)
-private: 
-	static TwAgent m_instance;
-	TwAgent()
+public: 
+	TwAgent():Singleton<TwAgent>()
 	{
 		InitializeWindowsMessages()  ; 
 	} ; 
-public: 
-	static TwAgent& getInstance(void)
-	{return m_instance;}
-	static TwAgent* getInstancePtr(void)
-	{return &m_instance;}
 
 public:
-	HHOOK hook2 ;
+	HHOOK m_hook ;
 
 	float m_xCamera;
 	float m_yCamera;
@@ -46,7 +40,7 @@ public:
 
 	~TwAgent()
 	{
-		UnhookWindowsHookEx(hook2);
+		UnhookWindowsHookEx(m_hook);
 	};
 	
 	void RaiseEvents(list<Blob> &currentBlobs ,list<Blob>& deletedBlobs);
