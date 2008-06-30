@@ -21,6 +21,9 @@ namespace TouchworkSDK
 		static public void NotifyOnTouch(ITouchable touchableControl)
 		{
 			WndProcHooker.HookWndProc(touchableControl);
+            
+            TouchMessage.InitializeTouchMessages(); 
+            
 		}
 
         /// <summary>
@@ -31,6 +34,7 @@ namespace TouchworkSDK
         static public void NotifyOnTouch(Control control, ITouchable callback)
         {
             WndProcHooker.HookWndProc(control, callback);
+            TouchMessage.InitializeTouchMessages(); 
         }
 
         /// <summary>
