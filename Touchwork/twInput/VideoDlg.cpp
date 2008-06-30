@@ -48,11 +48,11 @@ LRESULT CVideoDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	slider.m_hWnd = ::GetDlgItem(m_hWnd,IDC_SLIDER_BRIGHTNESS);
 	slider.SetRangeMin(0,FALSE);
 	slider.SetRangeMax(255,FALSE);
-	slider.SetPos(TwDetector::getInstance().GetBlobBrightness());
+	slider.SetPos(BlobDetector::m_Threshold);
 	CStatic ctrl_static;
 	ctrl_static.m_hWnd = ::GetDlgItem(m_hWnd,IDC_LABEL_Brightness);
 	wostringstream str ;
-	str<< TwDetector::getInstance().GetBlobBrightness();
+	str<< BlobDetector::m_Threshold;
 	ctrl_static.SetWindowText(str.str().c_str());
 
 	return TRUE;
@@ -203,9 +203,9 @@ LRESULT CVideoDlg::OnScroll( UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
 			slider.m_hWnd = (HWND)lParam;
 			CStatic ctrl_static;
 			ctrl_static.m_hWnd = ::GetDlgItem(m_hWnd,IDC_LABEL_Brightness);
-			TwDetector::getInstance().SetBlobBrightness( slider.GetPos());
+			BlobDetector::m_Threshold = slider.GetPos();
 			wostringstream str ;
-			str<< TwDetector::getInstance().GetBlobBrightness();
+			str<< BlobDetector::m_Threshold;
 			ctrl_static.SetWindowText(str.str().c_str());
 			
 		}

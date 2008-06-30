@@ -5,9 +5,6 @@ INIT_SINGLETON(TwDetector)
 
 void TwDetector::SetFormat( BITMAPINFOHEADER* pbmpinfo)
 {
-	if(m_blobDetector != NULL)
-		delete m_blobDetector;
-	m_blobDetector = new BlobDetector(pbmpinfo);
 }
 
 BlobDetector* TwDetector::GetBlobDetector()
@@ -15,13 +12,23 @@ BlobDetector* TwDetector::GetBlobDetector()
 	return TwDetector::m_blobDetector;
 }
 
-void TwDetector::SetBlobBrightness( int value )
+
+
+void TwDetector::Detect(BITMAPINFOHEADER* bmpinfo, BYTE* pdata ,list<Blob>& blobList)
 {
-	BlobDetector::s_Brightness = value;
+	BlobDetector* myblobDetector = new ComponentLabelingBlobDetector(bmpinfo);
+
+	//image processing
+	myblobDetector->InitializeBitmap(pdata);
+	myblobDetector->PreprocessBitmap();
+	
+	//detection
+	//thats copying a list!!!!!!!!!! 
+	myblobDetector->DetectBlobs(pdata,blobList);
+	delete myblobDetector;
 }
 
-
-int TwDetector::GetBlobBrightness()
+void TwDetector::Initialize()
 {
-	return BlobDetector::s_Brightness;
+
 }

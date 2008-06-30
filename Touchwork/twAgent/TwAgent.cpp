@@ -1,8 +1,6 @@
 #include "stdafx.h"
-//INIT_SINGLETON(TwAgent)
 
-TwAgent TwAgent::m_instance;
-
+INIT_SINGLETON(TwAgent)
 
 void TwAgent::InitializeWindowsMessages()
 {
@@ -76,16 +74,16 @@ int TwAgent::InitializeHookDll()
 	HMODULE hmod = LoadLibrary(TEXT("HookDLL.dll"));
 
 	//HHOOK hook1 = SetWindowsHookEx(WH_CALLWNDPROCRET,TWCallWndProc,hmod,NULL);	
-	hook2 = SetWindowsHookEx(WH_GETMESSAGE,TWGetMsgProc,hmod,NULL);	
+	m_hook = SetWindowsHookEx(WH_GETMESSAGE,TWGetMsgProc,hmod,NULL);	
 
-	if(hook2  == NULL)
+	if(m_hook  == NULL)
 	{
 		MessageBox(0,L"Hook failed",0,0);
 	}
 	else
 	{
 		MessageBox(0,L"Hook Succeeded" , 0 , 0 ) ; 
-		SetMasterWindow(hook2);
+		SetMasterWindow(m_hook);
 		//TWCallWndProc(0,0,0);
 	}
 

@@ -30,66 +30,38 @@ void ApplicationManager::SetTextConsoleHandle(HWND handle)
 void ApplicationManager::InitializeApplication()
 {
 
-	ifstream fin("config.txt");
-	fin>>m_settings;
-	ostringstream sout;
-	sout<<m_settings;
-	//MessageBoxA(0,sout.str().c_str(),0,0); 
-	m_twInput = TwInput::getInstancePtr();
-	m_twAgent = TwAgent::getInstancePtr();
-	m_twTracker = TwTracker::getInstancePtr();
-	//m_WindowsMessagesMgr = WindowsMessagesManager::getInstancePtr();
-	m_blobTracker = m_twTracker->GetBlobTracker();
-
-	//REMOVED THE COMMMENT FOR TESTING
-	m_twAgent->InitializeHookDll() ;
-
-	m_twInput->Start(this);
+	LoadSettings();
+// 	m_twInput = TwInput::getInstancePtr();
+// 	
+// 	m_twAgent = TwAgent::getInstancePtr();
+// 	m_twTracker = TwTracker::getInstancePtr();
+// 	m_twDetector = TwDetector::getInstancePtr();
+// 	
+	//m_twAgent->InitializeHookDll() ;
+	m_twTracker.Initialize();
+	m_twInput.Start(this);
 }
 
 
 void ApplicationManager::OnSampleArrived(BYTE* pdata,long size)
 {
 	//UpdateFramerates();
-	
-	//select one or more of the next
-	//DebugBreak();			
-	//Sleep(100);	//emulate slow/fast detection/tracking/agent
 	OnFrame(pdata,size);
 }
 
 void ApplicationManager::OnFrame(BYTE* pdata,int size)
 {
-
+	list<Blob>  blobList;
 	//-----detect
-	BlobDetector* myblobDetector = new BlobDetector(&m_bmpinfo);
+	m_twDetector.Detect(&m_bmpinfo, pdata, blobList);
 	
-	//image processing
-	myblobDetector->InitializeBitmap(pdata);
-	myblobDetector->ApplyMonochrome();
-	myblobDetector->ApplyGaussianFilter(m_settings.getNoise());
-
-	//detection
-	//thats copying a list!!!!!!!!!! 
-	list<Blob> blobList = myblobDetector->DetectBlobs(pdata);
+	//-----track
+	int k = m_twTracker.Track(&blobList );
 	
+	//------agent 
+	m_twAgent.RaiseEvents(m_twTracker.GetCurrentBlobs(),m_twTracker.GetDeletedBlobs());		
 
-
-//-----track
-	int k = m_blobTracker->UpdateBlobs( &blobList ); // dah fine .. its a pointer .. no copy constructors called
-
-	//------agent ... act ?
-		
-	m_twAgent->RaiseEvents(m_blobTracker->currentBlobs,m_blobTracker->deletedBlobs);				
-//	WriteLine(L"Number of Blobs: %d\r\n",m_blobTracker->currentBlobs.size());
-
-	WriteLine(L"\r\nIDs ");
-	list<Blob>::iterator itr;
-	for(itr = m_blobTracker->currentBlobs.begin() ; itr != m_blobTracker->currentBlobs.end(); itr++ )
-	{
-		WriteLine(L" - %d", itr->m_id);
-	}
-	delete myblobDetector;
+	DisplayDetectionResults();
 }
 
 void ApplicationManager::UpdateFramerates()
@@ -134,13 +106,42 @@ void ApplicationManager::OnScreenSizeChanges()
 {
 	//get camera size , and screen size and set the Agent mapping
 	
-	m_twAgent->m_xCamera = m_bmpinfo.biWidth;
-	m_twAgent->m_yCamera = m_bmpinfo.biHeight;
-	m_twAgent->m_xScreen = GetSystemMetrics(SM_CXSCREEN);
-	m_twAgent->m_yScreen = GetSystemMetrics(SM_CYSCREEN);
+	m_twAgent.m_xCamera = m_bmpinfo.biWidth;
+	m_twAgent.m_yCamera = m_bmpinfo.biHeight;
+	m_twAgent.m_xScreen = GetSystemMetrics(SM_CXSCREEN);
+	m_twAgent.m_yScreen = GetSystemMetrics(SM_CYSCREEN);
 
 		
-	m_twAgent->m_xScreenPerCamera = m_twAgent->m_xScreen / m_twAgent->m_xCamera;
-	m_twAgent->m_yScreenPerCamera = m_twAgent->m_yScreen / m_twAgent->m_yCamera;
+	m_twAgent.m_xScreenPerCamera = m_twAgent.m_xScreen / m_twAgent.m_xCamera;
+	m_twAgent.m_yScreenPerCamera = m_twAgent.m_yScreen / m_twAgent.m_yCamera;
+
+}
+
+void ApplicationManager::LoadSettings()
+{
+	ifstream fin("config.txt");
+	fin>>m_settings;
+	ostringstream sout;
+	sout<<m_settings;
+	//MessageBoxA(0,sout.str().c_str(),0,0);
+
+}
+
+TwSettings& ApplicationManager::getSettings()
+{
+	return ApplicationManager::getInstance().m_settings;
+}
+
+void ApplicationManager::DisplayDetectionResults()
+{
+	//WriteLine(L"Number of Blobs: %d\r\n",m_blobTracker->currentBlobs.size());
+	
+	WriteLine(L"\r\nIDs ");
+	list<Blob>::iterator itr;
+	for(itr = m_twTracker.GetCurrentBlobs().begin() ; itr != m_twTracker.GetCurrentBlobs().end(); itr++ )
+	{
+	WriteLine(L" - %d", itr->m_id);
+	}
+	//*/
 
 }
