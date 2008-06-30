@@ -101,9 +101,9 @@ namespace touch_simulator
 				}
 				else
 					HWnd = (IntPtr)Messages.targetWindow;
-				StringBuilder strBuilder = new StringBuilder();
-
-				//GetWindowText(HWnd, strBuilder, 100);
+				
+                StringBuilder strBuilder = new StringBuilder();
+                GetWindowText(HWnd, strBuilder, 100);
 				//Form1.s_txtMonitor.AppendText(HWnd + " - "+ strBuilder.ToString() +"\r\n");
 				//then unhide the simulator
 				//--done by the caller
