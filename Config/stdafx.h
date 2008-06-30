@@ -47,6 +47,7 @@
 #include <math.h>
 #include <exception>
 
+#define TW_CONFIG 1
 #include <cv.h>
 #include "Point.h"
 #include "Blob.h"
