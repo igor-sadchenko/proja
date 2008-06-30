@@ -10,14 +10,14 @@ void FrameListner::OnSampleArrived( BYTE*pdata,long size )
 
 void MonochromeListner::OnSampleArrived( BYTE*pdata,long size )
 {
-	BlobDetector detector(&m_bmpinfo);
+	ComponentLabelingBlobDetector detector(&m_bmpinfo);
 	detector.InitializeBitmap(pdata);
 	detector.ApplyMonochrome();
 }
 
 void NoiseRemovalListner::OnSampleArrived( BYTE*pdata,long size )
 {
-	BlobDetector detector(&m_bmpinfo);
+	ComponentLabelingBlobDetector detector(&m_bmpinfo);
 	detector.InitializeBitmap(pdata);
 	detector.ApplyGaussianFilter(g_settings.getNoise());
 }
