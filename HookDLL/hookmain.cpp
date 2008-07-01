@@ -3,7 +3,6 @@
 #include <atlwin.h>
 #include <string>
 #include <sstream>
-#include <set>
 #include <map>
 using namespace std;
 
@@ -77,14 +76,14 @@ void PostWindowMessages(MSG msg, HWND topLevelWindow)
 
 	if( msg.message == WM_TOUCH_DOWN )
 	{
-		if(hittest == HTCAPTION)												//The Touch_Down was on the title bar
+		if(hittest == HTCAPTION)															//The Touch_Down was on the title bar
 		{
 			PostMessage(topLevelWindow, WM_LBUTTONDOWN, msg.wParam, msg.lParam);
-			selectedHandles[topLevelWindow] = currentTouch;						//Update point on title bar
+			selectedHandles[topLevelWindow] = currentTouch;									//Update point on title bar
 		}
 		else
 		{
-			previousTouch[topLevelWindow] = currentTouch;						//First touch inside window
+			previousTouch[topLevelWindow] = currentTouch;									//First touch inside window
 		}
 	}
 	else if( msg.message == WM_TOUCH_UP ) 
@@ -92,7 +91,7 @@ void PostWindowMessages(MSG msg, HWND topLevelWindow)
 		if(hittest == HTCAPTION)
 		{
 			PostMessage(topLevelWindow, WM_LBUTTONUP, msg.wParam, msg.lParam);
-			selectedHandles.erase(topLevelWindow);								//This is supposed to be done by the caller
+			selectedHandles.erase(topLevelWindow);											//This is supposed to be done by the caller
 		}
 		else
 		{
@@ -362,35 +361,6 @@ LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 				}
 				break;
 		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	}
 	return CallNextHookEx(s_hook ,nCode, wParam, lParam);
 }
