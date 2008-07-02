@@ -19,21 +19,21 @@ namespace config {
 	///          the designers will not be able to interact properly with localized
 	///          resources associated with this form.
 	/// </summary>
-	public ref class Form_2_Highpass : public System::Windows::Forms::Form
+	public ref class FilterForm : public System::Windows::Forms::Form
 	{
 	private:
 		int* m_varSettings;
 		System::String^ m_formName;
 
 	public:
-		Form_2_Highpass(void)
+		FilterForm(void)
 		{
 			InitializeComponent();
 			//
 			//TODO: Add the constructor code here
 			//
 		}
-		Form_2_Highpass(int* varSettings, System::String^ name)
+		FilterForm(int* varSettings, System::String^ name)
 		{
 			m_varSettings = varSettings;
 			m_formName = name;
@@ -50,7 +50,7 @@ namespace config {
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		~Form_2_Highpass()
+		~FilterForm()
 		{
 			if (components)
 			{
@@ -98,7 +98,7 @@ namespace config {
 			this->trackBar1->Name = L"trackBar1";
 			this->trackBar1->Size = System::Drawing::Size(308, 45);
 			this->trackBar1->TabIndex = 1;
-			this->trackBar1->Scroll += gcnew System::EventHandler(this, &Form_2_Highpass::trackBar1_Scroll);
+			this->trackBar1->Scroll += gcnew System::EventHandler(this, &FilterForm::trackBar1_Scroll);
 			// 
 			// Form_2_Highpass
 			// 
@@ -109,8 +109,8 @@ namespace config {
 			this->Controls->Add(this->pictureBox1);
 			this->Name = L"Form_2_Highpass";
 			this->Text = L"Form_2_Highpass";
-			this->Load += gcnew System::EventHandler(this, &Form_2_Highpass::Form_2_Highpass_Load);
-			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &Form_2_Highpass::Form_2_Highpass_FormClosing);
+			this->Load += gcnew System::EventHandler(this, &FilterForm::Form_2_Highpass_Load);
+			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &FilterForm::Form_2_Highpass_FormClosing);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->trackBar1))->EndInit();
 			this->ResumeLayout(false);

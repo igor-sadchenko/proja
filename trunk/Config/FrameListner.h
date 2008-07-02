@@ -23,3 +23,15 @@ class NoiseRemovalListner: public SampleListener
 public:
 	void OnSampleArrived(BYTE*pdata,long size);
 };
+
+class CroppingListner: public SampleListener
+{
+public:
+	bool m_isCropMode;
+	int m_cropPoints;
+	CroppingListner(){
+		m_isCropMode = false;
+		m_cropPoints = 0;
+	}
+	void OnSampleArrived(BYTE*pdata,long size);
+};

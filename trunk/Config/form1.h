@@ -19,18 +19,19 @@ namespace config {
 	///          the designers will not be able to interact properly with localized
 	///          resources associated with this form.
 	/// </summary>
-	public ref class CropForm : public System::Windows::Forms::Form
+	public ref class MainForm : public System::Windows::Forms::Form
 	{
 	public:
-		CropForm(void)
+		MainForm(void)
 		{
 			InitializeComponent();
 			//
 			//TODO: Add the constructor code here
 			//
 		}
-		Form_2_Highpass^ m_formMonochrome;
-		Form_2_Highpass^ m_formNoise;
+		FilterForm^ m_formMonochrome;
+		FilterForm^ m_formNoise;
+		CropForm^ m_formCrop;
 		int preview_index ;
 	private: System::Windows::Forms::CheckBox^  chkFlipX;
 	public: 
@@ -41,7 +42,7 @@ namespace config {
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		~CropForm()
+		~MainForm()
 		{
 			if (components)
 			{
@@ -88,9 +89,9 @@ namespace config {
 			this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
 			this->pictureBox1->TabIndex = 0;
 			this->pictureBox1->TabStop = false;
-			this->pictureBox1->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &CropForm::pictureBox1_MouseMove);
-			this->pictureBox1->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &CropForm::pictureBox1_MouseDown);
-			this->pictureBox1->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &CropForm::pictureBox1_MouseUp);
+			this->pictureBox1->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::pictureBox1_MouseMove);
+			this->pictureBox1->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::pictureBox1_MouseDown);
+			this->pictureBox1->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::pictureBox1_MouseUp);
 			// 
 			// button1
 			// 
@@ -100,7 +101,7 @@ namespace config {
 			this->button1->TabIndex = 1;
 			this->button1->Text = L"start";
 			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &CropForm::button1_Click);
+			this->button1->Click += gcnew System::EventHandler(this, &MainForm::button1_Click);
 			// 
 			// textBox1
 			// 
@@ -127,7 +128,7 @@ namespace config {
 			this->chkFlipX->TabIndex = 4;
 			this->chkFlipX->Text = L"flip X";
 			this->chkFlipX->UseVisualStyleBackColor = true;
-			this->chkFlipX->CheckedChanged += gcnew System::EventHandler(this, &CropForm::chkFlipX_CheckedChanged);
+			this->chkFlipX->CheckedChanged += gcnew System::EventHandler(this, &MainForm::chkFlipX_CheckedChanged);
 			// 
 			// chkFlipY
 			// 
@@ -138,7 +139,7 @@ namespace config {
 			this->chkFlipY->TabIndex = 5;
 			this->chkFlipY->Text = L"flip Y";
 			this->chkFlipY->UseVisualStyleBackColor = true;
-			this->chkFlipY->CheckedChanged += gcnew System::EventHandler(this, &CropForm::chkFlipY_CheckedChanged);
+			this->chkFlipY->CheckedChanged += gcnew System::EventHandler(this, &MainForm::chkFlipY_CheckedChanged);
 			// 
 			// CropForm
 			// 
@@ -153,7 +154,7 @@ namespace config {
 			this->Controls->Add(this->pictureBox1);
 			this->Name = L"CropForm";
 			this->Text = L"CropForm-1";
-			this->Load += gcnew System::EventHandler(this, &CropForm::CropForm_Load);
+			this->Load += gcnew System::EventHandler(this, &MainForm::CropForm_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -185,10 +186,10 @@ namespace config {
 				 // Monochrome ...
 				 if (FAILED(g_video.AppendSampleGrabber( &g_Monochrome)))
 				 {
-					 MessageBox::Show(L"Couldnt append the Hi-Pass filter"); // edit the filter name
+					 MessageBox::Show(L"Couldnt append the Monochrome filter"); // edit the filter name
 					 return;
 				 }
-				 m_formMonochrome = gcnew Form_2_Highpass(g_settings.m_valNoise, L"Monochrome");
+				 m_formMonochrome = gcnew FilterForm(g_settings.m_valNoise, L"Monochrome");
 				 m_formMonochrome->Show(this);
 
 				 if(FAILED(g_video.AppendPreview( (HWND)m_formMonochrome->pictureBox1->Handle.ToPointer())))
@@ -203,7 +204,7 @@ namespace config {
 					 MessageBox::Show(L"Couldnt append the Hi-Pass filter"); // edit the filter name
 					 return;
 				 }
-				 m_formNoise = gcnew Form_2_Highpass(g_settings.m_valNoise, L"Noise Removal");
+				 m_formNoise = gcnew FilterForm(g_settings.m_valNoise, L"Noise Removal");
 				 m_formNoise->Show(this);
 
 				 if(FAILED(g_video.AppendPreview( (HWND)m_formNoise->pictureBox1->Handle.ToPointer())))
@@ -212,6 +213,20 @@ namespace config {
 					 return;
 				 }
 
+				 // Cropping ...
+				 if (FAILED(g_video.AppendSampleGrabber( &g_Crop)))
+				 {
+					 MessageBox::Show(L"Couldnt append the Cropping filter"); // edit the filter name
+					 return;
+				 }
+				 m_formCrop = gcnew CropForm(NULL);
+				 m_formCrop->Show(this);
+
+				 if(FAILED(g_video.AppendPreview( (HWND)m_formCrop->pictureBox1->Handle.ToPointer())))
+				 {
+					 MessageBox::Show(L"Crop Form init failed");
+					 return;
+				 }
 
 				 if(FAILED(g_video.Play()))
 				 {
