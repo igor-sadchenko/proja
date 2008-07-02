@@ -8,17 +8,17 @@ public:
 	static int m_GlobalID;
 
 public:
-	list<Blob> currentBlobs;
-	list<Blob> deletedBlobs;
+	list<twBlob> currentBlobs;
+	list<twBlob> deletedBlobs;
 
 public:
-	virtual int UpdateBlobs(list<Blob> * newBlobs) = 0;
+	virtual int UpdateBlobs(list<twBlob> * newBlobs) = 0;
 };
 
-class RangeBlobTracker:public BlobTracker
+class BeltRangeTracker:public BlobTracker
 {
 public:
-	RangeBlobTracker(void);
-	~RangeBlobTracker(void);
-	int UpdateBlobs(list<Blob> * newBlobs);
+	BeltRangeTracker(void);
+	~BeltRangeTracker(void);
+	int UpdateBlobs(list<twBlob> * newBlobs);
 };

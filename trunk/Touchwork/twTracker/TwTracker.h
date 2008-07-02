@@ -5,11 +5,11 @@ class TwTracker: public Singleton<TwTracker>
 {
 //SINGLETON(TwTracker)
 
-	BlobTracker* m_tracker;
+	BlobTracker* m_trackerImp;
 public:
 	BlobTracker* GetBlobTracker();
 	void Initialize();
-	list<Blob>& GetCurrentBlobs();
-	list<Blob>& GetDeletedBlobs();
-	int Track(list<Blob> * newBlobs);
+	list<twBlob>& GetCurrentBlobs();
+	list<twBlob>& GetDeletedBlobs();
+	int Track(list<twBlob> * newBlobs);
 };

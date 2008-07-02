@@ -34,7 +34,7 @@ LRESULT CVideoDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	
 
 	//---
-	ApplicationManager::txtConsole =GetDlgItem(IDC_Monitor);
+	ModuleManager::txtConsole =GetDlgItem(IDC_Monitor);
 	m_comb_cams.m_hWnd = GetDlgItem(IDC_COMBO1);
 	fillCamerasComb();
 
@@ -84,11 +84,11 @@ LRESULT CVideoDlg::OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, 
 
 LRESULT CVideoDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
-	ApplicationManager::WriteLine(L"b4 OK %d\r\n", SUCCEEDED(TwInput::getInstance().m_video.GetStatus()) );
+	ModuleManager::WriteLine(L"b4 OK %d\r\n", SUCCEEDED(TwInput::getInstance().m_video.GetStatus()) );
 	int sel = m_comb_cams.GetCurSel();
 	HWND hpicture_box = GetDlgItem(IDC_STATIC1);
 	
-	ApplicationManager::WriteLine(L"%d\r\n",m_pic_box.m_hWnd);
+	ModuleManager::WriteLine(L"%d\r\n",m_pic_box.m_hWnd);
 	if(FAILED( TwInput::getInstance().m_video.AppendSampleGrabber(TwInput::getInstance().m_SampleListener)))
 	{
 		show("Grabber init failed");
@@ -146,15 +146,15 @@ LRESULT CVideoDlg::OnCbnSelchangeCombo1(WORD wNotifyCode, WORD wID, HWND hWndCtl
 	{
 		if( FAILED(TwInput::getInstance().m_video.CaptureFromDevice(sel-1)))
 		{
-			ApplicationManager::WriteLine(L"camera device init failed\r\n");
+			ModuleManager::WriteLine(L"camera device init failed\r\n");
 		}
 	}
 	CButton fmtBtn;
 	fmtBtn.m_hWnd = ::GetDlgItem(m_hWnd,IDC_BTN_FORMAT);
-	ApplicationManager::WriteLine(L"b4 format %d\r\n", SUCCEEDED(TwInput::getInstance().m_video.GetStatus()) );
+	ModuleManager::WriteLine(L"b4 format %d\r\n", SUCCEEDED(TwInput::getInstance().m_video.GetStatus()) );
 	fmtBtn.EnableWindow((SUCCEEDED(TwInput::getInstance().m_video.GetFormatStructs(NULL,NULL,NULL))));
-	ApplicationManager::WriteLine(L"after format %d\r\n", SUCCEEDED(TwInput::getInstance().m_video.GetStatus()) );
-	ApplicationManager::getInstance().InitializeApplication();
+	ModuleManager::WriteLine(L"after format %d\r\n", SUCCEEDED(TwInput::getInstance().m_video.GetStatus()) );
+	ModuleManager::getInstance().InitializeApplication();
 	return 0;
 }
 
@@ -180,9 +180,9 @@ LRESULT CVideoDlg::OnDeviceChanged( UINT /*uMsg*/, WPARAM wParam, LPARAM /*lPara
 {
 	if(wParam == DBT_DEVICEARRIVAL || wParam == DBT_DEVICEREMOVECOMPLETE || wParam == DBT_DEVNODES_CHANGED)
 	{
-		ApplicationManager::WriteLine(L"device inserted, code= %x\r\n",wParam);	
+		ModuleManager::WriteLine(L"device inserted, code= %x\r\n",wParam);	
 		fillCamerasComb();
-		ApplicationManager::WriteLine(L"device inserted handled, code= %x\r\n",wParam);	
+		ModuleManager::WriteLine(L"device inserted handled, code= %x\r\n",wParam);	
 	}
 	return TRUE;
 }

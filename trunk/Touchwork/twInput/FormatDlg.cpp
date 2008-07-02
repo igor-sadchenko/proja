@@ -69,7 +69,7 @@ LRESULT CFormatDlg::OnScroll(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& 
 		TwInput::getInstance().m_video.GetFormatStructs(NULL,NULL,&fvals);
 		fvals[slider.GetDlgCtrlID() - IDC_SLIDER1] = slider.GetPos();
 		TwInput::getInstance().m_video.SetFormatStructs(&fvals);
-		ApplicationManager::WriteLine(L"%d\r\n",slider.GetPos());
+		ModuleManager::WriteLine(L"%d\r\n",slider.GetPos());
 	}
 	
 	}

@@ -120,7 +120,7 @@ void ComponentLabelingBlobDetector::ApplyGaussianFilter(int noise)
 	cvReleaseStructuringElement(&element2); // enta momtazz :Dloool
 }
 
-void ComponentLabelingBlobDetector::DetectBlobs(BYTE* Buffer,list<Blob>& blobList) 
+void ComponentLabelingBlobDetector::DetectBlobs(BYTE* Buffer,list<twBlob>& blobList) 
 {
 	m_bmpBits = Buffer;
 	int nh = m_bitmapInfo->biHeight;
@@ -211,9 +211,9 @@ void ComponentLabelingBlobDetector::DetectBlobs(BYTE* Buffer,list<Blob>& blobLis
 					 {
 						 BlobCount++;
 
-						 Blob current = Blob(BlobCount,twPoint((x_sum/all)/3, nh - y_sum/all));
+						 twBlob current = twBlob(BlobCount,twPoint((x_sum/all)/3, nh - y_sum/all));
 						 current.m_pointscount = all;
-						 list<Blob>::iterator itr;
+						 list<twBlob>::iterator itr;
 						 for(itr= blobList.begin() ; itr != blobList.end(); itr++ )
 						 {
 							if(itr->m_dist > current.m_dist)
@@ -252,6 +252,6 @@ void ComponentLabelingBlobDetector::PreprocessBitmap()
 #ifndef TW_CONFIG
 
 	ApplyMonochrome();
-	ApplyGaussianFilter(ApplicationManager::getSettings().getNoise());
+	ApplyGaussianFilter(ModuleManager::getSettings().getNoise());
 #endif
 }

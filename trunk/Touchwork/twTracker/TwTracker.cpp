@@ -4,26 +4,26 @@ INIT_SINGLETON(TwTracker)
 
 BlobTracker* TwTracker::GetBlobTracker()
 {
-	return m_tracker;
+	return m_trackerImp;
 }
 
 
 void TwTracker::Initialize()
 {
-	m_tracker = new RangeBlobTracker();
+	m_trackerImp = new BeltRangeTracker();
 }
 
-int TwTracker::Track( list<Blob> * newBlobs )
+int TwTracker::Track( list<twBlob> * newBlobs )
 {
-	return m_tracker->UpdateBlobs(newBlobs);
+	return m_trackerImp->UpdateBlobs(newBlobs);
 }
 
-list<Blob>& TwTracker::GetDeletedBlobs()
+list<twBlob>& TwTracker::GetDeletedBlobs()
 {
-	return m_tracker->deletedBlobs;
+	return m_trackerImp->deletedBlobs;
 }
 
-list<Blob>& TwTracker::GetCurrentBlobs()
+list<twBlob>& TwTracker::GetCurrentBlobs()
 {
-	return m_tracker->currentBlobs;
+	return m_trackerImp->currentBlobs;
 }
