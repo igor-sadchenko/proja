@@ -437,20 +437,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\VideoForm.h"
-			FileType="3"
-			>
-			<File
-				RelativePath=".\VideoForm.resx"
-				SubType="Designer"
-				>
-			</File>
-		</File>
-		<File
-			RelativePath=".\twConfig\VideoFormat.h"
-			>
-		</File>
 	</Files>
 	<Globals>
 		<Global

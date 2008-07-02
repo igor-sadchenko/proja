@@ -60,7 +60,7 @@ public:
 
 		UIAddChildWindowContainer(m_hWnd);
 
-		ApplicationManager::SetTextConsoleHandle(GetDlgItem(IDC_txtConsole));
+		ModuleManager::SetTextConsoleHandle(GetDlgItem(IDC_txtConsole));
 		m_videoDlg.Create(*this);
 		m_videoDlg.m_parent = *this;
 		return TRUE;
@@ -84,7 +84,7 @@ public:
 //		CAboutDlg dlg;
 //		dlg.DoModal();
 
-		ApplicationManager::WriteLine(L"Test\r\n");
+		ModuleManager::WriteLine(L"Test\r\n");
 		return 0;
 	}
 

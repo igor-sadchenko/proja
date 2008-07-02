@@ -27,6 +27,10 @@ public:
 
 	float m_xCamera;
 	float m_yCamera;
+	
+	float m_xCrop;
+	float m_yCrop;
+
 	float m_xScreen;
 	float m_yScreen;
 
@@ -37,17 +41,22 @@ public:
 
 	float m_xScreenPerCamera;
 	float m_yScreenPerCamera;
+	float m_xScreenPerCrop;
+	float m_yScreenPerCrop;
 
 	~TwAgent()
 	{
 		UnhookWindowsHookEx(m_hook);
 	};
 	
-	void RaiseEvents(list<Blob> &currentBlobs ,list<Blob>& deletedBlobs);
-	void NotifyWindowUnderBlob(Blob&,UINT messageType);
+	void RaiseEvents(list<twBlob> &currentBlobs ,list<twBlob>& deletedBlobs);
+	void NotifyWindowUnderBlob(twBlob&,UINT messageType);
 	void CameraToScreen(POINT&);
 	void UpdateScreenMetrics();
 	int InitializeHookDll() ; 
 	void InitializeWindowsMessages();
-
+	bool ClipPoint(POINT &);
+	void FlipPoint(POINT& pt);
+	void DrawScreenPoint(POINT pt);
+	void CropAreaToScreen( POINT& pt);
 };

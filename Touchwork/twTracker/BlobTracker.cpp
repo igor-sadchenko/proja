@@ -3,15 +3,15 @@ int BlobTracker::DIST_THRESHOLD = 100;
 int BlobTracker::MOVE_THRESHOLD = 5;
 int BlobTracker::m_GlobalID = 0;
 
-RangeBlobTracker::RangeBlobTracker(void)
+BeltRangeTracker::BeltRangeTracker(void)
 {
 }
 
-RangeBlobTracker::~RangeBlobTracker(void)
+BeltRangeTracker::~BeltRangeTracker(void)
 {
 }
 
-int RangeBlobTracker::UpdateBlobs(list<Blob> *newBlobs)
+int BeltRangeTracker::UpdateBlobs(list<twBlob> *newBlobs)
 {
 	deletedBlobs.clear(); //new frame, new blobs to delete
 
@@ -19,11 +19,11 @@ int RangeBlobTracker::UpdateBlobs(list<Blob> *newBlobs)
 	float minDist = INT_MAX;
 	float minBoundry, maxBoundry, diff;
 
-	list<Blob>::iterator match; // newBlob
-	Blob* newMatch;
+	list<twBlob>::iterator match; // newBlob
+	twBlob* newMatch;
 
-	list<Blob>::iterator nb; // newBlob
-	list<Blob>::iterator ob; // oldBlob
+	list<twBlob>::iterator nb; // newBlob
+	list<twBlob>::iterator ob; // oldBlob
 
 
 	for(ob = currentBlobs.begin(); ob != currentBlobs.end(); ob++)
@@ -77,7 +77,7 @@ int RangeBlobTracker::UpdateBlobs(list<Blob> *newBlobs)
 		else
 		{			
 			// New ..
-			list<Blob>::iterator itr;
+			list<twBlob>::iterator itr;
 			for(itr = currentBlobs.begin() ; itr != currentBlobs.end(); itr++ )
 			{
 				if(itr->m_dist > nb->m_dist)
@@ -85,7 +85,7 @@ int RangeBlobTracker::UpdateBlobs(list<Blob> *newBlobs)
 			}
 			nb->m_id = m_GlobalID++;
 			nb->m_checked = true;
-			currentBlobs.insert(itr,(Blob)(*nb));
+			currentBlobs.insert(itr,(twBlob)(*nb));
 		}
 	}
 

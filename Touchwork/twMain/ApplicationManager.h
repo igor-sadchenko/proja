@@ -1,6 +1,6 @@
 #pragma once
 // Singleton
-class ApplicationManager:public SampleListener, public Singleton<ApplicationManager>
+class ModuleManager:public SampleListener, public Singleton<ModuleManager>
 {
 	
 public:
@@ -9,13 +9,12 @@ public:
 	static HWND txtConsole;
 private:
 	
-	//WindowsMessagesManager* m_WindowsMessagesMgr;
 	TwInput m_twInput;
 	TwAgent m_twAgent;
 	TwTracker m_twTracker;
 	TwDetector m_twDetector;
 public:
-	TwSettings m_settings;
+	TwSettings m_twSettings;
 	
 
 

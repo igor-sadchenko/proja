@@ -3,7 +3,7 @@
 #include "Blob.h"
 #include <math.h>
 
-Blob::Blob(void)
+twBlob::twBlob(void)
 {
 	m_id = 0;
 	m_dist = -1;
@@ -16,7 +16,7 @@ Blob::Blob(void)
 	m_isMoved = false;
 }
 
-Blob::Blob(int id,twPoint center)
+twBlob::twBlob(int id,twPoint center)
 {
 	m_id = id;
 	m_dist = -1;
@@ -29,17 +29,17 @@ Blob::Blob(int id,twPoint center)
 	m_isMoved = false;
 }
 
-Blob::~Blob(void)
+twBlob::~twBlob(void)
 {
 }
 
-twPoint Blob::CalculateCenter()
+twPoint twBlob::CalculateCenter()
 {
 	//int i;
 	twPoint center;
 	return center;
 }
-void Blob::CalculateDist()
+void twBlob::CalculateDist()
 {
 	m_dist = sqrtf(m_center.m_x*m_center.m_x + m_center.m_y*m_center.m_y);
 }

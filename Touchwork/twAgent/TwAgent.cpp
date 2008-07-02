@@ -9,9 +9,9 @@ void TwAgent::InitializeWindowsMessages()
 	WM_TOUCH_MOVE = RegisterWindowMessageA( "WM_TOUCH_MOVE" ) ; 
 }
 
-void TwAgent::RaiseEvents( list<Blob> &currentBlobs ,list<Blob>& deletedBlobs )
+void TwAgent::RaiseEvents( list<twBlob> &currentBlobs ,list<twBlob>& deletedBlobs )
 {
-	list<Blob>::iterator itr;
+	list<twBlob>::iterator itr;
 	for(itr = currentBlobs.begin() ; itr != currentBlobs.end(); itr++ )
 	{
 		if (itr->m_isMoved)
@@ -33,12 +33,21 @@ void TwAgent::RaiseEvents( list<Blob> &currentBlobs ,list<Blob>& deletedBlobs )
 	}
 }
 
-void TwAgent::NotifyWindowUnderBlob(Blob& blob, UINT messageType)
+void TwAgent::NotifyWindowUnderBlob(twBlob& blob, UINT messageType)
 {
 	//get the blob place
 	POINT pt = blob.m_center.getPOINT();
+	//clip Point
+	if(ClipPoint(pt))
+		return;
+	//flip point
+	FlipPoint(pt);
 	//map it to the screen space
-	CameraToScreen(pt);
+	CropAreaToScreen(pt);
+
+	//draw a point ...
+	DrawScreenPoint(pt);
+
 	//locate the window under it
 	HWND hwnd = WindowFromPoint(pt);
 	if(hwnd)
@@ -56,17 +65,13 @@ void TwAgent::NotifyWindowUnderBlob(Blob& blob, UINT messageType)
 
 void TwAgent::CameraToScreen( POINT& pt)
 {
-
-	if(ApplicationManager::getInstance().m_settings.m_x_flip)
-	{
-		pt.x = m_xCamera - pt.x;
-	}
 	pt.x = pt.x * m_xScreenPerCamera;
-	if(ApplicationManager::getInstance().m_settings.m_y_flip)
-	{
-		pt.y = m_yCamera - pt.y;
-	}
 	pt.y = pt.y * m_yScreenPerCamera;
+}
+void TwAgent::CropAreaToScreen( POINT& pt)
+{
+	pt.x = pt.x * m_xScreenPerCrop;
+	pt.y = pt.y * m_yScreenPerCrop;
 }
 
 int TwAgent::InitializeHookDll()
@@ -87,7 +92,37 @@ int TwAgent::InitializeHookDll()
 		//TWCallWndProc(0,0,0);
 	}
 
-	//put unhook dih in other func ..destructor wala 7aga
-	//UnhookWindowsHookEx(hook1);
     return 0;
 }	
+
+bool TwAgent::ClipPoint( POINT & pt)
+{
+	RECT rc = ModuleManager::getSettings().m_Crop;
+	pt.x = pt.x - rc.left;
+	pt.y = pt.y - rc.top;
+	if(pt.x > rc.right || pt.y > rc.bottom)
+		return true;
+	else
+		return false;
+}
+
+void TwAgent::FlipPoint( POINT& pt )
+{
+	if(ModuleManager::getSettings().m_x_flip)
+	{
+		pt.x = m_xCrop - pt.x;
+	}
+
+	if(ModuleManager::getSettings().m_y_flip)
+	{
+		pt.y = m_yCrop - pt.y;
+	}
+}
+
+void TwAgent::DrawScreenPoint( POINT pt )
+{
+	HDC hdc = GetDC(NULL);
+	int r = 100;
+	Ellipse(hdc, pt.x - r , pt.y - r , pt.x + r, pt.y + r);
+	ReleaseDC(NULL, hdc);
+}

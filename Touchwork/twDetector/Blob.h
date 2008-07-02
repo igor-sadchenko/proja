@@ -1,6 +1,6 @@
 #pragma once
 #include "Point.h"
-class Blob
+class twBlob
 {
 //Attributes
 public:
@@ -15,9 +15,9 @@ public:
 
 //Methods
 public:
-	Blob(void);
-	Blob(int,twPoint);
-	~Blob(void);
+	twBlob(void);
+	twBlob(int,twPoint);
+	~twBlob(void);
 	twPoint CalculateCenter();
 	void CalculateDist();
 };

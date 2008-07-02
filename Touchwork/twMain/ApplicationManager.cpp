@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "VideoDlg.h"
 
-HWND ApplicationManager::txtConsole = 0;
-INIT_SINGLETON(ApplicationManager)
+HWND ModuleManager::txtConsole = 0;
+INIT_SINGLETON(ModuleManager)
 
-void ApplicationManager::WriteLine(TCHAR *szFormat, ...)
+void ModuleManager::WriteLine(TCHAR *szFormat, ...)
 {
 	TCHAR   szBuffer [1024] ;
 	va_list pArgList ;
@@ -22,12 +22,12 @@ void ApplicationManager::WriteLine(TCHAR *szFormat, ...)
 
 }
 
-void ApplicationManager::SetTextConsoleHandle(HWND handle)
+void ModuleManager::SetTextConsoleHandle(HWND handle)
 {
 	txtConsole = handle;
 }
 
-void ApplicationManager::InitializeApplication()
+void ModuleManager::InitializeApplication()
 {
 
 	LoadSettings();
@@ -43,15 +43,15 @@ void ApplicationManager::InitializeApplication()
 }
 
 
-void ApplicationManager::OnSampleArrived(BYTE* pdata,long size)
+void ModuleManager::OnSampleArrived(BYTE* pdata,long size)
 {
 	//UpdateFramerates();
 	OnFrame(pdata,size);
 }
 
-void ApplicationManager::OnFrame(BYTE* pdata,int size)
+void ModuleManager::OnFrame(BYTE* pdata,int size)
 {
-	list<Blob>  blobList;
+	list<twBlob>  blobList;
 	//-----detect
 	m_twDetector.Detect(&m_bmpinfo, pdata, blobList);
 	
@@ -64,7 +64,7 @@ void ApplicationManager::OnFrame(BYTE* pdata,int size)
 	DisplayDetectionResults();
 }
 
-void ApplicationManager::UpdateFramerates()
+void ModuleManager::UpdateFramerates()
 {
 	static float lasttime = 0.0f;
 	static float timespan = 0;
@@ -88,13 +88,13 @@ void ApplicationManager::UpdateFramerates()
 	}	
 }
 
-void ApplicationManager::OnFormatChanges( BITMAPINFOHEADER* pbmpinfo )
+void ModuleManager::OnFormatChanges( BITMAPINFOHEADER* pbmpinfo )
 {
 	SampleListener::OnFormatChanges(pbmpinfo);
 	if(m_bmpinfo.biCompression == BI_RGB && m_bmpinfo.biBitCount == 24)
 	{
 		TwDetector::getInstance().SetFormat(&m_bmpinfo);
-		ApplicationManager::WriteLine(TEXT("blob detector initialized\r\n"));
+		ModuleManager::WriteLine(TEXT("blob detector initialized\r\n"));
 	}
 	else
 		MessageBox(0,TEXT("this format is not Uncompressed RGB-24, choose another video"),0,0);
@@ -102,7 +102,7 @@ void ApplicationManager::OnFormatChanges( BITMAPINFOHEADER* pbmpinfo )
 	OnScreenSizeChanges();
 }
 
-void ApplicationManager::OnScreenSizeChanges()
+void ModuleManager::OnScreenSizeChanges()
 {
 	//get camera size , and screen size and set the Agent mapping
 	
@@ -111,33 +111,37 @@ void ApplicationManager::OnScreenSizeChanges()
 	m_twAgent.m_xScreen = GetSystemMetrics(SM_CXSCREEN);
 	m_twAgent.m_yScreen = GetSystemMetrics(SM_CYSCREEN);
 
+	m_twAgent.m_xCrop = m_twSettings.m_Crop.right - m_twSettings.m_Crop.left;
+	m_twAgent.m_yCrop = m_twSettings.m_Crop.bottom - m_twSettings.m_Crop.top;
 		
-	m_twAgent.m_xScreenPerCamera = m_twAgent.m_xScreen / m_twAgent.m_xCamera;
-	m_twAgent.m_yScreenPerCamera = m_twAgent.m_yScreen / m_twAgent.m_yCamera;
+ 	m_twAgent.m_xScreenPerCamera = m_twAgent.m_xScreen / m_twAgent.m_xCamera;
+ 	m_twAgent.m_yScreenPerCamera = m_twAgent.m_yScreen / m_twAgent.m_yCamera;
+	m_twAgent.m_xScreenPerCrop = m_twAgent.m_xScreen / m_twAgent.m_xCrop ;
+	m_twAgent.m_yScreenPerCrop = m_twAgent.m_yScreen / m_twAgent.m_yCrop ;
 
 }
 
-void ApplicationManager::LoadSettings()
+void ModuleManager::LoadSettings()
 {
 	ifstream fin("config.txt");
-	fin>>m_settings;
+	fin>>m_twSettings;
 	ostringstream sout;
-	sout<<m_settings;
+	sout<<m_twSettings;
 	//MessageBoxA(0,sout.str().c_str(),0,0);
 
 }
 
-TwSettings& ApplicationManager::getSettings()
+TwSettings& ModuleManager::getSettings()
 {
-	return ApplicationManager::getInstance().m_settings;
+	return ModuleManager::getInstance().m_twSettings;
 }
 
-void ApplicationManager::DisplayDetectionResults()
+void ModuleManager::DisplayDetectionResults()
 {
 	//WriteLine(L"Number of Blobs: %d\r\n",m_blobTracker->currentBlobs.size());
 	
 	WriteLine(L"\r\nIDs ");
-	list<Blob>::iterator itr;
+	list<twBlob>::iterator itr;
 	for(itr = m_twTracker.GetCurrentBlobs().begin() ; itr != m_twTracker.GetCurrentBlobs().end(); itr++ )
 	{
 	WriteLine(L" - %d", itr->m_id);

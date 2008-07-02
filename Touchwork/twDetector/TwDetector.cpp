@@ -9,12 +9,12 @@ void TwDetector::SetFormat( BITMAPINFOHEADER* pbmpinfo)
 
 BlobDetector* TwDetector::GetBlobDetector()
 {
-	return TwDetector::m_blobDetector;
+	return TwDetector::m_detectorImp;
 }
 
 
 
-void TwDetector::Detect(BITMAPINFOHEADER* bmpinfo, BYTE* pdata ,list<Blob>& blobList)
+void TwDetector::Detect(BITMAPINFOHEADER* bmpinfo, BYTE* pdata ,list<twBlob>& blobList)
 {
 	BlobDetector* myblobDetector = new ComponentLabelingBlobDetector(bmpinfo);
 

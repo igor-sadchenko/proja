@@ -14,7 +14,7 @@
 
 CAppModule _Module;
 
-ApplicationManager g_app;
+ModuleManager g_app;
 int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 {
 	CMessageLoop theLoop;
@@ -28,7 +28,7 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 		return 0;
 	}
 
-	ApplicationManager::getInstance().InitializeApplication();
+	ModuleManager::getInstance().InitializeApplication();
 
 	dlgMain.ShowWindow(nCmdShow);
 	
