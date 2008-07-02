@@ -19,6 +19,7 @@ FrameListner g_Listner;
 TwSettings g_settings;
 MonochromeListner g_Monochrome;
 NoiseRemovalListner g_Noise;
+CroppingListner g_Crop;
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
@@ -26,7 +27,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
                      int       nCmdShow)
 {
 
-	Application::Run(gcnew CropForm());
+	Application::Run(gcnew MainForm());
 	ofstream fout("config.txt");
 	fout<<g_settings;
  	return 0;

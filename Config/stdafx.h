@@ -67,8 +67,10 @@ extern  FrameListner g_Listner;
 //todo add here a global instance of the filter .. and copy it (without extern) to the main
 extern  MonochromeListner g_Monochrome;
 extern  NoiseRemovalListner g_Noise;
+extern	CroppingListner g_Crop;
 
 #include "FilterForm.h"
+#include "CropForm1.h"
 #include "form1.h"
 
 
