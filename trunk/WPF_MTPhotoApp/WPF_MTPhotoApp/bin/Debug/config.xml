@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<bbox ulX="0.000000" ulY="0.000000" lrX="1.000000" lrY="1.000000" />
+<screen>
+    <point X="295.000000" Y="14.000000" />
+    <point X="228.624695" Y="11.194764" />
+    <point X="151.393036" Y="11.298037" />
+    <point X="76.137375" Y="14.203094" />
+    <point X="8.138689" Y="21.637669" />
+    <point X="294.500000" Y="90.000000" />
+    <point X="231.654037" Y="86.005196" />
+    <point X="155.894974" Y="88.981842" />
+    <point X="81.903389" Y="91.554298" />
+    <point X="13.491169" Y="95.195313" />
+    <point X="288.628021" Y="156.941315" />
+    <point X="227.380508" Y="157.539169" />
+    <point X="157.065720" Y="163.067566" />
+    <point X="86.540833" Y="163.184387" />
+    <point X="21.580807" Y="162.580811" />
+    <point X="282.000000" Y="213.500000" />
+    <point X="225.417007" Y="218.500000" />
+    <point X="159.000000" Y="222.000000" />
+    <point X="95.380722" Y="222.382523" />
+    <point X="32.556038" Y="221.443970" />
+</screen>
+<filtergraph>
+    <dsvlcapture label="dsvlcapture0" />
+    <mono label="mono1" />
+    <smooth label="smooth2" />
+    <backgroundremove label="backgroundremove3">
+        <threshold value="8" />
+    </backgroundremove>
+    <rectify label="rectify4">
+        <level value="39" />
+    </rectify>
+</filtergraph>
