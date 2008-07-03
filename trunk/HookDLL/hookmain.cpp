@@ -24,16 +24,32 @@ map<HWND, POINT> previousTouch;
 DWORD  s_dwLastLTouchUp = ULONG_MAX;
 DWORD  s_dwDblClickMsecs = GetDoubleClickTime();
 HWND   s_hwndLastWindowHandle = 0;
- 
+
+
+UINT WM_TOUCH_UP;	
+UINT WM_TOUCH_DOWN;	
+UINT WM_TOUCH_MOVE;	
+
+LIB void SetMasterWindow(HHOOK hook)
+{
+	s_hook = hook;
+
+	WM_TOUCH_UP = RegisterWindowMessageA( "WM_TOUCH_UP" ) ;
+	WM_TOUCH_DOWN = RegisterWindowMessageA("WM_TOUCH_DOWN" ) ; 
+	WM_TOUCH_MOVE = RegisterWindowMessageA( "WM_TOUCH_MOVE" ) ; 
+}
+
 BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, PVOID fImpLoad) {
 
 	switch (fdwReason) {
 	  case DLL_PROCESS_ATTACH:
 		  // DLL is attaching to the address space of the current process.
 		  g_hinstDll = hinstDll;
+		  SetMasterWindow(s_hook);
 		  break;
 
 	  case DLL_THREAD_ATTACH:
+		  SetMasterWindow(s_hook);
 		  // A new thread is being created in the current process.
 		  break;
 
@@ -49,9 +65,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, PVOID fImpLoad) {
 }
 
 
-UINT WM_TOUCH_UP;	
-UINT WM_TOUCH_DOWN;	
-UINT WM_TOUCH_MOVE;	
 
 LIB LRESULT CALLBACK TWCallWndProc(int nCode, WPARAM wParam, LPARAM lParam )
 {
@@ -365,11 +378,3 @@ LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 	return CallNextHookEx(s_hook ,nCode, wParam, lParam);
 }
 
-LIB void SetMasterWindow(HHOOK hook)
-{
-	s_hook = hook;
-
-	WM_TOUCH_UP = RegisterWindowMessageA( "WM_TOUCH_UP" ) ;
-	WM_TOUCH_DOWN = RegisterWindowMessageA("WM_TOUCH_DOWN" ) ; 
-	WM_TOUCH_MOVE = RegisterWindowMessageA( "WM_TOUCH_MOVE" ) ; 
-}
