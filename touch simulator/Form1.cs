@@ -27,7 +27,6 @@ namespace touch_simulator
 			this.Opacity = 0.5;
 			timer1.Interval = 1000;
 			//test_form.Show();
-
 		}
 
 		private void frameTrackbar_Scroll(object sender, EventArgs e)
@@ -41,11 +40,6 @@ namespace touch_simulator
 				AddFrame();
 			pictureBox.Invalidate();
 			pictureBox.Update();
-
-		}
-
-		private void btnNew_Click(object sender, EventArgs e)
-		{
 
 		}
 
@@ -63,18 +57,19 @@ namespace touch_simulator
 			}
 		}
 
-
-
 		private void SimulateFrame()
 		{
 			if (chkNotifyChildren.Checked)
 			{
 				if (Messages.targetWindow == 0)
 					this.Visible = false;
+                IntPtr hwnd = IntPtr.Zero;
 				foreach (Blob b in m_blobs[frameTrackbar.Value])
 				{
-					Messages.SendToChildWindows(pictureBox, b);
-				}
+                    Point previousPos = GetPreviousPosition(b.id, frameTrackbar.Value);
+                    hwnd = Messages.SendToChildWindows(this.pictureBox, b, previousPos);
+                 }
+                Win32.RedrawWindow(hwnd, IntPtr.Zero, IntPtr.Zero, Win32.RDW_FRAME | Win32.RDW_INVALIDATE | Win32.RDW_UPDATENOW | Win32.RDW_ALLCHILDREN);
 				if (Messages.targetWindow == 0)
 					this.Visible = true;
 			}
@@ -85,8 +80,19 @@ namespace touch_simulator
 					Messages.SendToNextWindow(this, pictureBox, b);
 				}
 			}
-
 		}
+
+        private Point GetPreviousPosition(int id, int frameno)
+        {
+            if (frameno == 0)
+                return new Point(0, 0);
+            foreach (Blob b in m_blobs[frameno - 1])
+            {
+                if (b.id == id)
+                    return b.center;
+            }
+            return new Point(0,0);
+        }
 
 		private void timer1_Tick(object sender, EventArgs e)
 		{
@@ -161,7 +167,6 @@ namespace touch_simulator
 				Blob b2 = new Blob(b);
 				b2.type = TWMessagesType.WM_NONE;
 				m_blobs[i].AddLast(b);
-
 			}
 		}
 
@@ -171,7 +176,6 @@ namespace touch_simulator
 			{
 				m_currnetBlob.center = e.Location;
 				m_currnetBlob.type = TWMessagesType.WM_TOUCHMOVE;
-				
 				pictureBox.Invalidate();
 			}
 		}
@@ -284,18 +288,29 @@ namespace touch_simulator
 
 		private void chk_send_Mouse_CheckedChanged(object sender, EventArgs e)
 		{
-				Messages.send_Mouse_Messages = chk_send_Mouse.Checked;
+			Messages.send_Mouse_Messages = chk_send_Mouse.Checked;
 		}
 
 		private void btnSelectWnd_Click(object sender, EventArgs e)
 		{
 			window_slector f = new window_slector();
 			if (f.ShowDialog() == DialogResult.OK)
-				Messages.targetWindow = f.hwnd;
+				Messages.targetWindow = f._hwnd;
 		}
 
-		private void Form1_Load(object sender, EventArgs e)
-		{
-		}
+        private void chk_ScreenCoord_CheckedChanged(object sender, EventArgs e)
+        {
+            Messages.send_Screen_Coordinates = chk_ScreenCoord.Checked;
+        }
+
+        private void num_TimePerFrame_ValueChanged(object sender, EventArgs e)
+        {
+            timer1.Interval = (int) num_TimePerFrame.Value;
+        }
+
+        private void btn_Clear_Click(object sender, EventArgs e)
+        {
+            m_blobs = new List<LinkedList<Blob>>();
+        }
 	}
 }
