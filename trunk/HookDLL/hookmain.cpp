@@ -313,7 +313,7 @@ bool NonClient(LRESULT hittest)
 
 LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 {
-	if(nCode >= 0 )
+	if(nCode >= 0 & nCode == HC_ACTION)
 	{
 		map<HWND,POINT>::iterator _iter;
 		int _mode = 1;												//WindowMessages:0 , MouseMessages:1, NonClientMouseMessages:2
