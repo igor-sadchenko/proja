@@ -91,7 +91,7 @@ void PostWindowMessages(MSG msg, HWND topLevelWindow)
 	{
 		if(hittest == HTCAPTION)															//The Touch_Down was on the title bar
 		{
-			PostMessage(topLevelWindow, WM_LBUTTONDOWN, msg.wParam, msg.lParam);
+			PostMessage(topLevelWindow, WM_NCLBUTTONDOWN, msg.wParam, msg.lParam);
 			selectedHandles[topLevelWindow] = currentTouch;									//Update point on title bar
 		}
 		else
@@ -126,7 +126,7 @@ void PostWindowMessages(MSG msg, HWND topLevelWindow)
 		{
 			if(previousTouch.find(topLevelWindow) == previousTouch.end())					//No other touches elsewhere on the window
 			{																				//.. then perform an ordinary move
-				PostMessage(topLevelWindow, WM_NCMOUSEMOVE, msg.wParam | MK_LBUTTON, msg.lParam);
+				PostMessage(topLevelWindow, WM_MOUSEMOVE, MK_LBUTTON, msg.lParam);
 				selectedHandles[topLevelWindow] = currentTouch;								//Update the titlebar touch position
 			}
 			else
@@ -213,18 +213,18 @@ void PostMouseMessages(MSG msg)
 
 		if(bDoubleClick && msg.hwnd == s_hwndLastWindowHandle)					//Elapsed time does not exceed the double-click time-out value
 		{																		//NOTE: If that doesn't work, try posting an LButtonUP after the 
-			PostMessage(msg.hwnd, WM_LBUTTONDBLCLK , msg.wParam, msg.lParam);	//DoubleClick message
+			PostMessage(msg.hwnd, WM_LBUTTONDBLCLK , MK_LBUTTON, msg.lParam);	//DoubleClick message
 		}		
 		else
 		{
-			PostMessage(msg.hwnd, WM_LBUTTONUP, msg.wParam, msg.lParam);
+			PostMessage(msg.hwnd, WM_LBUTTONUP, MK_LBUTTON , msg.lParam);
 		}
 		s_dwLastLTouchUp = dwTick;
 		s_hwndLastWindowHandle = msg.hwnd;
 	}
 	else if( msg.message == WM_TOUCH_MOVE )
 	{
-		PostMessage(msg.hwnd,WM_MOUSEMOVE , msg.wParam | MK_LBUTTON, msg.lParam);
+		PostMessage(msg.hwnd,WM_MOUSEMOVE , MK_LBUTTON, msg.lParam);
 	}
 }
 
@@ -235,7 +235,7 @@ void PostNonClientMouseMessages(MSG msg)
 
 	if( msg.message ==  WM_TOUCH_DOWN )
 	{
-		PostMessage(msg.hwnd, WM_NCLBUTTONDOWN, msg.wParam, msg.lParam);
+		PostMessage(msg.hwnd, WM_NCLBUTTONDOWN, MK_LBUTTON, msg.lParam);
 	}
 	else if( msg.message == WM_TOUCH_UP ) 
 	{
@@ -244,18 +244,38 @@ void PostNonClientMouseMessages(MSG msg)
 
 		if(bDoubleClick && msg.hwnd == s_hwndLastWindowHandle)					
 		{																		
-			PostMessage(msg.hwnd, WM_NCLBUTTONDBLCLK , msg.wParam, msg.lParam);
+			PostMessage(msg.hwnd, WM_NCLBUTTONDBLCLK , MK_LBUTTON, msg.lParam);
 		}		
 		else
 		{
-			PostMessage(msg.hwnd, WM_NCLBUTTONUP, msg.wParam, msg.lParam);
+			switch(msg.wParam)
+			{
+			case HTMINBUTTON:
+				if(IsIconic(msg.hwnd))
+					PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_RESTORE, 0);
+				else
+					PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
+				break;
+			case HTMAXBUTTON:
+				if(IsZoomed(msg.hwnd))
+					PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_RESTORE, 0);
+				else
+					PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+				break;
+			case HTCLOSE:
+				PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_CLOSE, 0);
+				break;
+			default:
+				PostMessage(msg.hwnd, WM_LBUTTONUP, MK_LBUTTON, msg.lParam);
+				break;
+			}
 		}
 		s_dwLastLTouchUp = dwTick;
 		s_hwndLastWindowHandle = msg.hwnd;
 	}
 	else if( msg.message == WM_TOUCH_MOVE )
 	{
-		PostMessage(msg.hwnd,WM_NCMOUSEMOVE , msg.wParam | MK_LBUTTON, msg.lParam);
+		PostMessage(msg.hwnd,WM_NCMOUSEMOVE , MK_LBUTTON, msg.lParam);
 	}
 }
 
@@ -300,7 +320,7 @@ LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 		MSG* msg = (MSG*) lParam;
 
 		POINT touchSCord = GetTouchPoint(msg->hwnd, msg->lParam);	//Convert client coordinates to screen (takes LPARAM,return POINT struct)
-		HWND currentHandle = WindowFromPoint(touchSCord);			//Get the handle at the current touch position
+		HWND currentHandle = msg->hwnd; //WindowFromPoint(touchSCord);			//Get the handle at the current touch position
 		HWND topLevel = GetAncestor(currentHandle, GA_ROOTOWNER );	//Get Top Level Window of the current handle
 
 		if((msg->message == WM_TOUCH_DOWN || msg->message == WM_TOUCH_MOVE) && 
@@ -368,8 +388,7 @@ LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 			case 2:
 				{
 					twMsg.wParam = hittest;									//The result of hittest is placed in the wparam
-					twMsg.lParam = MAKELPARAM(touchSCord.x, touchSCord.y);	//Non client messages are sent in screen coordinates
-					twMsg.hwnd = currentHandle;								
+					//twMsg.lParam = MAKELPARAM(touchSCord.x, touchSCord.y);	//Non client messages are sent in screen coordinates			
 					PostNonClientMouseMessages(twMsg);
 				}
 				break;
