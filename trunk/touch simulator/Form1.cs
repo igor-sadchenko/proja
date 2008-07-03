@@ -69,7 +69,7 @@ namespace touch_simulator
                     Point previousPos = GetPreviousPosition(b.id, frameTrackbar.Value);
                     hwnd = Messages.SendToChildWindows(this.pictureBox, b, previousPos);
                  }
-                Win32.RedrawWindow(hwnd, IntPtr.Zero, IntPtr.Zero, Win32.RDW_FRAME | Win32.RDW_INVALIDATE | Win32.RDW_UPDATENOW | Win32.RDW_ALLCHILDREN);
+                //Win32.RedrawWindow(hwnd, IntPtr.Zero, IntPtr.Zero, Win32.RDW_FRAME | Win32.RDW_INVALIDATE | Win32.RDW_UPDATENOW | Win32.RDW_ALLCHILDREN);
 				if (Messages.targetWindow == 0)
 					this.Visible = true;
 			}
@@ -310,7 +310,10 @@ namespace touch_simulator
 
         private void btn_Clear_Click(object sender, EventArgs e)
         {
+            frameTrackbar.Value = 0;
             m_blobs = new List<LinkedList<Blob>>();
+            m_blobs.Add(new LinkedList<Blob>());
+            this.pictureBox.Invalidate();
         }
 	}
 }

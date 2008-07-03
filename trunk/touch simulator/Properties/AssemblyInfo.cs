@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("touch simulator")]
+[assembly: AssemblyTitle("Simulator (Rigid)")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("touch simulator")]
+[assembly: AssemblyProduct("Simulator (Rigid)")]
 [assembly: AssemblyCopyright("Copyright ©  2008")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("1e1fe90f-142e-4863-8539-a600ad782a3d")]
+[assembly: Guid("7815fc03-bb32-4d70-832a-ded3773dd4bf")]
 
 // Version information for an assembly consists of the following four values:
 //

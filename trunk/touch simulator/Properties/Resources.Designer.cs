@@ -59,5 +59,19 @@ namespace touch_simulator.Properties {
                 resourceCulture = value;
             }
         }
+        
+        internal static System.Drawing.Bitmap FinderGone1 {
+            get {
+                object obj = ResourceManager.GetObject("FinderGone1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap FinderHome1 {
+            get {
+                object obj = ResourceManager.GetObject("FinderHome1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

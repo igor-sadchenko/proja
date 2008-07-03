@@ -71,15 +71,17 @@ namespace touch_simulator
 				//map the points
 				POINT p = new POINT(blob.center.X, blob.center.Y);
 
-                if(send_Screen_Coordinates)
+                if (send_Screen_Coordinates)
                     ClientToScreen(sender.Handle, ref p);
                 else
                     MapWindowPoints(sender.Handle, HWnd, ref p, 1);
 
-				uint Msg = (uint)blob.type;
-				uint LParam = (uint)((p.Y << 16) | (p.X & 0x0000FFFF));
-				uint WParam = (uint)((blob.Pressure << 16) | (blob.id & 0x0000FFFF));
-				PostMessage(HWnd, Msg, WParam, LParam);
+                uint Msg = (uint)blob.type;
+                uint LParam = (uint)((p.Y << 16) | (p.X & 0x0000FFFF));
+                uint WParam = (uint)((blob.Pressure << 16) | (blob.id & 0x0000FFFF));
+
+                Win32.SetCursorPos(p.X, p.Y); 
+                PostMessage(HWnd, Msg, WParam, LParam);
 
 				if (send_Mouse_Messages)
 				{
@@ -125,7 +127,8 @@ namespace touch_simulator
 				uint Msg = (uint)blob.type;
 				uint LParam = (uint)((p.Y << 16) | (p.X & 0x0000FFFF));
 				uint WParam = (uint)((blob.Pressure << 16) | (blob.id & 0x0000FFFF));
-                
+
+                Win32.SetCursorPos(p.X, p.Y); 
 				PostMessage(HWnd, Msg, WParam, LParam);
 				if(send_Mouse_Messages)
 				{
