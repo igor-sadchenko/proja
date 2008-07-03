@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Windows.h>
+
 class twPoint
 {
 public:
@@ -11,4 +12,5 @@ public:
 	~twPoint(void);
 	twPoint(int x,int y);
 	POINT getPOINT();
+	bool operator < (twPoint) const;
 };

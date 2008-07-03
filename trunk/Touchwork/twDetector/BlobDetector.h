@@ -9,9 +9,7 @@ public:
 	BITMAPINFOHEADER* m_bitmapInfo;
 	int m_WidthBytes;
 	int BlobCount;
-	twPoint* Contour;
 	BYTE* m_bmpBits;
-
 	BYTE** m_bmpBitsLabel;
 	static int m_Threshold;
 public:

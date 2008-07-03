@@ -2,13 +2,14 @@
 #pragma comment (lib, "cxcore")
 
 #include "StdAfx.h"
+#include <set>
 
 int BlobDetector::m_Threshold = 145;
 
 ComponentLabelingBlobDetector::~ComponentLabelingBlobDetector(void)
 {
-	if(Contour)
-		delete[] Contour;
+	//if(Contour)
+	//	delete[] Contour;
 	if(m_bmpBitsLabel)
 	{
 		for(int i = 0; i < m_bitmapInfo->biHeight; i++)
@@ -25,7 +26,7 @@ ComponentLabelingBlobDetector::ComponentLabelingBlobDetector(BITMAPINFOHEADER* b
 	BlobCount = -1;
 	m_bitmapInfo = b;
 	m_WidthBytes = b->biWidth*3;
-	Contour = new twPoint[m_bitmapInfo->biHeight*m_bitmapInfo->biWidth];
+	//Contour = new twPoint[m_bitmapInfo->biHeight*m_bitmapInfo->biWidth];
 	m_bmpBitsLabel = new BYTE*[m_bitmapInfo->biHeight];
 	for(int i = 0; i < m_bitmapInfo->biHeight; i++)   
 		m_bmpBitsLabel[i] = new BYTE[m_bitmapInfo->biWidth];
@@ -125,11 +126,12 @@ void ComponentLabelingBlobDetector::DetectBlobs(BYTE* Buffer,list<twBlob>& blobL
 	m_bmpBits = Buffer;
 	int nh = m_bitmapInfo->biHeight;
 	int nw = m_bitmapInfo->biWidth;
-	//list<Blob> blobList;
 	BlobCount = -1; 
 	int C = 1, i,j;
 	int start;  
 	int x_sum = 0, y_sum = 0, all = 0;
+	set<twPoint> Contour;
+	set<twPoint>::iterator contour_iter;
 
 	//Initialization
 	for(i = 0; i < nh; i++)   
@@ -153,18 +155,16 @@ void ComponentLabelingBlobDetector::DetectBlobs(BYTE* Buffer,list<twBlob>& blobL
 				 {
 					 //Follow Contour Tracing Algo
 					 start = 7;
-					 int count = 0;
 					 int pixelx[] = {3,3,0,-3,-3,-3,0,3};
 					 int pixely[] = {0,1,1,1,0,-1,-1,-1};
 
-					 Contour[count].m_x = x;
-					 Contour[count].m_y = y;
-					 count++;
+					 twPoint p = twPoint(x,y);
+					 Contour.insert(p);
 					 
-					 while(count > 0)
+					 while(!Contour.empty())
 					 {
-						 count--;
-						 twPoint p = Contour[count];
+						 contour_iter = Contour.begin();
+						 twPoint p = (twPoint)*contour_iter;
 						 
 						 if(p.m_x < nw*3 && p.m_x >=0 && p.m_y < nh && p.m_y >=0)
 						 {
@@ -180,9 +180,7 @@ void ComponentLabelingBlobDetector::DetectBlobs(BYTE* Buffer,list<twBlob>& blobL
 										 (p.m_x + pixelx[k] >= 0) && (p.m_x + pixelx[k] < nw*3) &&
 										 m_bmpBitsLabel[p.m_y + pixely[k]][(p.m_x + pixelx[k])/3] == 0)
 									 {
-										 Contour[count].m_x = p.m_x + pixelx[k];
-										 Contour[count].m_y = p.m_y + pixely[k];
-										 count++;
+										 Contour.insert(twPoint(p.m_x + pixelx[k],p.m_y + pixely[k]));
 									 }
 									 else if((p.m_y + pixely[k] >= 0) && (p.m_y + pixely[k] < nh) &&(p.m_x + pixelx[k] >= 0) && (p.m_x + pixelx[k] < nw))
 									 {
@@ -202,6 +200,8 @@ void ComponentLabelingBlobDetector::DetectBlobs(BYTE* Buffer,list<twBlob>& blobL
 								 m_bmpBitsLabel[p.m_y][p.m_x/3] = -1;
 							 }
 						 }
+
+						 Contour.erase(p); //MAY CHANGE
 					 }
 
 					 //Increment C
