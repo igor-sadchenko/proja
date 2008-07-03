@@ -91,7 +91,7 @@ void PostWindowMessages(MSG msg, HWND topLevelWindow)
 	{
 		if(hittest == HTCAPTION)															//The Touch_Down was on the title bar
 		{
-			PostMessage(topLevelWindow, WM_NCLBUTTONDOWN, msg.wParam, msg.lParam);
+			PostMessage(topLevelWindow, WM_NCLBUTTONDOWN, MK_LBUTTON, msg.lParam);
 			selectedHandles[topLevelWindow] = currentTouch;									//Update point on title bar
 		}
 		else
@@ -103,7 +103,7 @@ void PostWindowMessages(MSG msg, HWND topLevelWindow)
 	{
 		if(hittest == HTCAPTION)
 		{
-			PostMessage(topLevelWindow, WM_LBUTTONUP, msg.wParam, msg.lParam);
+			PostMessage(topLevelWindow, WM_LBUTTONUP, MK_LBUTTON, msg.lParam);
 			selectedHandles.erase(topLevelWindow);											//This is supposed to be done by the caller
 		}
 		else
@@ -204,7 +204,7 @@ void PostMouseMessages(MSG msg)
 
 	if( msg.message ==  WM_TOUCH_DOWN )
 	{
-		PostMessage(msg.hwnd, WM_LBUTTONDOWN, msg.wParam, msg.lParam);
+		PostMessage(msg.hwnd, WM_LBUTTONDOWN, MK_LBUTTON, msg.lParam);
 	}
 	else if( msg.message == WM_TOUCH_UP ) 
 	{
