@@ -107,9 +107,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Finder.cur" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="FinderGone1.bmp" />
   </ItemGroup>
   <ItemGroup>

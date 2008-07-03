@@ -666,6 +666,9 @@ namespace touch_simulator
 		[DllImport("user32.dll")]
 		public static extern int RedrawWindow(IntPtr hWnd, IntPtr lprcUpdate, IntPtr hrgnUpdate, uint flags);
 
+        [DllImport("user32.dll")]
+        public static extern bool SetCursorPos(long xPos, long yPos);
+
 		#endregion Windows
 
 		#region GDI - gdi32.dll
