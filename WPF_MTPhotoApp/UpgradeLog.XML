@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="WPF_MTPhotoApp">
+</Property><Property Name="Solution File" Value="E:\MyDocuments\Desktop\WPF_MTPhotoApp\WPF_MTPhotoApp.sln">
+</Property><Property Name="User Options File" Value="E:\MyDocuments\Desktop\WPF_MTPhotoApp\WPF_MTPhotoApp.suo">
+</Property><Property Name="Date" Value="Thursday, June 12, 2008">
+</Property><Property Name="Time" Value="1:59 AM">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="WPF_MTPhotoApp.sln" Description="File successfully backed up as E:\MyDocuments\Desktop\WPF_MTPhotoApp\Backup\WPF_MTPhotoApp.sln">
+</Event><Event ErrorLevel="0" Project="" Source="WPF_MTPhotoApp.suo" Description="File successfully backed up as E:\MyDocuments\Desktop\WPF_MTPhotoApp\Backup\WPF_MTPhotoApp.suo">
+</Event><Event ErrorLevel="0" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\WPF_MTPhotoApp.csproj" Description="Project file successfully backed up as E:\MyDocuments\Desktop\WPF_MTPhotoApp\Backup\WPF_MTPhotoApp\WPF_MTPhotoApp.csproj">
+</Event><Event ErrorLevel="0" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\App.xaml.cs" Description="File successfully backed up as E:\MyDocuments\Desktop\WPF_MTPhotoApp\Backup\WPF_MTPhotoApp\App.xaml.cs">
+</Event><Event ErrorLevel="0" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\PhotoApp.xaml.cs" Description="File successfully backed up as E:\MyDocuments\Desktop\WPF_MTPhotoApp\Backup\WPF_MTPhotoApp\PhotoApp.xaml.cs">
+</Event><Event ErrorLevel="0" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\Properties\AssemblyInfo.cs" Description="File successfully backed up as E:\MyDocuments\Desktop\WPF_MTPhotoApp\Backup\WPF_MTPhotoApp\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\Properties\Resources.cs" Description="File successfully backed up as E:\MyDocuments\Desktop\WPF_MTPhotoApp\Backup\WPF_MTPhotoApp\Properties\Resources.cs">
+</Event><Event ErrorLevel="0" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\Properties\Settings.cs" Description="File successfully backed up as E:\MyDocuments\Desktop\WPF_MTPhotoApp\Backup\WPF_MTPhotoApp\Properties\Settings.cs">
+</Event><Event ErrorLevel="0" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\TouchCanvas.cs" Description="File successfully backed up as E:\MyDocuments\Desktop\WPF_MTPhotoApp\Backup\WPF_MTPhotoApp\TouchCanvas.cs">
+</Event><Event ErrorLevel="0" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\TouchData.cs" Description="File successfully backed up as E:\MyDocuments\Desktop\WPF_MTPhotoApp\Backup\WPF_MTPhotoApp\TouchData.cs">
+</Event><Event ErrorLevel="0" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\TouchEventArgs.cs" Description="File successfully backed up as E:\MyDocuments\Desktop\WPF_MTPhotoApp\Backup\WPF_MTPhotoApp\TouchEventArgs.cs">
+</Event><Event ErrorLevel="0" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\TouchFramework.cs" Description="File successfully backed up as E:\MyDocuments\Desktop\WPF_MTPhotoApp\Backup\WPF_MTPhotoApp\TouchFramework.cs">
+</Event><Event ErrorLevel="0" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\TouchImage.cs" Description="File successfully backed up as E:\MyDocuments\Desktop\WPF_MTPhotoApp\Backup\WPF_MTPhotoApp\TouchImage.cs">
+</Event><Event ErrorLevel="0" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\TouchVideo.cs" Description="File successfully backed up as E:\MyDocuments\Desktop\WPF_MTPhotoApp\Backup\WPF_MTPhotoApp\TouchVideo.cs">
+</Event><Event ErrorLevel="0" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\Properties\Settings.settings" Description="File successfully backed up as E:\MyDocuments\Desktop\WPF_MTPhotoApp\Backup\WPF_MTPhotoApp\Properties\Settings.settings">
+</Event><Event ErrorLevel="0" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\Properties\Resources.resx" Description="File successfully backed up as E:\MyDocuments\Desktop\WPF_MTPhotoApp\Backup\WPF_MTPhotoApp\Properties\Resources.resx">
+</Event><Event ErrorLevel="0" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\App.xaml" Description="File successfully backed up as E:\MyDocuments\Desktop\WPF_MTPhotoApp\Backup\WPF_MTPhotoApp\App.xaml">
+</Event><Event ErrorLevel="0" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\PhotoApp.xaml" Description="File successfully backed up as E:\MyDocuments\Desktop\WPF_MTPhotoApp\Backup\WPF_MTPhotoApp\PhotoApp.xaml">
+</Event><Event ErrorLevel="0" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\WPF_MTPhotoApp.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\WPF_MTPhotoApp.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="WPF_MTPhotoApp.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="WPF_MTPhotoApp.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="WPF_MTPhotoApp" Source="WPF_MTPhotoApp\WPF_MTPhotoApp.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>
