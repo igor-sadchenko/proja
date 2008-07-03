@@ -33,7 +33,9 @@ namespace touch_simulator
 	{
         
 		public static bool send_Mouse_Messages = false;  // change the message box if u changed this or add a loader
+        public static bool send_Screen_Coordinates = false;  // change the message box if u changed this or add a loader
 		public static int targetWindow = 0;
+
 		public static uint TouchToMouse(uint msg)
 		{
 			uint ret = TWMessagesType.WM_NONE;
@@ -54,6 +56,7 @@ namespace touch_simulator
 			
 			return ret;
 		}
+
 		public static void SendToNextWindow(Form sender,Control pointContainer ,Blob blob)
 		{
 			if (blob.type >= TWMessagesType.WM_TOUCH_FIRST )
@@ -67,12 +70,17 @@ namespace touch_simulator
 					HWnd = (IntPtr)Messages.targetWindow;
 				//map the points
 				POINT p = new POINT(blob.center.X, blob.center.Y);
-				MapWindowPoints(sender.Handle, HWnd, ref p, 1);
+
+                if(send_Screen_Coordinates)
+                    ClientToScreen(sender.Handle, ref p);
+                else
+                    MapWindowPoints(sender.Handle, HWnd, ref p, 1);
 
 				uint Msg = (uint)blob.type;
 				uint LParam = (uint)((p.Y << 16) | (p.X & 0x0000FFFF));
 				uint WParam = (uint)((blob.Pressure << 16) | (blob.id & 0x0000FFFF));
 				PostMessage(HWnd, Msg, WParam, LParam);
+
 				if (send_Mouse_Messages)
 				{
 					uint WParam2  = 0;
@@ -84,7 +92,7 @@ namespace touch_simulator
 			}
 		}
 
-		public static void SendToChildWindows(Control sender, Blob blob)
+		public static IntPtr SendToChildWindows(Control sender, Blob blob, POINT previousPosition)
 		{
 			if (blob.type >= TWMessagesType.WM_TOUCH_FIRST)
 			{
@@ -101,47 +109,66 @@ namespace touch_simulator
 				}
 				else
 					HWnd = (IntPtr)Messages.targetWindow;
-				
+
                 StringBuilder strBuilder = new StringBuilder();
                 GetWindowText(HWnd, strBuilder, 100);
-				//Form1.s_txtMonitor.AppendText(HWnd + " - "+ strBuilder.ToString() +"\r\n");
-				//then unhide the simulator
-				//--done by the caller
+                Form1.s_txtMonitor.AppendText(HWnd + " - "+ strBuilder.ToString() +"\r\n");
+
 				//map the points
 				POINT p = new POINT(blob.center.X, blob.center.Y);
-				MapWindowPoints(sender.Handle, HWnd, ref p, 1);
+
+                if(send_Screen_Coordinates)
+                    ClientToScreen(sender.Handle, ref p);
+                else
+                    MapWindowPoints(sender.Handle, HWnd, ref p, 1);
 
 				uint Msg = (uint)blob.type;
 				uint LParam = (uint)((p.Y << 16) | (p.X & 0x0000FFFF));
 				uint WParam = (uint)((blob.Pressure << 16) | (blob.id & 0x0000FFFF));
+                
 				PostMessage(HWnd, Msg, WParam, LParam);
 				if(send_Mouse_Messages)
 				{
 					uint WParam2 = 0;
-					if (blob.type == TWMessagesType.WM_TOUCHMOVE)
-						WParam2 = 0x0001;
+
+                    //Modified for rigid.. send fake down in case of drag & up
+                    if (blob.type == TWMessagesType.WM_TOUCHMOVE)
+                    {
+                        p = new POINT(previousPosition.X, previousPosition.Y);
+                        if (p.X - blob.center.X != 0 || p.Y - blob.center.Y != 0)
+                        {
+                            ClientToScreen(sender.Handle, ref p);
+                            uint FakeLParam = (uint)((p.Y << 16) | (p.X & 0x0000FFFF));
+                            PostMessage(HWnd, TWMessagesType.WM_LBUTTONDOWN, WParam, FakeLParam);
+                            WParam2 = 0x0001;
+                        }
+                    }
+                    else if (blob.type == TWMessagesType.WM_TOUCHUP)
+                    {
+                        PostMessage(HWnd, TWMessagesType.WM_LBUTTONDOWN, WParam2, LParam);
+                    }
 					uint mouse_msg = TouchToMouse(blob.type);
 					PostMessage(HWnd, mouse_msg, WParam2, LParam);
 				}
+                Win32.ReleaseCapture();
+                return HWnd;
 			}
-		}
+            return IntPtr.Zero;
+        }
 
-		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        #region User32 DLL Importing
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
 		
 		[DllImport("user32.dll", SetLastError = true)]
-		public extern static int SendMessage(
-			IntPtr hwnd, uint msg, uint wParam, uint lParam);
+		public extern static int SendMessage(IntPtr hwnd, uint msg, uint wParam, uint lParam);
 
 		[return: MarshalAs(UnmanagedType.Bool)]
 		[DllImport("user32.dll", SetLastError = true)]
-		static extern bool PostMessage(IntPtr hWnd, uint Msg, uint wParam,
-		  uint lParam);
-
+		static extern bool PostMessage(IntPtr hWnd, uint Msg, uint wParam,uint lParam);
 
 		[DllImport("user32.dll", SetLastError = true)]
-		public extern static IntPtr GetNextWindow(
-			IntPtr hwnd, uint wCmd);
+		public extern static IntPtr GetNextWindow(IntPtr hwnd, uint wCmd);
 
 		[DllImport("user32.dll", SetLastError = true)]
 		static extern IntPtr GetWindow(IntPtr hWnd, uint uCmd);
@@ -154,18 +181,6 @@ namespace touch_simulator
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern uint RegisterWindowMessage(string lpString);
-
-
-		enum GetWindow_Cmd : uint
-		{
-			GW_HWNDFIRST = 0,
-			GW_HWNDLAST = 1,
-			GW_HWNDNEXT = 2,
-			GW_HWNDPREV = 3,
-			GW_OWNER = 4,
-			GW_CHILD = 5,
-			GW_ENABLEDPOPUP = 6
-		}
 
 		[DllImport("user32.dll", SetLastError = true)]
 		public static extern int MapWindowPoints(IntPtr hwndFrom, IntPtr hwndTo, ref POINT lpPoints, [MarshalAs(UnmanagedType.U4)] int cPoints);
@@ -193,6 +208,16 @@ namespace touch_simulator
 			}
 		}
 
-
-	}
+        enum GetWindow_Cmd : uint
+        {
+            GW_HWNDFIRST = 0,
+            GW_HWNDLAST = 1,
+            GW_HWNDNEXT = 2,
+            GW_HWNDPREV = 3,
+            GW_OWNER = 4,
+            GW_CHILD = 5,
+            GW_ENABLEDPOPUP = 6
+        }
+        #endregion
+    }
 }

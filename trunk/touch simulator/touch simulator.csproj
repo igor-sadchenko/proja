@@ -92,6 +92,7 @@
     <Compile Include="testForm.Designer.cs">
       <DependentUpon>testForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Win32.cs" />
     <Compile Include="window slector.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -104,6 +105,15 @@
       <Project>{66E10586-2B33-4A53-92C7-7DA6FF0F8415}</Project>
       <Name>TouchworkNet</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Finder.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FinderGone1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FinderHome1.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -32,7 +32,7 @@ namespace touch_simulator
 		public void Draw(Graphics g, Brush brush)
 		{
 			int radius = Pressure;
-			g.FillEllipse(brush, center.X-radius, center.Y - radius, 2*radius , 2*radius);
+			g.FillEllipse(brush, center.X - radius, center.Y - radius, 2*radius , 2*radius);
 		}
 
 		public bool ContainsPoint(Point p)
