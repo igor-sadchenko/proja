@@ -49,7 +49,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\OpenCV\cv\include&quot;;twTracker;res;twInput;twDetector;twAgent;twMain;media;utility;twConfig"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\OpenCV\cv\include&quot;;twTracker;res;twInput;twDetector;twAgent;twMain;media;utility;twConfig;vld"
 				PreprocessorDefinitions="WIN32;_WINDOWS;STRICT;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -384,6 +384,14 @@
 			>
 			<File
 				RelativePath=".\utility\singleton.h"
+				>
+			</File>
+			<File
+				RelativePath=".\vld\vld.h"
+				>
+			</File>
+			<File
+				RelativePath=".\vld\vldapi.h"
 				>
 			</File>
 		</Filter>

@@ -3,6 +3,9 @@
 
 #include "stdafx.h"
 
+//detect leaks
+#include "vld.h"
+
 #include <atlframe.h>
 #include <atlctrls.h>
 #include <atldlgs.h>
