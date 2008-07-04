@@ -21,4 +21,5 @@ public:
 	BeltRangeTracker(void);
 	~BeltRangeTracker(void);
 	int UpdateBlobs(list<twBlob> * newBlobs);
+	
 };

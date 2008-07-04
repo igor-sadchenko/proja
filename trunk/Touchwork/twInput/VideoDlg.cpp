@@ -75,9 +75,10 @@ LRESULT CVideoDlg::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 LRESULT CVideoDlg::OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
 	ShowWindow(SW_HIDE);
+	ModuleManager::getInstance().FinalizeApplication();
 	CloseDialog(0);
 
-	//DestroyWindow();
+	DestroyWindow();
 
 	return 0;
 }
@@ -154,7 +155,6 @@ LRESULT CVideoDlg::OnCbnSelchangeCombo1(WORD wNotifyCode, WORD wID, HWND hWndCtl
 	ModuleManager::WriteLine(L"b4 format %d\r\n", SUCCEEDED(TwInput::getInstance().m_video.GetStatus()) );
 	fmtBtn.EnableWindow((SUCCEEDED(TwInput::getInstance().m_video.GetFormatStructs(NULL,NULL,NULL))));
 	ModuleManager::WriteLine(L"after format %d\r\n", SUCCEEDED(TwInput::getInstance().m_video.GetStatus()) );
-	ModuleManager::getInstance().InitializeApplication();
 	return 0;
 }
 

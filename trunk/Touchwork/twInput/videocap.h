@@ -82,6 +82,7 @@ namespace Video
 		void FreeMediaType(AM_MEDIA_TYPE& mt);
 	public:
 		CVideoCapture();
+		~CVideoCapture();
 		HRESULT GetCaptureDevices(EnumFunc,void*);
 		HRESULT CaptureFromDevice(UINT);
 		HRESULT CaptureFromFile(LPTSTR);

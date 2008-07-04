@@ -27,3 +27,9 @@ list<twBlob>& TwTracker::GetCurrentBlobs()
 {
 	return m_trackerImp->currentBlobs;
 }
+
+void TwTracker::DeInitialize()
+{
+	if(m_trackerImp )
+		delete m_trackerImp;
+}

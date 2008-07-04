@@ -94,18 +94,10 @@ void ComponentLabelingBlobDetector::ApplyGaussianFilter(int noise)
 	//img->imageData = (char*) m_bmpBits;
 	cvSetData(img, m_bmpBits, m_WidthBytes);
 
-//	cvSmooth(img, img, CV_GAUSSIAN, 7, 7, 0, 0 );
-//	cvSub(img, tmp, img);
-
 	cvErode(img, img, element, 1);
 	cvSmooth(img, img, CV_GAUSSIAN, 11, 11, 0, 0 );
 	cvDilate(img, img, element, 1);
-	/*
-	cvErode(img, img, element, 2);
-	cvSmooth(img, img, CV_GAUSSIAN, 11, 11, 0, 0 );
-	cvDilate(img, img, element2, 1);
-	cvDilate(img, img, element, 1);
-*/
+
 	cvThreshold(img, img, noise, 255, CV_THRESH_TOZERO); 
 
 	//m_bmpBits = (BYTE*) dst->imageData;
@@ -254,4 +246,10 @@ void ComponentLabelingBlobDetector::PreprocessBitmap()
 	ApplyMonochrome();
 	ApplyGaussianFilter(ModuleManager::getSettings().getNoise());
 #endif
+}
+
+
+BlobDetector::~BlobDetector()
+{
+
 }

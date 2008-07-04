@@ -17,9 +17,13 @@ void ModuleManager::WriteLine(TCHAR *szFormat, ...)
 	::SendMessage (txtConsole, EM_REPLACESEL, FALSE, (LPARAM) szBuffer) ;
 	::SendMessage (txtConsole, EM_SCROLLCARET, 0, 0) ;
 	CEdit ctrl(txtConsole);
-	if(ctrl.GetLineCount() > 200)
-		ctrl.Clear();
+	if(::IsWindow(txtConsole) && ctrl.GetLineCount() > 200)
+	{
+		::SendMessage (txtConsole, EM_SETSEL, (WPARAM) 0, (LPARAM) -1) ;
+		::SendMessage (txtConsole, EM_REPLACESEL, FALSE, (LPARAM) szBuffer) ;
+		::SendMessage (txtConsole, EM_SCROLLCARET, 0, 0) ;
 
+	}
 }
 
 void ModuleManager::SetTextConsoleHandle(HWND handle)
@@ -31,13 +35,8 @@ void ModuleManager::InitializeApplication()
 {
 
 	LoadSettings();
-// 	m_twInput = TwInput::getInstancePtr();
-// 	
-// 	m_twAgent = TwAgent::getInstancePtr();
-// 	m_twTracker = TwTracker::getInstancePtr();
-// 	m_twDetector = TwDetector::getInstancePtr();
-// 	
-	//m_twAgent->InitializeHookDll() ;
+
+	//m_twAgent.InitializeHookDll() ;
 	m_twTracker.Initialize();
 	m_twInput.Start(this);
 }
@@ -61,7 +60,7 @@ void ModuleManager::OnFrame(BYTE* pdata,int size)
 	//------agent 
 	m_twAgent.RaiseEvents(m_twTracker.GetCurrentBlobs(),m_twTracker.GetDeletedBlobs());		
 
-	DisplayDetectionResults();
+	DisplayDetectionResults(blobList);
 }
 
 void ModuleManager::UpdateFramerates()
@@ -127,7 +126,7 @@ void ModuleManager::LoadSettings()
 	fin>>m_twSettings;
 	ostringstream sout;
 	sout<<m_twSettings;
-	//MessageBoxA(0,sout.str().c_str(),0,0);
+	MessageBoxA(0,sout.str().c_str(),0,0);
 
 }
 
@@ -136,16 +135,24 @@ TwSettings& ModuleManager::getSettings()
 	return ModuleManager::getInstance().m_twSettings;
 }
 
-void ModuleManager::DisplayDetectionResults()
+void ModuleManager::DisplayDetectionResults(list<twBlob> & blobList)
 {
-	//WriteLine(L"Number of Blobs: %d\r\n",m_blobTracker->currentBlobs.size());
+	WriteLine(L"\r\nN: %d - ",blobList.size());
 	
-	WriteLine(L"\r\nIDs ");
+	WriteLine(L"IDs ");
 	list<twBlob>::iterator itr;
 	for(itr = m_twTracker.GetCurrentBlobs().begin() ; itr != m_twTracker.GetCurrentBlobs().end(); itr++ )
 	{
 	WriteLine(L" - %d", itr->m_id);
 	}
+
 	//*/
 
+}
+
+void ModuleManager::FinalizeApplication()
+{
+
+		m_twInput.m_video.Stop();
+		m_twTracker.DeInitialize();
 }

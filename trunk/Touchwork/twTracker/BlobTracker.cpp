@@ -1,15 +1,17 @@
 #include "StdAfx.h"
-int BlobTracker::DIST_THRESHOLD = 100;
+int BlobTracker::DIST_THRESHOLD = 50;
 int BlobTracker::MOVE_THRESHOLD = 5;
 int BlobTracker::m_GlobalID = 0;
 
-BeltRangeTracker::BeltRangeTracker(void)
+BeltRangeTracker::BeltRangeTracker(void):BlobTracker()
 {
 }
 
 BeltRangeTracker::~BeltRangeTracker(void)
 {
+
 }
+
 
 int BeltRangeTracker::UpdateBlobs(list<twBlob> *newBlobs)
 {
@@ -48,7 +50,7 @@ int BeltRangeTracker::UpdateBlobs(list<twBlob> *newBlobs)
 				if(ob->m_dist > maxBoundry)
 					break;
 				
-				if(ob->m_dist > minBoundry)
+				if(!ob->m_checked && ob->m_dist > minBoundry)
 				{
 					diff = sqrtf( (nb->m_center.m_x - ob->m_center.m_x) * (nb->m_center.m_x - ob->m_center.m_x) +
 						(nb->m_center.m_y - ob->m_center.m_y) * (nb->m_center.m_y - ob->m_center.m_y) );
