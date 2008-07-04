@@ -122,7 +122,7 @@ void TwAgent::FlipPoint( POINT& pt )
 void TwAgent::DrawScreenPoint( POINT pt )
 {
 	HDC hdc = GetDC(NULL);
-	int r = 100;
+	int r = 5;
 	Ellipse(hdc, pt.x - r , pt.y - r , pt.x + r, pt.y + r);
 	ReleaseDC(NULL, hdc);
 }

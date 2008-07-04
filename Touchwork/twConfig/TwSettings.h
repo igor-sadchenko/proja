@@ -20,6 +20,11 @@ public:
 		m_valNoise = new int();
 		*m_valNoise = 100;
 	}
+	~TwSettings(void)
+	{
+		delete m_valNoise;
+		
+	}
 	
 	int getNoise();
 };

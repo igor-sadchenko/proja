@@ -9,6 +9,7 @@ class TwTracker: public Singleton<TwTracker>
 public:
 	BlobTracker* GetBlobTracker();
 	void Initialize();
+	void DeInitialize();
 	list<twBlob>& GetCurrentBlobs();
 	list<twBlob>& GetDeletedBlobs();
 	int Track(list<twBlob> * newBlobs);

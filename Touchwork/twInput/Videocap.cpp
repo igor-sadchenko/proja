@@ -62,6 +62,7 @@ HRESULT CVideoCapture::GetCaptureDevices( EnumFunc functoCall,void* userdata)
 		pMoniker->Release();
 	}
 	LeaveCriticalSection(&m_CriticalSection);
+	
 	return hr;
 }
 
@@ -422,7 +423,11 @@ HRESULT Video::CVideoCapture::Stop()
 {
 	if(FAILED(m_hResult))
 		return m_hResult;
-	return m_pMCtrl->Stop();
+	if (m_pMCtrl)
+	{
+	
+		return m_pMCtrl->Stop();
+	}
 }
 	
 HRESULT CVideoCapture::InitCaptureGraphBuilder()
@@ -994,6 +999,19 @@ HRESULT Video::CVideoCapture::AppendSink()
 	return S_OK;
 }
 
+Video::CVideoCapture::~CVideoCapture()
+{
+	list<SampleCallback*>::iterator it;
+	for ( it = m_sampleCallbacks.begin(); it != m_sampleCallbacks.end() ; it++)
+	{
+		delete *it;
+	}
+	
+	if(devices)
+		delete devices;
+	if(m_vFormats)
+		delete m_vFormats ;
+}
 void Video::SampleListener::OnFormatChanges( BITMAPINFOHEADER* pbmpinfo )
 {
 	m_bmpinfo = *pbmpinfo;

@@ -31,6 +31,7 @@ public:
 	void OnScreenSizeChanges();
 	void LoadSettings();
 	static TwSettings& getSettings();
-	void DisplayDetectionResults();
+	void DisplayDetectionResults(list<twBlob> & blobList);
+	void FinalizeApplication();
 };
 
