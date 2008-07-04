@@ -64,6 +64,9 @@ namespace touch_simulator
 				//find the window to send to .. mostly obsecured by the simulator
 				//here i can hide the simulator .. query for window at point .. send .. then unhide the simulator
 				IntPtr HWnd;
+                POINT ScreenPos = new POINT(blob.center.X, blob.center.Y);
+                ClientToScreen(sender.Handle, ref ScreenPos);
+
 				if (Messages.targetWindow == 0)
 					HWnd = GetWindow(sender.Handle, (uint)GetWindow_Cmd.GW_HWNDNEXT);
 				else
@@ -80,7 +83,7 @@ namespace touch_simulator
                 uint LParam = (uint)((p.Y << 16) | (p.X & 0x0000FFFF));
                 uint WParam = (uint)((blob.Pressure << 16) | (blob.id & 0x0000FFFF));
 
-                Win32.SetCursorPos(p.X, p.Y); 
+                Win32.SetCursorPos(ScreenPos.X, ScreenPos.Y); 
                 PostMessage(HWnd, Msg, WParam, LParam);
 
 				if (send_Mouse_Messages)
@@ -102,10 +105,11 @@ namespace touch_simulator
 				//here i can hide the simulator -- done by the caller
 				//.. query for window at point .. send .. 
 				IntPtr HWnd ;
+                POINT ScreenPos = new POINT(blob.center.X, blob.center.Y);
+                ClientToScreen(sender.Handle, ref ScreenPos);
+
 				if (Messages.targetWindow == 0)
 				{
-					POINT ScreenPos = new POINT(blob.center.X, blob.center.Y);
-					ClientToScreen(sender.Handle, ref ScreenPos);
 					HWnd = WindowFromPoint(ScreenPos);
 				}
 				else
@@ -127,8 +131,7 @@ namespace touch_simulator
 				uint LParam = (uint)((p.Y << 16) | (p.X & 0x0000FFFF));
 				uint WParam = (uint)((blob.Pressure << 16) | (blob.id & 0x0000FFFF));
 
-                //Win32.SetWindowPos(HWnd, Win32.HWND_TOP, 0, 0, 0, 0, 0);
-                Win32.SetCursorPos(p.X, p.Y); 
+                Win32.SetCursorPos(ScreenPos.X, ScreenPos.Y); 
 				PostMessage(HWnd, Msg, WParam, LParam);
 				if(send_Mouse_Messages)
                 {
