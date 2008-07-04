@@ -62,7 +62,13 @@ namespace TouchworkSDK
 			ITouchable touchable, Control ctrl,IntPtr hwnd, uint msg, uint wParam, uint lParam, ref bool handled, List<Touch> mTouches)
 		{
 			TouchEventArgs e; // This event should be filled
-            Touch touch; 
+            Touch touch;
+            
+            if (msg == TouchMessage.WM_IS_TOUCHABLE)
+            {
+                return 5; 
+            }
+            
             if (msg == TouchMessage.WM_TOUCH_DOWN)
             {
                 e = new TouchEventArgs(lParam, wParam);

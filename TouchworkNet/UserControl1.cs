@@ -48,6 +48,7 @@ namespace TouchworkSDK
         {
             TouchEventArgs e; // This event should be filled
             bool flag = true;
+            
             if (  (int)TouchMessage.WM_TOUCH_DOWN ==  m.Msg )
             {
                 if (OnTouchDown())
