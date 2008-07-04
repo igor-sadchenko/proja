@@ -61,7 +61,7 @@ namespace touch_simulator
 		{
 			if (chkNotifyChildren.Checked)
 			{
-				if (Messages.targetWindow == 0)
+                if (Messages.targetWindow == 0)
 					this.Visible = false;
                 IntPtr hwnd = IntPtr.Zero;
 				foreach (Blob b in m_blobs[frameTrackbar.Value])
@@ -71,7 +71,7 @@ namespace touch_simulator
                  }
                 //Win32.RedrawWindow(hwnd, IntPtr.Zero, IntPtr.Zero, Win32.RDW_FRAME | Win32.RDW_INVALIDATE | Win32.RDW_UPDATENOW | Win32.RDW_ALLCHILDREN);
 				if (Messages.targetWindow == 0)
-					this.Visible = true;
+                    this.Visible = true;
 			}
 			else
 			{
@@ -310,7 +310,10 @@ namespace touch_simulator
 
         private void btn_Clear_Click(object sender, EventArgs e)
         {
+            m_currnetBlob = null;
+            m_currentID = 0;
             frameTrackbar.Value = 0;
+            frameTrackbar.Maximum = 0;
             m_blobs = new List<LinkedList<Blob>>();
             m_blobs.Add(new LinkedList<Blob>());
             this.pictureBox.Invalidate();

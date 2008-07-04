@@ -99,8 +99,7 @@ namespace touch_simulator
 			if (blob.type >= TWMessagesType.WM_TOUCH_FIRST)
 			{
 				//find the window to send to .. mostly obsecured by the simulator
-				//here i can hide the simulator 
-				//--done by the caller
+				//here i can hide the simulator -- done by the caller
 				//.. query for window at point .. send .. 
 				IntPtr HWnd ;
 				if (Messages.targetWindow == 0)
@@ -113,7 +112,7 @@ namespace touch_simulator
 					HWnd = (IntPtr)Messages.targetWindow;
 
                 StringBuilder strBuilder = new StringBuilder();
-                GetWindowText(HWnd, strBuilder, 100);
+                GetWindowText(HWnd, strBuilder, 200);
                 Form1.s_txtMonitor.AppendText(HWnd + " - "+ strBuilder.ToString() +"\r\n");
 
 				//map the points
@@ -128,11 +127,12 @@ namespace touch_simulator
 				uint LParam = (uint)((p.Y << 16) | (p.X & 0x0000FFFF));
 				uint WParam = (uint)((blob.Pressure << 16) | (blob.id & 0x0000FFFF));
 
+                //Win32.SetWindowPos(HWnd, Win32.HWND_TOP, 0, 0, 0, 0, 0);
                 Win32.SetCursorPos(p.X, p.Y); 
 				PostMessage(HWnd, Msg, WParam, LParam);
 				if(send_Mouse_Messages)
-				{
-					uint WParam2 = 0;
+                {
+                    uint WParam2 = 0;
 
                     //Modified for rigid.. send fake down in case of drag & up
                     if (blob.type == TWMessagesType.WM_TOUCHMOVE)
@@ -142,7 +142,7 @@ namespace touch_simulator
                         {
                             ClientToScreen(sender.Handle, ref p);
                             uint FakeLParam = (uint)((p.Y << 16) | (p.X & 0x0000FFFF));
-                            PostMessage(HWnd, TWMessagesType.WM_LBUTTONDOWN, WParam, FakeLParam);
+                            PostMessage(HWnd, TWMessagesType.WM_LBUTTONDOWN, WParam2, FakeLParam);
                             WParam2 = 0x0001;
                         }
                     }
@@ -150,9 +150,10 @@ namespace touch_simulator
                     {
                         PostMessage(HWnd, TWMessagesType.WM_LBUTTONDOWN, WParam2, LParam);
                     }
-					uint mouse_msg = TouchToMouse(blob.type);
-					PostMessage(HWnd, mouse_msg, WParam2, LParam);
-				}
+
+                    uint mouse_msg = TouchToMouse(blob.type);
+                    PostMessage(HWnd, mouse_msg, WParam2, LParam);
+                }
                 Win32.ReleaseCapture();
                 return HWnd;
 			}
