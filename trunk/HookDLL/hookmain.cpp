@@ -28,7 +28,8 @@ HWND   s_hwndLastWindowHandle = 0;
 
 UINT WM_TOUCH_UP;	
 UINT WM_TOUCH_DOWN;	
-UINT WM_TOUCH_MOVE;	
+UINT WM_TOUCH_MOVE;
+UINT WM_IS_TOUCHABLE;
 
 LIB void SetMasterWindow(HHOOK hook)
 {
@@ -37,6 +38,7 @@ LIB void SetMasterWindow(HHOOK hook)
 	WM_TOUCH_UP = RegisterWindowMessageA( "WM_TOUCH_UP" ) ;
 	WM_TOUCH_DOWN = RegisterWindowMessageA("WM_TOUCH_DOWN" ) ; 
 	WM_TOUCH_MOVE = RegisterWindowMessageA( "WM_TOUCH_MOVE" ) ; 
+	WM_IS_TOUCHABLE = RegisterWindowMessageA( "WM_IS_TOUCHABLE" );
 }
 
 BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, PVOID fImpLoad) {
@@ -265,6 +267,12 @@ void PostNonClientMouseMessages(MSG msg)
 			case HTCLOSE:
 				PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_CLOSE, 0);
 				break;
+			/*case HTVSCROLL:
+				PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_VSCROLL, 0);
+				break;
+			case HTHSCROLL:
+				PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_HSCROLL, 0);
+				break;*/
 			default:
 				PostMessage(msg.hwnd, WM_LBUTTONUP, MK_LBUTTON, msg.lParam);
 				break;
@@ -318,6 +326,11 @@ LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 		map<HWND,POINT>::iterator _iter;
 		int _mode = 1;												//WindowMessages:0 , MouseMessages:1, NonClientMouseMessages:2
 		MSG* msg = (MSG*) lParam;
+
+		if(SendMessage(msg->hwnd, WM_IS_TOUCHABLE, 0, 0) == 5)
+		{
+			return CallNextHookEx(s_hook ,nCode, wParam, lParam);
+		}
 
 		POINT touchSCord = GetTouchPoint(msg->hwnd, msg->lParam);	//Convert client coordinates to screen (takes LPARAM,return POINT struct)
 		HWND currentHandle = msg->hwnd; //WindowFromPoint(touchSCord);			//Get the handle at the current touch position
