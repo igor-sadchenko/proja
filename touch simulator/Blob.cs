@@ -48,7 +48,6 @@ namespace touch_simulator
 		}
 
 
-
 		#region IEquatable<Blob> Members
 
 		public bool Equals(Blob other)
