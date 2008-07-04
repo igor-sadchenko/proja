@@ -313,7 +313,7 @@ namespace touch_simulator
             m_currnetBlob = null;
             m_currentID = 0;
             frameTrackbar.Value = 0;
-            frameTrackbar.Maximum = 0;
+            frameTrackbar.Maximum = 1;
             m_blobs = new List<LinkedList<Blob>>();
             m_blobs.Add(new LinkedList<Blob>());
             this.pictureBox.Invalidate();
