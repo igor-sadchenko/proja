@@ -93,7 +93,7 @@ void PostWindowMessages(MSG msg, HWND topLevelWindow)
 	{
 		if(hittest == HTCAPTION)															//The Touch_Down was on the title bar
 		{
-			PostMessage(topLevelWindow, WM_NCLBUTTONDOWN, MK_LBUTTON, msg.lParam);
+			PostMessage(topLevelWindow, WM_NCLBUTTONDOWN, msg.wParam, msg.lParam);
 			selectedHandles[topLevelWindow] = currentTouch;									//Update point on title bar
 		}
 		else
@@ -126,17 +126,20 @@ void PostWindowMessages(MSG msg, HWND topLevelWindow)
 
 		if(hittest == HTCAPTION)															//Moving or Resizing Window
 		{
+			POINT preTitleTouch = selectedHandles[topLevelWindow]	;						//Use the previous value of touch on title bar
+			long dx = preTitleTouch.x - currentTouch.x;										//to determine the resizing/moving factor
+			long dy = preTitleTouch.y - currentTouch.y;
+
 			if(previousTouch.find(topLevelWindow) == previousTouch.end())					//No other touches elsewhere on the window
 			{																				//.. then perform an ordinary move
-				PostMessage(topLevelWindow, WM_MOUSEMOVE, MK_LBUTTON, msg.lParam);
+				rect.left = rect.left - dx;
+				rect.top = rect.top - dy;
+				SetWindowPos(topLevelWindow, NULL, rect.left, rect.top, width, height, FALSE);
+				//PostMessage(topLevelWindow, WM_MOUSEMOVE, MK_LBUTTON, msg.lParam);
 				selectedHandles[topLevelWindow] = currentTouch;								//Update the titlebar touch position
 			}
 			else
 			{
-				POINT preTitleTouch = selectedHandles[topLevelWindow];						//Use the previous value of touch on title bar
-				long dx = preTitleTouch.x - currentTouch.x;									//to determine the resizing factor
-				long dy = preTitleTouch.y - currentTouch.y;
-
 				if(currentTouch.x < previousTouch[topLevelWindow].x)						//resizing in / direction
 				{
 					width = width + dx;
@@ -159,7 +162,6 @@ void PostWindowMessages(MSG msg, HWND topLevelWindow)
 				if(width > screenwidth)		width = screenwidth;
 				if(height > screenheight)	height = screenheight;
 
-				//MoveWindow(topLevelWindow, rect.top, rect.left, width, height, TRUE);
 				SetWindowPos(topLevelWindow, NULL, rect.left, rect.top, width, height, FALSE);
 				selectedHandles[topLevelWindow] = currentTouch;								//Update the title bar touch position
 			}
@@ -219,7 +221,7 @@ void PostMouseMessages(MSG msg)
 		}		
 		else
 		{
-			PostMessage(msg.hwnd, WM_LBUTTONUP, MK_LBUTTON , msg.lParam);
+			PostMessage(msg.hwnd, WM_LBUTTONUP, 0 , msg.lParam);
 		}
 		s_dwLastLTouchUp = dwTick;
 		s_hwndLastWindowHandle = msg.hwnd;
@@ -333,7 +335,7 @@ LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 		}
 
 		POINT touchSCord = GetTouchPoint(msg->hwnd, msg->lParam);	//Convert client coordinates to screen (takes LPARAM,return POINT struct)
-		HWND currentHandle = msg->hwnd; //WindowFromPoint(touchSCord);			//Get the handle at the current touch position
+		HWND currentHandle = msg->hwnd;								//Get the handle at the current touch position (Already handled in the agent)
 		HWND topLevel = GetAncestor(currentHandle, GA_ROOTOWNER );	//Get Top Level Window of the current handle
 
 		if((msg->message == WM_TOUCH_DOWN || msg->message == WM_TOUCH_MOVE) && 
