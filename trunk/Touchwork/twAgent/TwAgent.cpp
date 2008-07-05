@@ -37,6 +37,8 @@ void TwAgent::NotifyWindowUnderBlob(twBlob& blob, UINT messageType)
 {
 	//get the blob place
 	POINT pt = blob.m_center.getPOINT();
+	
+	/*
 	//clip Point
 	if(ClipPoint(pt))
 		return;
@@ -44,6 +46,10 @@ void TwAgent::NotifyWindowUnderBlob(twBlob& blob, UINT messageType)
 	FlipPoint(pt);
 	//map it to the screen space
 	CropAreaToScreen(pt);
+	*/
+
+	//map point
+	MapPoint(pt);
 
 	//draw a point ...
 	DrawScreenPoint(pt);
@@ -125,4 +131,29 @@ void TwAgent::DrawScreenPoint( POINT pt )
 	int r = 5;
 	Ellipse(hdc, pt.x - r , pt.y - r , pt.x + r, pt.y + r);
 	ReleaseDC(NULL, hdc);
+}
+
+void TwAgent::MapPoint( POINT & pt )
+{
+	point spot = {pt.x,pt.y};
+	point leftPoint = {pt.x - 5,pt.y};
+	point topPoint = {pt.x ,pt.y- 5};
+
+	line horizental;
+	line vertical; 
+	points_to_line( leftPoint, spot,&horizental);
+	points_to_line(topPoint, spot,&vertical);
+
+	point u1; point u2;
+	intersection_point(m_side_left,horizental,u1);
+	intersection_point(m_side_right,horizental,u2);
+	float u = (spot[0] - u1[0]) / (u2[0] - u1[0]);
+
+	point v1,v2;
+	intersection_point(m_side_bottom,vertical,v1);
+	intersection_point(m_side_top,vertical,v2);
+	float v = (spot[1] - v1[1]) / (v2[1] - v1[1]);
+
+	pt.x = m_xScreen * u;
+	pt.y = m_yScreen - m_yScreen * v;
 }

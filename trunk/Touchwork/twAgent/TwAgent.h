@@ -44,6 +44,13 @@ public:
 	float m_xScreenPerCrop;
 	float m_yScreenPerCrop;
 
+
+	line m_side_left;
+	line m_side_right;
+	line m_side_top;
+	line m_side_bottom;
+
+
 	~TwAgent()
 	{
 		UnhookWindowsHookEx(m_hook);
@@ -59,4 +66,5 @@ public:
 	void FlipPoint(POINT& pt);
 	void DrawScreenPoint(POINT pt);
 	void CropAreaToScreen( POINT& pt);
+	void MapPoint(POINT & pt);
 };

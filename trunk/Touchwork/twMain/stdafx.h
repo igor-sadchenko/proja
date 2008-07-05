@@ -54,8 +54,11 @@ using namespace std;
 #include "AtlBase.h"
 #include "cv.h"
 
+
 #include "singleton.h"
 #include "resource.h"
+#include "geometry.h"
+
 #include "VideoFormat.h"
 #include "videocap.h"
 using namespace Video;
