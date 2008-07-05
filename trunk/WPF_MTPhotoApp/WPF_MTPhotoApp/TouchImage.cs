@@ -13,7 +13,7 @@ namespace NUIGroup.MultiTouchFramework
         
     class TouchImage : Image
     {
-        #region Instance Variables
+            #region Instance Variables
         //where drag starts
         Point origLocation;
         //original position of element when drag starts
@@ -50,9 +50,7 @@ namespace NUIGroup.MultiTouchFramework
         public delegate void fingerUpHandler(object sender, TouchEventArgs e);
 
         public TouchImage()
-        {
-            
-             
+        { 
             if (fingerDownEvent == null)
                 fingerDownEvent = EventManager.RegisterRoutedEvent("fingerDown", RoutingStrategy.Bubble, typeof(fingerDownHandler), typeof(TouchImage));
             if (fingerUpdateEvent == null)
@@ -64,15 +62,12 @@ namespace NUIGroup.MultiTouchFramework
             theCanvas.fingerDown += new TouchCanvas.fingerDownHandler(theCanvas_fingerDown);
             theCanvas.fingerUp += new TouchCanvas.fingerUpHandler(theCanvas_fingerUp);
             theCanvas.fingerUpdate += new TouchCanvas.fingerUpdateHandler(theCanvas_fingerUpdate);
-
-            
             
         }
 
         #region Event Handlers
         void theCanvas_fingerUpdate(object sender, TouchEventArgs e)
         {
-
             if ((e.data.touchedElement == this) && (isInLIstByID(e.data)))
             {
                 imgOrigin = new Point(Canvas.GetLeft(this) + this.Width / 2, Canvas.GetTop(this) + this.Height / 2);
