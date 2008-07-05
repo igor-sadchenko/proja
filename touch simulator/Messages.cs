@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Drawing;
 
 namespace touch_simulator
 {
@@ -83,7 +84,7 @@ namespace touch_simulator
                 uint LParam = (uint)((p.Y << 16) | (p.X & 0x0000FFFF));
                 uint WParam = (uint)((blob.Pressure << 16) | (blob.id & 0x0000FFFF));
 
-                Win32.SetCursorPos(ScreenPos.X, ScreenPos.Y); 
+                Win32.SetCursorPos(ScreenPos.X, ScreenPos.Y);
                 PostMessage(HWnd, Msg, WParam, LParam);
 
 				if (send_Mouse_Messages)
@@ -130,8 +131,8 @@ namespace touch_simulator
 				uint Msg = (uint)blob.type;
 				uint LParam = (uint)((p.Y << 16) | (p.X & 0x0000FFFF));
 				uint WParam = (uint)((blob.Pressure << 16) | (blob.id & 0x0000FFFF));
-
-                Win32.SetCursorPos(ScreenPos.X, ScreenPos.Y); 
+                
+                Win32.SetCursorPos(ScreenPos.X, ScreenPos.Y);
 				PostMessage(HWnd, Msg, WParam, LParam);
 				if(send_Mouse_Messages)
                 {
@@ -145,6 +146,7 @@ namespace touch_simulator
                         {
                             ClientToScreen(sender.Handle, ref p);
                             uint FakeLParam = (uint)((p.Y << 16) | (p.X & 0x0000FFFF));
+                            Win32.SetCursorPos(p.X, p.Y);
                             PostMessage(HWnd, TWMessagesType.WM_LBUTTONDOWN, WParam2, FakeLParam);
                             WParam2 = 0x0001;
                         }
@@ -157,7 +159,7 @@ namespace touch_simulator
                     uint mouse_msg = TouchToMouse(blob.type);
                     PostMessage(HWnd, mouse_msg, WParam2, LParam);
                 }
-                Win32.ReleaseCapture();
+                //Win32.ReleaseCapture();
                 return HWnd;
 			}
             return IntPtr.Zero;
