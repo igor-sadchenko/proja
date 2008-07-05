@@ -118,6 +118,13 @@ void ModuleManager::OnScreenSizeChanges()
 	m_twAgent.m_xScreenPerCrop = m_twAgent.m_xScreen / m_twAgent.m_xCrop ;
 	m_twAgent.m_yScreenPerCrop = m_twAgent.m_yScreen / m_twAgent.m_yCrop ;
 
+	points_to_line(m_twSettings.m_trapozoid[0], m_twSettings.m_trapozoid[3] , &m_twAgent.m_side_left);
+	points_to_line(m_twSettings.m_trapozoid[1], m_twSettings.m_trapozoid[2] , &m_twAgent.m_side_right);
+	points_to_line(m_twSettings.m_trapozoid[0], m_twSettings.m_trapozoid[1] , &m_twAgent.m_side_top);
+	points_to_line(m_twSettings.m_trapozoid[3], m_twSettings.m_trapozoid[2] , &m_twAgent.m_side_bottom);
+
+
+
 }
 
 void ModuleManager::LoadSettings()

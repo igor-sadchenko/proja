@@ -4,7 +4,7 @@ class TwSettings
 {
 public:
 	RECT m_Crop;
-	
+	point m_trapozoid[4];
 	int* m_valNoise;
 	bool m_y_flip;
 	bool m_x_flip;

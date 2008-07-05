@@ -383,6 +383,14 @@
 			Name="utility"
 			>
 			<File
+				RelativePath=".\utility\geometry.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\utility\geometry.h"
+				>
+			</File>
+			<File
 				RelativePath=".\utility\singleton.h"
 				>
 			</File>
