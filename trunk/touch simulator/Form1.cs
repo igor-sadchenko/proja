@@ -57,43 +57,6 @@ namespace touch_simulator
 			}
 		}
 
-		private void SimulateFrame()
-		{
-			if (chkNotifyChildren.Checked)
-			{
-                if (Messages.targetWindow == 0)
-					this.Visible = false;
-                IntPtr hwnd = IntPtr.Zero;
-				foreach (Blob b in m_blobs[frameTrackbar.Value])
-				{
-                    Point previousPos = GetPreviousPosition(b.id, frameTrackbar.Value);
-                    hwnd = Messages.SendToChildWindows(this.pictureBox, b, previousPos);
-                 }
-                //Win32.RedrawWindow(hwnd, IntPtr.Zero, IntPtr.Zero, Win32.RDW_FRAME | Win32.RDW_INVALIDATE | Win32.RDW_UPDATENOW | Win32.RDW_ALLCHILDREN);
-				if (Messages.targetWindow == 0)
-                    this.Visible = true;
-			}
-			else
-			{
-				foreach (Blob b in m_blobs[frameTrackbar.Value])
-				{
-					Messages.SendToNextWindow(this, pictureBox, b);
-				}
-			}
-		}
-
-        private Point GetPreviousPosition(int id, int frameno)
-        {
-            if (frameno == 0)
-                return new Point(0, 0);
-            foreach (Blob b in m_blobs[frameno - 1])
-            {
-                if (b.id == id)
-                    return b.center;
-            }
-            return new Point(0,0);
-        }
-
 		private void timer1_Tick(object sender, EventArgs e)
 		{
 			SimulateFrame();
@@ -144,6 +107,74 @@ namespace touch_simulator
 			}
 		}
 
+        private void SimulateFrame()
+        {
+            if (chkNotifyChildren.Checked)
+            {
+                if (Messages.targetWindow == 0)
+                    this.Visible = false;
+                IntPtr hwnd = IntPtr.Zero;
+                foreach (Blob b in m_blobs[frameTrackbar.Value])
+                {
+                    Point previousPos = GetPreviousPosition(b.id, frameTrackbar.Value);
+                    hwnd = Messages.SendToChildWindows(this.pictureBox, b, previousPos);
+                }
+                //Win32.RedrawWindow(hwnd, IntPtr.Zero, IntPtr.Zero, Win32.RDW_FRAME | Win32.RDW_INVALIDATE | Win32.RDW_UPDATENOW | Win32.RDW_ALLCHILDREN);
+                if (Messages.targetWindow == 0)
+                    this.Visible = true;
+            }
+            else
+            {
+                foreach (Blob b in m_blobs[frameTrackbar.Value])
+                {
+                    Messages.SendToNextWindow(this, pictureBox, b);
+                }
+            }
+        }
+
+        private Point GetPreviousPosition(int id, int frameno)
+        {
+            if (frameno == 0)
+                return new Point(0, 0);
+            foreach (Blob b in m_blobs[frameno - 1])
+            {
+                if (b.id == id)
+                    return b.center;
+            }
+            return new Point(0, 0);
+        }
+
+        private void AddNewBlob(MouseEventArgs e)
+        {
+            Blob b = new Blob(e.Location, m_currentID++);
+            b.type = TWMessagesType.WM_TOUCHDOWN;
+            m_blobs[frameTrackbar.Value].AddLast(b);
+            for (int i = frameTrackbar.Value + 1; i < frameTrackbar.Maximum; i++)
+            {
+                Blob b2 = new Blob(b);
+                b2.type = TWMessagesType.WM_NONE;
+                m_blobs[i].AddLast(b);
+            }
+        }
+
+        void AddFrame()
+        {
+            m_blobs.Add(new LinkedList<Blob>());
+            if (m_blobs.Count > 1)
+            {
+                foreach (Blob b in m_blobs[m_blobs.Count - 2])
+                {
+                    if (b.isVisible)
+                    {
+                        Blob b2 = new Blob(b);
+                        b2.type = TWMessagesType.WM_TOUCHMOVE;
+                        m_blobs[m_blobs.Count - 1].AddLast(b2);
+                    }
+                }
+            }
+            frameTrackbar.Maximum++;
+        }
+
 		private void Form1_MouseDown(object sender, MouseEventArgs e)
 		{
 			if (e.Button == MouseButtons.Left)
@@ -157,19 +188,6 @@ namespace touch_simulator
 			pictureBox.Invalidate();
 		}
 
-		private void AddNewBlob(MouseEventArgs e)
-		{
-			Blob b = new Blob(e.Location, m_currentID++);
-			b.type = TWMessagesType.WM_TOUCHDOWN;
-			m_blobs[frameTrackbar.Value].AddLast(b);
-			for (int i = frameTrackbar.Value + 1; i < frameTrackbar.Maximum; i++)
-			{
-				Blob b2 = new Blob(b);
-				b2.type = TWMessagesType.WM_NONE;
-				m_blobs[i].AddLast(b);
-			}
-		}
-
 		private void Form1_MouseMove(object sender, MouseEventArgs e)
 		{
 			if (m_currnetBlob != null && e.Button == MouseButtons.Left)
@@ -178,24 +196,6 @@ namespace touch_simulator
 				m_currnetBlob.type = TWMessagesType.WM_TOUCHMOVE;
 				pictureBox.Invalidate();
 			}
-		}
-
-		void AddFrame()
-		{
-			m_blobs.Add(new LinkedList<Blob>());
-			if (m_blobs.Count > 1)
-			{
-				foreach (Blob b in m_blobs[m_blobs.Count - 2])
-				{
-					if (b.isVisible)
-					{
-						Blob b2 = new Blob(b);
-						b2.type = TWMessagesType.WM_TOUCHMOVE;
-						m_blobs[m_blobs.Count - 1].AddLast(b2);
-					}
-				}
-			}
-			frameTrackbar.Maximum++;
 		}
 
 		private void Form1_MouseUp(object sender, MouseEventArgs e)
@@ -217,7 +217,6 @@ namespace touch_simulator
 				}
 			}
 		}
-
 
 		private void Form1_KeyDown(object sender, KeyEventArgs e)
 		{
@@ -286,10 +285,16 @@ namespace touch_simulator
 			}
 		}
 
-		private void chk_send_Mouse_CheckedChanged(object sender, EventArgs e)
-		{
-			Messages.send_Mouse_Messages = chk_send_Mouse.Checked;
-		}
+        private void btn_Clear_Click(object sender, EventArgs e)
+        {
+            m_currnetBlob = null;
+            m_currentID = 0;
+            frameTrackbar.Value = 0;
+            frameTrackbar.Maximum = 1;
+            m_blobs = new List<LinkedList<Blob>>();
+            m_blobs.Add(new LinkedList<Blob>());
+            this.pictureBox.Invalidate();
+        }
 
 		private void btnSelectWnd_Click(object sender, EventArgs e)
 		{
@@ -308,15 +313,9 @@ namespace touch_simulator
             timer1.Interval = (int) num_TimePerFrame.Value;
         }
 
-        private void btn_Clear_Click(object sender, EventArgs e)
+        private void chk_send_Mouse_CheckedChanged(object sender, EventArgs e)
         {
-            m_currnetBlob = null;
-            m_currentID = 0;
-            frameTrackbar.Value = 0;
-            frameTrackbar.Maximum = 1;
-            m_blobs = new List<LinkedList<Blob>>();
-            m_blobs.Add(new LinkedList<Blob>());
-            this.pictureBox.Invalidate();
+            Messages.send_Mouse_Messages = chk_send_Mouse.Checked;
         }
 	}
 }

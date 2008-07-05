@@ -529,7 +529,7 @@ namespace touch_simulator
 			public Rectangle normalPosition;
 		}
 
-		public struct Rect
+		public class Rect
 		{
 			public int left;
 			public int top;
@@ -554,6 +554,9 @@ namespace touch_simulator
 		}
 
 		public delegate bool EnumWindowEventHandler(IntPtr hWnd, Int32 lParam);
+
+        [DllImport("user32.dll")]
+        public static extern bool ClipCursor(Rect lpRect);
 
 		[DllImport("user32.dll")]
 		public static extern int GetWindowModuleFileName(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
@@ -667,7 +670,10 @@ namespace touch_simulator
 		public static extern int RedrawWindow(IntPtr hWnd, IntPtr lprcUpdate, IntPtr hrgnUpdate, uint flags);
 
         [DllImport("user32.dll")]
-        public static extern bool SetCursorPos(long xPos, long yPos);
+        public static extern bool SetCursorPos(int xPos, int yPos);
+
+        [DllImport("user32.dll")]
+        public static extern Point GetCursorPos();
 
 		#endregion Windows
 
