@@ -1,0 +1,9 @@
+crop 0 0 0 0
+noise 100
+Xflip 0
+Yflip 0
+CamraTrapozoid
+7 176
+41 181
+74 165
+134 169
