@@ -37,7 +37,8 @@ namespace WPF_MTPhotoApp
         {
             
             InitializeComponent();
-            this.Background = new LinearGradientBrush(Color.FromRgb(204, 204, 204), Color.FromRgb(51, 51, 51), 90);
+            //this.Background = new LinearGradientBrush(Color.FromRgb(204, 204, 204), Color.FromRgb(51, 51, 51), 90);
+            this.Background = new LinearGradientBrush(Colors.Black , Color.FromRgb(100, 100, 100), 90);
 
             //myCanvas.Background
             //this.AddChild(myCanvas);
@@ -81,9 +82,15 @@ namespace WPF_MTPhotoApp
             Canvas.SetTop(img3, 500);
 
 
+            myMenu.Items.Add("Open"); 
+            
+            
+
             myCanvas.Children.Add(img);
             myCanvas.Children.Add(img2);
             myCanvas.Children.Add(img3);
+            
+            
 
             //Button startButton = new Button();
             //startButton.Content = "start tracking";
@@ -95,8 +102,11 @@ namespace WPF_MTPhotoApp
 
             //myCanvas.Children.Add(startButton);
 
+            
+
+
             Loaded += new RoutedEventHandler(PhotoApp_Loaded);
-            TouchMessage.InitializeTouchMessages();  
+            TouchworkSDK.TouchMessage.InitializeTouchMessages(); 
         }
 
         void PhotoApp_Loaded(object sender, RoutedEventArgs e)
@@ -110,46 +120,30 @@ namespace WPF_MTPhotoApp
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             TouchworkSDK.TouchEventArgs e;
-            if ((uint)msg == TouchMessage.WM_TOUCH_DOWN)
+
+            if ((uint)msg == TouchworkSDK.TouchMessage.WM_IS_TOUCHABLE)
             {
-                e = new TouchworkSDK.TouchEventArgs((uint)lParam,(uint)wParam);
-                myCanvas.OnTouchDown(null, e);
-                handled = e.handled; 
+                return (IntPtr)5;
             }
-            else if ((uint)msg == TouchMessage.WM_TOUCH_MOVE)
+
+            if ((uint)msg == TouchworkSDK.TouchMessage.WM_TOUCH_DOWN)
+            {
+                e = new TouchworkSDK.TouchEventArgs((uint)lParam, (uint)wParam);
+                myCanvas.OnTouchDown(null, e);
+                handled = e.handled;
+            }
+            else if ((uint)msg == TouchworkSDK.TouchMessage.WM_TOUCH_MOVE)
             {
                 e = new TouchworkSDK.TouchEventArgs((uint)lParam, (uint)wParam);
                 myCanvas.OnTouchMove(null, e);
-                handled = e.handled; 
+                handled = e.handled;
             }
-            else if ((uint)msg == TouchMessage.WM_TOUCH_UP)
+            else if ((uint)msg == TouchworkSDK.TouchMessage.WM_TOUCH_UP)
             {
                 e = new TouchworkSDK.TouchEventArgs((uint)lParam, (uint)wParam);
                 myCanvas.OnTouchUp(null, e);
-                handled = e.handled; 
+                handled = e.handled;
             }
-
-            //TouchEventArgs e; // This event should be filled
-            //switch ((TouchMessage)msg)
-            //{
-            //    case TouchMessage.WM_TOUCHDOWN:
-            //        e = new TouchEventArgs((uint)lParam, (uint)wParam);
-            //        OnTouchDown(null, e);
-            //        handled = e.handled;
-            //        break;
-            //    case TouchMessage.WM_TOUCHMOVE:
-            //        e = new TouchEventArgs((uint)lParam, (uint)wParam);
-            //        OnTouchMove(null, e);
-            //        handled = e.handled;
-            //        break;
-            //    case TouchMessage.WM_TOUCHUP:
-            //        e = new TouchEventArgs((uint)lParam, (uint)wParam);
-            //        OnTouchUp(null, e);
-            //        handled = e.handled;
-            //        break;
-
-            //}
-
             return (IntPtr)0;
         }
 

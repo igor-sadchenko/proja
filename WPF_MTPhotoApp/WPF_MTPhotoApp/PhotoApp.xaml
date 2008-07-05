@@ -4,8 +4,13 @@
     xmlns:local="clr-namespace:NUIGroup.MultiTouchFramework" 
     Title="WPF_MTPhotoApp" Height="300" Width="300" WindowState="Maximized"
     >
-  <local:TouchCanvas x:Name="myCanvas">
-    <!-- this is how you will add TouchImages in XAML-->
-    <!--<local:TouchImage x:Name="img2" Source="Winter.jpg" Width="400" Height="400" Canvas.Left="600" Canvas.Top="100"></local:TouchImage>-->
-  </local:TouchCanvas>
+    <StackPanel>
+        <Menu x:Name="myMenu">
+            
+        </Menu>
+        <local:TouchCanvas x:Name="myCanvas">
+            <!-- this is how you will add TouchImages in XAML-->
+            <!--<local:TouchImage x:Name="img2" Source="Winter.jpg" Width="400" Height="400" Canvas.Left="600" Canvas.Top="100"></local:TouchImage>-->
+        </local:TouchCanvas>
+    </StackPanel>
 </Window>
