@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\Touchwork\twDetector;..\Touchwork\twInput;..\Touchwork\twConfig;.;"
+				AdditionalIncludeDirectories="..\Touchwork\utility;..\Touchwork\twDetector;..\Touchwork\twInput;..\Touchwork\twConfig;.;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="0"
@@ -285,6 +285,14 @@
 			</File>
 			<File
 				RelativePath="..\Touchwork\twDetector\BlobDetector.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Touchwork\utility\geometry.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Touchwork\utility\geometry.h"
 				>
 			</File>
 			<File

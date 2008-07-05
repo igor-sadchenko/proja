@@ -36,6 +36,7 @@
 #include<DShow.h>
 #include "Qedit.h"
 #include "AtlBase.h"
+#include "geometry.h"
 
 #include<vector>
 #include <list>
@@ -47,16 +48,17 @@
 #include <math.h>
 #include <exception>
 
+
 #define TW_CONFIG 1
 #include <cv.h>
 #include "Point.h"
 #include "Blob.h"
 
-
 #include "VideoFormat.h"
 #include "videocap.h"
 using namespace std;
 using namespace Video;
+
 #include "TwSettings.h"
 #include "BlobDetector.h"
 #include "FrameListner.h"
