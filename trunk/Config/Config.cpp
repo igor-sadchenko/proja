@@ -28,8 +28,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 {
 
 	Application::Run(gcnew MainForm());
-	ofstream fout("config.txt");
-	fout<<g_settings;
+	
  	return 0;
  }
 

@@ -50,9 +50,9 @@ namespace config {
 			}
 		}
 	private: System::Windows::Forms::PictureBox^  pictureBox1;
-	private: System::Windows::Forms::Button^  button1;
-	private: System::Windows::Forms::TextBox^  textBox1;
-	private: System::Windows::Forms::Label^  label1;
+
+
+
 
 	protected: 
 
@@ -70,9 +70,6 @@ namespace config {
 		void InitializeComponent(void)
 		{
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
-			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->chkFlipX = (gcnew System::Windows::Forms::CheckBox());
 			this->chkFlipY = (gcnew System::Windows::Forms::CheckBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->BeginInit();
@@ -83,7 +80,7 @@ namespace config {
 			this->pictureBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left) 
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->pictureBox1->BorderStyle = System::Windows::Forms::BorderStyle::Fixed3D;
-			this->pictureBox1->Location = System::Drawing::Point(12, 123);
+			this->pictureBox1->Location = System::Drawing::Point(12, 51);
 			this->pictureBox1->Name = L"pictureBox1";
 			this->pictureBox1->Size = System::Drawing::Size(310, 254);
 			this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
@@ -93,36 +90,10 @@ namespace config {
 			this->pictureBox1->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::pictureBox1_MouseDown);
 			this->pictureBox1->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::pictureBox1_MouseUp);
 			// 
-			// button1
-			// 
-			this->button1->Location = System::Drawing::Point(234, 32);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(75, 23);
-			this->button1->TabIndex = 1;
-			this->button1->Text = L"start";
-			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &MainForm::button1_Click);
-			// 
-			// textBox1
-			// 
-			this->textBox1->Location = System::Drawing::Point(12, 32);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(157, 20);
-			this->textBox1->TabIndex = 2;
-			// 
-			// label1
-			// 
-			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(12, 9);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(56, 13);
-			this->label1->TabIndex = 3;
-			this->label1->Text = L"Crop Area";
-			// 
 			// chkFlipX
 			// 
 			this->chkFlipX->AutoSize = true;
-			this->chkFlipX->Location = System::Drawing::Point(12, 63);
+			this->chkFlipX->Location = System::Drawing::Point(12, 5);
 			this->chkFlipX->Name = L"chkFlipX";
 			this->chkFlipX->Size = System::Drawing::Size(49, 17);
 			this->chkFlipX->TabIndex = 4;
@@ -133,7 +104,7 @@ namespace config {
 			// chkFlipY
 			// 
 			this->chkFlipY->AutoSize = true;
-			this->chkFlipY->Location = System::Drawing::Point(12, 86);
+			this->chkFlipY->Location = System::Drawing::Point(12, 28);
 			this->chkFlipY->Name = L"chkFlipY";
 			this->chkFlipY->Size = System::Drawing::Size(49, 17);
 			this->chkFlipY->TabIndex = 5;
@@ -141,20 +112,18 @@ namespace config {
 			this->chkFlipY->UseVisualStyleBackColor = true;
 			this->chkFlipY->CheckedChanged += gcnew System::EventHandler(this, &MainForm::chkFlipY_CheckedChanged);
 			// 
-			// CropForm
+			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(334, 389);
+			this->ClientSize = System::Drawing::Size(334, 317);
 			this->Controls->Add(this->chkFlipY);
 			this->Controls->Add(this->chkFlipX);
-			this->Controls->Add(this->label1);
-			this->Controls->Add(this->textBox1);
-			this->Controls->Add(this->button1);
 			this->Controls->Add(this->pictureBox1);
-			this->Name = L"CropForm";
-			this->Text = L"CropForm-1";
+			this->Name = L"MainForm";
+			this->Text = L"Capture (1)";
 			this->Load += gcnew System::EventHandler(this, &MainForm::CropForm_Load);
+			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &MainForm::MainForm_FormClosing);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -254,8 +223,6 @@ namespace config {
 
 			 }
 	private: System::Void pictureBox1_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
-
-				 textBox1->Text = g_settings.m_Crop.left+ "," + g_settings.m_Crop.top + "," + g_settings.m_Crop.right + "," + g_settings.m_Crop.bottom;
 			 }
 
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -272,6 +239,18 @@ namespace config {
 			 }
 private: System::Void chkFlipY_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 g_settings.m_y_flip = chkFlipY->Checked;
+		 }
+private: System::Void MainForm_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
+			 System::Windows::Forms::DialogResult res = System::Windows::Forms::MessageBox::Show(this,"Configuration Changed","Save changes ?",MessageBoxButtons::YesNoCancel,MessageBoxIcon::Question,MessageBoxDefaultButton::Button1);
+			 if(res == System::Windows::Forms::DialogResult::Yes)
+			 {
+				 ofstream fout("config.txt");
+				 fout<<g_settings;
+			 }
+			 else if (res == System::Windows::Forms::DialogResult::Cancel)
+			 {
+				 e->Cancel = true;
+			 }
 		 }
 };
 }

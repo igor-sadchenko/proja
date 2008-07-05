@@ -27,12 +27,25 @@ namespace config {
 			m_varSettings = varSettings;
 			InitializeComponent();
 			instance = this;
+			m_bitmap0 = gcnew Bitmap("0.jpg");
+			m_bitmap1 = gcnew Bitmap("1.jpg");
+			m_bitmap2 = gcnew Bitmap("2.jpg");
+			m_bitmap3 = gcnew Bitmap("3.jpg");
+
 		}
 	public: System::Windows::Forms::CheckBox^  checkBox1;
 	public:static CropForm^ instance;
 
 	public: System::Windows::Forms::PictureBox^  pictureBox1;
 	public: System::Windows::Forms::TextBox^  textBox1;
+	public: System::Windows::Forms::PictureBox^  pictureBox2;
+
+	public: 
+		System::Drawing::Bitmap^ m_bitmap0;
+		System::Drawing::Bitmap^ m_bitmap1;
+		System::Drawing::Bitmap^ m_bitmap2;
+		System::Drawing::Bitmap^ m_bitmap3;
+	public: 
 
 	public: 
 
@@ -69,16 +82,18 @@ namespace config {
 			this->checkBox1 = (gcnew System::Windows::Forms::CheckBox());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox2))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// checkBox1
 			// 
 			this->checkBox1->Appearance = System::Windows::Forms::Appearance::Button;
 			this->checkBox1->AutoSize = true;
-			this->checkBox1->Location = System::Drawing::Point(142, 12);
+			this->checkBox1->Location = System::Drawing::Point(407, 43);
 			this->checkBox1->Name = L"checkBox1";
-			this->checkBox1->Size = System::Drawing::Size(67, 23);
+			this->checkBox1->Size = System::Drawing::Size(72, 23);
 			this->checkBox1->TabIndex = 0;
 			this->checkBox1->Text = L"Calibrate...";
 			this->checkBox1->UseVisualStyleBackColor = true;
@@ -94,23 +109,35 @@ namespace config {
 			// 
 			// textBox1
 			// 
-			this->textBox1->Location = System::Drawing::Point(62, 43);
+			this->textBox1->Location = System::Drawing::Point(1, 12);
 			this->textBox1->Multiline = true;
 			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(227, 69);
+			this->textBox1->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
+			this->textBox1->Size = System::Drawing::Size(348, 100);
 			this->textBox1->TabIndex = 2;
+			// 
+			// pictureBox2
+			// 
+			this->pictureBox2->Location = System::Drawing::Point(372, 118);
+			this->pictureBox2->Name = L"pictureBox2";
+			this->pictureBox2->Size = System::Drawing::Size(135, 135);
+			this->pictureBox2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
+			this->pictureBox2->TabIndex = 3;
+			this->pictureBox2->TabStop = false;
 			// 
 			// CropForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(350, 379);
+			this->ClientSize = System::Drawing::Size(519, 379);
+			this->Controls->Add(this->pictureBox2);
 			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->pictureBox1);
 			this->Controls->Add(this->checkBox1);
 			this->Name = L"CropForm";
 			this->Text = L"CropForm";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox2))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -120,9 +147,14 @@ namespace config {
 			 {
 				 g_Crop.m_isCropMode = checkBox1->Checked;
 				 if(checkBox1->Checked)
+				 {
 					 checkBox1->Text = "Ready...";
+					 pictureBox2->Image = m_bitmap0;
+					 textBox1->AppendText("Touch the top left corner of the screen\r\n");
+				 }
 				 else 
 					 checkBox1->Text = "Calibrate";
+
 			 }
 	};
 }
