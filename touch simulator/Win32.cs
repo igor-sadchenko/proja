@@ -529,7 +529,7 @@ namespace touch_simulator
 			public Rectangle normalPosition;
 		}
 
-		public class Rect
+		public struct Rect
 		{
 			public int left;
 			public int top;
@@ -554,9 +554,6 @@ namespace touch_simulator
 		}
 
 		public delegate bool EnumWindowEventHandler(IntPtr hWnd, Int32 lParam);
-
-        [DllImport("user32.dll")]
-        public static extern bool ClipCursor(Rect lpRect);
 
 		[DllImport("user32.dll")]
 		public static extern int GetWindowModuleFileName(IntPtr hWnd, StringBuilder lpString, int nMaxCount);

@@ -117,7 +117,7 @@ namespace touch_simulator
 					HWnd = (IntPtr)Messages.targetWindow;
 
                 StringBuilder strBuilder = new StringBuilder();
-                GetWindowText(HWnd, strBuilder, 200);
+                GetWindowText(HWnd, strBuilder, 120);
                 Form1.s_txtMonitor.AppendText(HWnd + " - "+ strBuilder.ToString() +"\r\n");
 
 				//map the points
