@@ -29,9 +29,11 @@ class CroppingListner: public SampleListener
 public:
 	bool m_isCropMode;
 	int m_cropPoints;
+	bool m_isNewBlob;
 	CroppingListner(){
 		m_isCropMode = false;
 		m_cropPoints = 0;
+		m_isNewBlob = true;
 	}
 	void OnSampleArrived(BYTE*pdata,long size);
 };

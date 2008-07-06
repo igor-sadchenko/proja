@@ -23,6 +23,8 @@ istream& operator >>(istream &is,TwSettings &obj)
 				is>>obj.m_trapozoid[i][0]>>obj.m_trapozoid[i][1];
 			}
 		}
+		else if (str == "threshold")
+			is>>obj.m_threshold;
 	}
 	return is;
 }
@@ -39,6 +41,7 @@ ostream& operator <<(ostream &os,const TwSettings &obj)
 	{
 		os<<obj.m_trapozoid[i][0]<<" "<<obj.m_trapozoid[i][1]<<endl;
 	}
+	os<<"threshold "<<obj.m_threshold<<endl;
 
 	return os;
 }

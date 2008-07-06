@@ -43,6 +43,11 @@ LRESULT CVideoDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	m_CamFrameRate.m_hWnd = GetDlgItem(IDC_CAM_FR);
 	m_actualFrameRate.m_hWnd = GetDlgItem(IDC_ACTUAL_FR);
 
+	SetScroll();	
+	return TRUE;
+}
+void CVideoDlg::SetScroll()
+{
 	//-----set the brightness scroll bar
 	CTrackBarCtrl slider;
 	slider.m_hWnd = ::GetDlgItem(m_hWnd,IDC_SLIDER_BRIGHTNESS);
@@ -54,8 +59,6 @@ LRESULT CVideoDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	wostringstream str ;
 	str<< BlobDetector::m_Threshold;
 	ctrl_static.SetWindowText(str.str().c_str());
-
-	return TRUE;
 }
 
 void CVideoDlg::fillCamerasComb()
@@ -75,7 +78,7 @@ LRESULT CVideoDlg::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 LRESULT CVideoDlg::OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
 	ShowWindow(SW_HIDE);
-	ModuleManager::getInstance().FinalizeApplication();
+	//ModuleManager::getInstance().FinalizeApplication();
 	CloseDialog(0);
 
 	DestroyWindow();
@@ -90,17 +93,18 @@ LRESULT CVideoDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& 
 	HWND hpicture_box = GetDlgItem(IDC_STATIC1);
 	
 	ModuleManager::WriteLine(L"%d\r\n",m_pic_box.m_hWnd);
-	if(FAILED( TwInput::getInstance().m_video.AppendSampleGrabber(TwInput::getInstance().m_SampleListener)))
+	/*if(FAILED( TwInput::getInstance().m_video.AppendSampleGrabber(TwInput::getInstance().m_SampleListener)))
 	{
 		show("Grabber init failed");
 	}
-
-	if(FAILED(TwInput::getInstance().m_video.AppendPreview(m_pic_box.m_hWnd)))
-	{
-		show("window init failed");
-	}
+*/
 	
-	if(FAILED(TwInput::getInstance().m_video.Play()))
+ 	if(FAILED(TwInput::getInstance().m_video.AppendPreview(m_pic_box.m_hWnd)))
+ 	{
+ 		show("window init failed");
+ 	}
+	//*/
+	if(FAILED(TwInput::getInstance().m_video.Play(TwInput::getInstance().m_SampleListener)))
 	{
 		show("Play failed");
 	}

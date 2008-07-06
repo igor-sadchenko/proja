@@ -6,8 +6,7 @@ class TwDetector :public Singleton<TwDetector>
 {
 	
 private:
-	BlobDetector* m_detectorImp;
-	
+	ComponentLabelingBlobDetector* m_blobDetector ;
 
 public:
 	BlobDetector* GetBlobDetector();
@@ -15,4 +14,5 @@ public:
 	void Detect(BITMAPINFOHEADER* binfo, BYTE* pdata ,list<twBlob>&);
 	
 	void SetFormat(BITMAPINFOHEADER*);
+	void DeInitialize();
 };

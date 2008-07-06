@@ -244,6 +244,15 @@ HRESULT Video::CVideoCapture::Play(SampleListener* plistener)
 	m_ISampleCB.SetDelay();
 	m_pSGrab->SetCallback(&m_ISampleCB,0);
 
+
+	if(m_last_out_pin != NULL)
+	{
+		m_hResult = AppendSink();
+		if(FAILED(m_hResult))
+			return m_hResult;
+
+	}
+
 	return m_pMCtrl->Run();
 }
 

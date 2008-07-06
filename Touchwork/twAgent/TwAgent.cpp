@@ -52,7 +52,7 @@ void TwAgent::NotifyWindowUnderBlob(twBlob& blob, UINT messageType)
 	MapPoint(pt);
 
 	//draw a point ...
-	DrawScreenPoint(pt);
+	//DrawScreenPoint(pt);
 
 	//locate the window under it
 	HWND hwnd = WindowFromPoint(pt);

@@ -84,15 +84,13 @@ void ComponentLabelingBlobDetector::ApplyInversion()
 
 void ComponentLabelingBlobDetector::ApplyGaussianFilter(int noise)
 {
-	IplImage* img = cvCreateImage(cvSize(m_bitmapInfo->biWidth, m_bitmapInfo->biHeight), IPL_DEPTH_8U, 3);
-	IplImage* tmp = cvCreateImage(cvSize(m_bitmapInfo->biWidth, m_bitmapInfo->biHeight), IPL_DEPTH_8U, 3);
-	IplImage* dst = cvCreateImage(cvSize(m_bitmapInfo->biWidth, m_bitmapInfo->biHeight), IPL_DEPTH_8U, 3);
+	IplImage* img = cvCreateImageHeader(cvSize(m_bitmapInfo->biWidth, m_bitmapInfo->biHeight), IPL_DEPTH_8U, 3);
 
-    IplConvKernel* element = cvCreateStructuringElementEx( 3, 3, 0, 0, CV_SHAPE_ELLIPSE, 0 );
+	IplConvKernel* element = cvCreateStructuringElementEx( 3, 3, 0, 0, CV_SHAPE_ELLIPSE, 0 );
     IplConvKernel* element2 = cvCreateStructuringElementEx( 5, 5, 2, 2, CV_SHAPE_ELLIPSE, 0 );
 
 	//img->imageData = (char*) m_bmpBits;
-	cvSetData(img, m_bmpBits, m_WidthBytes);
+ 	cvSetData(img, m_bmpBits, m_WidthBytes);
 
 	cvErode(img, img, element, 1);
 	cvSmooth(img, img, CV_GAUSSIAN, 11, 11, 0, 0 );
@@ -101,16 +99,14 @@ void ComponentLabelingBlobDetector::ApplyGaussianFilter(int noise)
 	cvThreshold(img, img, noise, 255, CV_THRESH_TOZERO); 
 
 	//m_bmpBits = (BYTE*) dst->imageData;
-	int step;
-    CvSize size;
-	cvGetRawData(img, (uchar**)&m_bmpBits, &step, &size);
+	//int step;
+	//CvSize size;
+ 	//cvGetRawData(img, (uchar**)&m_bmpBits, &step, &size);
 	
 	// TODO : Delete pointers ... and change function's name ..
-	cvReleaseImage(&img);
-	cvReleaseImage(&tmp);
-	cvReleaseImage(&dst);
 	cvReleaseStructuringElement(&element);
-	cvReleaseStructuringElement(&element2); // enta momtazz :Dloool
+	cvReleaseStructuringElement(&element2);
+	cvReleaseImageHeader(&img);
 }
 
 void ComponentLabelingBlobDetector::DetectBlobs(BYTE* Buffer,list<twBlob>& blobList) 

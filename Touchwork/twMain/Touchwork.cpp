@@ -4,7 +4,7 @@
 #include "stdafx.h"
 
 //detect leaks
-//#include "vld.h"
+#include "vld.h"
 
 #include <atlframe.h>
 #include <atlctrls.h>
@@ -30,7 +30,7 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 		ATLTRACE(_T("Main dialog creation failed!\n"));
 		return 0;
 	}
-
+	
 	ModuleManager::getInstance().InitializeApplication();
 
 	dlgMain.ShowWindow(nCmdShow);
@@ -38,7 +38,7 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 	dlgMain.ShowVideoDialog();
 
 	int nRet = theLoop.Run();
-
+	g_app.FinalizeApplication();
 	_Module.RemoveMessageLoop();
 	return nRet;
 }
