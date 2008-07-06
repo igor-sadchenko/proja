@@ -32,6 +32,6 @@ public:
 	void LoadSettings();
 	static TwSettings& getSettings();
 	void DisplayDetectionResults(list<twBlob> & blobList);
-	void FinalizeApplication();
+	virtual void FinalizeApplication() sealed;
 };
 

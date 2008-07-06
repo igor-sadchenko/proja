@@ -35,8 +35,9 @@ void CroppingListner::OnSampleArrived( BYTE*pdata,long size )
 
 		
 
-		if(blobs.size() == 1)
+		if(blobs.size() == 1 && m_isNewBlob)
 		{
+			m_isNewBlob = false;
 			list<twBlob>::iterator it = blobs.begin();
 			g_settings.m_trapozoid[m_cropPoints][0] = it->m_center.m_x;
 			g_settings.m_trapozoid[m_cropPoints][1] = it->m_center.m_y;
@@ -68,6 +69,10 @@ void CroppingListner::OnSampleArrived( BYTE*pdata,long size )
 				m_isCropMode = false;
 				config::CropForm::instance->checkBox1->Checked = false;
 			}
+		}
+		else if (blobs.size() == 0 )
+		{
+			m_isNewBlob = true;
 		}
 	}
 }

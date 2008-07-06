@@ -164,7 +164,7 @@ LRESULT CVideoDlg::OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, 
 	CStatic m_CamFrameRate;
 	CStatic m_pic_box;
 	LRESULT OnTtnGetDispInfoCustom1(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/);
-
+	void SetScroll();
 
 };
 

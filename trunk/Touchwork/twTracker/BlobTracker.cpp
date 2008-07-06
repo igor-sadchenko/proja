@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-int BlobTracker::DIST_THRESHOLD = 50;
+int BlobTracker::DIST_THRESHOLD = 200;
 int BlobTracker::MOVE_THRESHOLD = 5;
 int BlobTracker::m_GlobalID = 0;
 

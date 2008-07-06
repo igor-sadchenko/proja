@@ -36,6 +36,8 @@ namespace config {
 	private: System::Windows::Forms::CheckBox^  chkFlipX;
 	public: 
 	private: System::Windows::Forms::CheckBox^  chkFlipY;
+	private: System::Windows::Forms::TrackBar^  trackBar1;
+	private: System::Windows::Forms::Label^  label1;
 			 int sample_index ;
 
 	protected:
@@ -72,7 +74,10 @@ namespace config {
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			this->chkFlipX = (gcnew System::Windows::Forms::CheckBox());
 			this->chkFlipY = (gcnew System::Windows::Forms::CheckBox());
+			this->trackBar1 = (gcnew System::Windows::Forms::TrackBar());
+			this->label1 = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->trackBar1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// pictureBox1
@@ -86,8 +91,8 @@ namespace config {
 			this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
 			this->pictureBox1->TabIndex = 0;
 			this->pictureBox1->TabStop = false;
-			this->pictureBox1->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::pictureBox1_MouseMove);
 			this->pictureBox1->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::pictureBox1_MouseDown);
+			this->pictureBox1->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::pictureBox1_MouseMove);
 			this->pictureBox1->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::pictureBox1_MouseUp);
 			// 
 			// chkFlipX
@@ -112,19 +117,40 @@ namespace config {
 			this->chkFlipY->UseVisualStyleBackColor = true;
 			this->chkFlipY->CheckedChanged += gcnew System::EventHandler(this, &MainForm::chkFlipY_CheckedChanged);
 			// 
+			// trackBar1
+			// 
+			this->trackBar1->Location = System::Drawing::Point(102, 3);
+			this->trackBar1->Maximum = 255;
+			this->trackBar1->Name = L"trackBar1";
+			this->trackBar1->Size = System::Drawing::Size(175, 42);
+			this->trackBar1->TabIndex = 6;
+			this->trackBar1->Value = 145;
+			this->trackBar1->Scroll += gcnew System::EventHandler(this, &MainForm::trackBar1_Scroll);
+			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Location = System::Drawing::Point(287, 9);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(0, 13);
+			this->label1->TabIndex = 7;
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(334, 317);
+			this->Controls->Add(this->label1);
+			this->Controls->Add(this->trackBar1);
 			this->Controls->Add(this->chkFlipY);
 			this->Controls->Add(this->chkFlipX);
 			this->Controls->Add(this->pictureBox1);
 			this->Name = L"MainForm";
 			this->Text = L"Capture (1)";
-			this->Load += gcnew System::EventHandler(this, &MainForm::CropForm_Load);
 			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &MainForm::MainForm_FormClosing);
+			this->Load += gcnew System::EventHandler(this, &MainForm::CropForm_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->trackBar1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -251,6 +277,11 @@ private: System::Void MainForm_FormClosing(System::Object^  sender, System::Wind
 			 {
 				 e->Cancel = true;
 			 }
+		 }
+private: System::Void trackBar1_Scroll(System::Object^  sender, System::EventArgs^  e) {
+			 label1->Text = trackBar1->Value.ToString();
+			 g_settings.m_threshold = trackBar1->Value;
+			 BlobDetector::m_Threshold = trackBar1->Value;
 		 }
 };
 }

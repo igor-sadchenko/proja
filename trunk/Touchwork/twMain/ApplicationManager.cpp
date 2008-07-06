@@ -33,14 +33,14 @@ void ModuleManager::SetTextConsoleHandle(HWND handle)
 
 void ModuleManager::InitializeApplication()
 {
-
 	LoadSettings();
 
 	//m_twAgent.InitializeHookDll() ;
+	m_twDetector.Initialize();
 	m_twTracker.Initialize();
 	m_twInput.Start(this);
+	CVideoDlg::getInstance().SetScroll();
 }
-
 
 void ModuleManager::OnSampleArrived(BYTE* pdata,long size)
 {
@@ -53,7 +53,7 @@ void ModuleManager::OnFrame(BYTE* pdata,int size)
 	list<twBlob>  blobList;
 	//-----detect
 	m_twDetector.Detect(&m_bmpinfo, pdata, blobList);
-	
+ 	
 	//-----track
 	int k = m_twTracker.Track(&blobList );
 	
@@ -71,7 +71,7 @@ void ModuleManager::UpdateFramerates()
 	float now = ((float)GetTickCount())/1000.0f;
 	float framerate = 1.0f /(now-lasttime);
 
-	timespan += now-lasttime;
+	timespan += now - lasttime;
 	lasttime = now;
 
 	if(timespan >= 1.0f)
@@ -161,5 +161,6 @@ void ModuleManager::FinalizeApplication()
 {
 
 		m_twInput.m_video.Stop();
+		m_twDetector.DeInitialize();
 		m_twTracker.DeInitialize();
 }
