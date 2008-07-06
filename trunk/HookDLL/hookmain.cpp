@@ -3,6 +3,7 @@
 #include <atlwin.h>
 #include <string>
 #include <sstream>
+#include <set>
 #include <map>
 using namespace std;
 
@@ -24,34 +25,16 @@ map<HWND, POINT> previousTouch;
 DWORD  s_dwLastLTouchUp = ULONG_MAX;
 DWORD  s_dwDblClickMsecs = GetDoubleClickTime();
 HWND   s_hwndLastWindowHandle = 0;
-
-
-UINT WM_TOUCH_UP;	
-UINT WM_TOUCH_DOWN;	
-UINT WM_TOUCH_MOVE;
-UINT WM_IS_TOUCHABLE;
-
-LIB void SetMasterWindow(HHOOK hook)
-{
-	s_hook = hook;
-
-	WM_TOUCH_UP = RegisterWindowMessageA( "WM_TOUCH_UP" ) ;
-	WM_TOUCH_DOWN = RegisterWindowMessageA("WM_TOUCH_DOWN" ) ; 
-	WM_TOUCH_MOVE = RegisterWindowMessageA( "WM_TOUCH_MOVE" ) ; 
-	WM_IS_TOUCHABLE = RegisterWindowMessageA( "WM_IS_TOUCHABLE" );
-}
-
+ 
 BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, PVOID fImpLoad) {
 
 	switch (fdwReason) {
 	  case DLL_PROCESS_ATTACH:
 		  // DLL is attaching to the address space of the current process.
 		  g_hinstDll = hinstDll;
-		  SetMasterWindow(s_hook);
 		  break;
 
 	  case DLL_THREAD_ATTACH:
-		  SetMasterWindow(s_hook);
 		  // A new thread is being created in the current process.
 		  break;
 
@@ -67,6 +50,9 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, PVOID fImpLoad) {
 }
 
 
+UINT WM_TOUCH_UP;	
+UINT WM_TOUCH_DOWN;	
+UINT WM_TOUCH_MOVE;	
 
 LIB LRESULT CALLBACK TWCallWndProc(int nCode, WPARAM wParam, LPARAM lParam )
 {
@@ -82,42 +68,45 @@ POINT GetTouchPoint(HWND hWnd, LPARAM lParam)
 	return currentTouch;
 }
 
-void PostWindowMessages(MSG msg, HWND topLevelWindow)
+void PostWindowMessages(MSG* msg, HWND topLevelWindow)
 {
-	//This is called for 2 reasons:: 1)Touch on title bar	or  2)Touch inside window while another one is already on the title bar
-	LRESULT hittest = DefWindowProc(topLevelWindow, WM_NCHITTEST, msg.wParam, msg.lParam);	//Perform a hit test at the current position
-	POINT currentTouch = POINT();															
-	currentTouch.x = LOWORD(msg.lParam);	currentTouch.y = HIWORD(msg.lParam);			//In Screen Coordinates
+	//Perform a hit test at the current position
+	LRESULT hittest = DefWindowProc(msg->hwnd, WM_NCHITTEST, msg->wParam, msg->lParam);
 
-	if( msg.message == WM_TOUCH_DOWN )
+	//If the current touch is NOT on the title bar & message is either Down or Up.. then discard
+	if( msg->message == WM_LBUTTONDOWN )
+
+
+
+
+
+
 	{
-		if(hittest == HTCAPTION)															//The Touch_Down was on the title bar
+		//if(hittest == HTCAPTION)
+		//	PostMessage(msg->hwnd, WM_LBUTTONDOWN, msg->wParam, msg->lParam);
+		//else
 		{
-			PostMessage(topLevelWindow, WM_NCLBUTTONDOWN, msg.wParam, msg.lParam);
-			selectedHandles[topLevelWindow] = currentTouch;									//Update point on title bar
+		//	LPPOINT lpoint = (LPPOINT) msg->lParam;
+		//	ClientToScreen(msg->hwnd, lpoint);
+		//	previousClick[topLevelWindow] = lpoint;
 		}
-		else
-		{
-			previousTouch[topLevelWindow] = currentTouch;									//First touch inside window
-		}
+
 	}
-	else if( msg.message == WM_TOUCH_UP ) 
+	else if( msg->message == WM_TOUCH_UP ) 
 	{
-		if(hittest == HTCAPTION)
-		{
-			PostMessage(topLevelWindow, WM_LBUTTONUP, 0, msg.lParam);
-			selectedHandles.erase(topLevelWindow);											//This is supposed to be done by the caller
-			previousTouch.erase(topLevelWindow);
-		}
-		else
-		{
-			previousTouch.erase(topLevelWindow);
-		}
+		//if(hittest == HTCAPTION)
+		//	PostMessage(msg->hwnd, WM_LBUTTONUP, msg->wParam, msg->lParam);
+
+
+
+
+
+
+
+
 	}
-	else if(msg.message == WM_TOUCH_MOVE )
+	else if(msg->message == WM_MOUSEMOVE || msg->message == WM_NCMOUSEMOVE)		//WM_TOUCH_MOVE )
 	{
-		//We have 2 cases:	1)The touch moving is the one on the title bar (either move or resize)
-		//					2)The touch moving is inside the window (resize)
 		RECT rect;
 		GetWindowRect(topLevelWindow, &rect);
 		int width  = rect.right  - rect.left;
@@ -126,167 +115,156 @@ void PostWindowMessages(MSG msg, HWND topLevelWindow)
 		int screenheight = GetSystemMetrics(SM_CYSCREEN);
 
 		if(hittest == HTCAPTION)															//Moving or Resizing Window
-		{
-			POINT preTitleTouch = selectedHandles[topLevelWindow]	;						//Use the previous value of touch on title bar
-			long dx = preTitleTouch.x - currentTouch.x;										//to determine the resizing/moving factor
-			long dy = preTitleTouch.y - currentTouch.y;
 
+
+		{
 			if(previousTouch.find(topLevelWindow) == previousTouch.end())					//No other touches elsewhere on the window
 			{																				//.. then perform an ordinary move
-				rect.left = rect.left - dx;
-				rect.top = rect.top - dy;
-				SetWindowPos(topLevelWindow, NULL, rect.left, rect.top, width, height, FALSE);
-				//PostMessage(topLevelWindow, WM_MOUSEMOVE, MK_LBUTTON, msg.lParam);
-				selectedHandles[topLevelWindow] = currentTouch;								//Update the titlebar touch position
+				//PostMessage(topLevelWindow, WM_NCMOUSEMOVE, msg->wParam | WM_NCLBUTTONDOWN,	msg->lParam);
+				//selectedHandles[topLevelWindow] = GetTouchPoint(msg->hwnd, msg->lParam);	//Update the titlebar touch position
 			}
 			else
 			{
-				if(currentTouch.x < previousTouch[topLevelWindow].x)						//resizing in / direction
+				/*
+				POINT preTitleTouch = selectedHandles[topLevelWindow];
+				POINT currentTouch = GetTouchPoint(msg->hwnd, msg->lParam);
+				long dx = preTitleTouch.x - currentTouch.x;
+				long dy = preTitleTouch.y - currentTouch.y;
+
+				if(currentTouch.x < previousTouch[topLevelWindow].x)
 				{
 					width = width + dx;
 					height = height + dy;	
 					rect.left = rect.left - dx;
 					rect.top = rect.top - dy;
 				}
-				else																		//resizing in \ direction
+				else
 				{
 					width = width - dx;
 					height = height + dy;			
 					rect.top = rect.top - dy;
 				}
 				
-				//Checking
+				//Checking for errors
 				if(width < 0)				width = 0;
 				if(height < 0)				height = 0;
-				//if(rect.top < 0)			rect.top = 0;
-				//if(rect.left< 0)			rect.left = 0;
+				if(rect.top < 0)			rect.top = 0;
+				if(rect.left< 0)			rect.left = 0;
 				if(width > screenwidth)		width = screenwidth;
 				if(height > screenheight)	height = screenheight;
 
+				//MoveWindow(topLevelWindow, rect.top, rect.left, width, height, TRUE);
 				SetWindowPos(topLevelWindow, NULL, rect.left, rect.top, width, height, FALSE);
-				selectedHandles[topLevelWindow] = currentTouch;								//Update the title bar touch position
+				selectedHandles[topLevelWindow] = currentTouch;
+				*/
 			}
 		}
 		else																				//Window Resizing
 		{
-			POINT preTouch = previousTouch[topLevelWindow];	
-			long dx = preTouch.x - currentTouch.x;											//Get difference between current & previous touch
-			long dy = preTouch.y - currentTouch.y;
-
-			if(currentTouch.x < selectedHandles[topLevelWindow].x)							//resizing in / direction
+			if(previousTouch.find(topLevelWindow) == previousTouch.end())					//First point inside the window
 			{
-				width = width + dx;
-				height = height - dy;	
-				rect.left = rect.left - dx;
+				POINT firstTouch = GetTouchPoint(msg->hwnd, msg->lParam);					
+				previousTouch[topLevelWindow] = firstTouch;									//Save it in previousTouch
 			}
-			else																			//resizing in \ direction
+			else
 			{
-				width = width - dx;
-				height = height - dy;			
+				POINT preTouch = previousTouch[topLevelWindow];	
+				POINT currentTouch = GetTouchPoint(msg->hwnd, msg->lParam);
+				long dx = preTouch.x - currentTouch.x;										//Get difference between current & previous touch
+				long dy = preTouch.y - currentTouch.y;
+
+				if(currentTouch.x <= selectedHandles[topLevelWindow].x)
+				{
+					width = width + dx;
+					height = height - dy;	
+					rect.left = rect.left - dx;
+				}
+				else
+				{
+					width = width - dx;
+					height = height - dy;			
+				}
+
+				//Checking for errors
+				if(width < 0)	width = 0;
+				if(height < 0)	height = 0;
+				if(width > screenwidth)		width = screenwidth;
+				if(height > screenheight)	height = screenheight;
+
+				//Actual Resizing
+				//MoveWindow(topLevelWindow, rect.top, rect.left, width, height, TRUE);
+				SetWindowPos(topLevelWindow, NULL, rect.left, rect.top, width, height, FALSE);
+				previousTouch[topLevelWindow] = currentTouch;								//Set current touch as the previous touch
 			}
-
-			//Checking
-			if(width < 0)	width = 0;
-			if(height < 0)	height = 0;
-			//if(rect.top < 0)			rect.top = 0;
-			//if(rect.left< 0)			rect.left = 0;
-			if(width > screenwidth)		width = screenwidth;
-			if(height > screenheight)	height = screenheight;
-
-			//Actual Resizing
-			//MoveWindow(topLevelWindow, rect.top, rect.left, width, height, TRUE);
-			SetWindowPos(topLevelWindow, NULL, rect.left, rect.top, width, height, FALSE);
-			previousTouch[topLevelWindow] = currentTouch;									//Set current touch as the previous touch
 		}
+
 	}
 }
 
-void PostMouseMessages(MSG msg)
+void PostMouseMessages(MSG* msg)
 {
 	//For Double Click
 	BOOL bDoubleClick = FALSE;
 	DWORD dwTick = 0;
 
-	if( msg.message ==  WM_TOUCH_DOWN )
+	//Post Messages
+	if( msg->message ==  WM_TOUCH_DOWN )
 	{
-		PostMessage(msg.hwnd, WM_LBUTTONDOWN, MK_LBUTTON, msg.lParam);
+		PostMessage(msg->hwnd, WM_LBUTTONDOWN, msg->wParam, msg->lParam);
 	}
-	else if( msg.message == WM_TOUCH_UP ) 
-	{
-		dwTick = GetTickCount();												//Maybe we can use the "time" member instead of GetTickCount()
-		bDoubleClick = ((dwTick - s_dwLastLTouchUp) <= s_dwDblClickMsecs);
-
-		if(bDoubleClick && msg.hwnd == s_hwndLastWindowHandle)					//Elapsed time does not exceed the double-click time-out value
-		{																		//NOTE: If that doesn't work, try posting an LButtonUP after the 
-			PostMessage(msg.hwnd, WM_LBUTTONDBLCLK , MK_LBUTTON, msg.lParam);	//DoubleClick message
-		}		
-		else
-		{
-			PostMessage(msg.hwnd, WM_LBUTTONUP, 0 , msg.lParam);
-		}
-		s_dwLastLTouchUp = dwTick;
-		s_hwndLastWindowHandle = msg.hwnd;
-	}
-	else if( msg.message == WM_TOUCH_MOVE )
-	{
-		PostMessage(msg.hwnd,WM_MOUSEMOVE , MK_LBUTTON, msg.lParam);
-	}
-}
-
-void PostNonClientMouseMessages(MSG msg)
-{
-	BOOL bDoubleClick = FALSE;
-	DWORD dwTick = 0;
-
-	if( msg.message ==  WM_TOUCH_DOWN )
-	{
-		PostMessage(msg.hwnd, WM_NCLBUTTONDOWN, MK_LBUTTON, msg.lParam);
-	}
-	else if( msg.message == WM_TOUCH_UP ) 
+	else if( msg->message == WM_TOUCH_UP ) 
 	{
 		dwTick = GetTickCount();
 		bDoubleClick = ((dwTick - s_dwLastLTouchUp) <= s_dwDblClickMsecs);
 
-		if(bDoubleClick && msg.hwnd == s_hwndLastWindowHandle)					
-		{																		
-			PostMessage(msg.hwnd, WM_NCLBUTTONDBLCLK , MK_LBUTTON, msg.lParam);
+		if(bDoubleClick && msg->hwnd == s_hwndLastWindowHandle)					//In case the user made two successive "Up"s
+		{																		//NOTE: Not sure if this should work right with multi-touch or not
+			PostMessage(msg->hwnd, WM_LBUTTONDBLCLK , msg->wParam, msg->lParam);//I am not sure wt is the "time" member, 
+																				//but we can use it instead of GetTickCount()
 		}		
 		else
 		{
-			switch(msg.wParam)
-			{
-			case HTMINBUTTON:
-				if(IsIconic(msg.hwnd))
-					PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_RESTORE, 0);
-				else
-					PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
-				break;
-			case HTMAXBUTTON:
-				if(IsZoomed(msg.hwnd))
-					PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_RESTORE, 0);
-				else
-					PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
-				break;
-			case HTCLOSE:
-				PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_CLOSE, 0);
-				break;
-			case HTVSCROLL:
-				PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_VSCROLL, msg.lParam);
-				break;
-			case HTHSCROLL:
-				PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_HSCROLL, msg.lParam);
-				break;
-			default:
-				PostMessage(msg.hwnd, WM_LBUTTONUP, 0, msg.lParam);
-				break;
-			}
+			PostMessage(msg->hwnd, WM_LBUTTONUP, msg->wParam, msg->lParam);
 		}
 		s_dwLastLTouchUp = dwTick;
-		s_hwndLastWindowHandle = msg.hwnd;
+		s_hwndLastWindowHandle = msg->hwnd;
 	}
-	else if( msg.message == WM_TOUCH_MOVE )
+	else if( msg->message == WM_TOUCH_MOVE )
 	{
-		PostMessage(msg.hwnd,WM_NCMOUSEMOVE , MK_LBUTTON, msg.lParam);
+		PostMessage(msg->hwnd,WM_MOUSEMOVE , msg->wParam, msg->lParam);
+	}
+}
+
+void PostNonClientMouseMessages(MSG* msg)
+{
+	//For Double Click
+	BOOL bDoubleClick = FALSE;
+	DWORD dwTick = 0;
+
+	//Post Messages
+	if( msg->message ==  WM_TOUCH_DOWN )
+	{
+		PostMessage(msg->hwnd, WM_NCLBUTTONDOWN, msg->wParam, msg->lParam);
+	}
+	else if( msg->message == WM_TOUCH_UP ) 
+	{
+		dwTick = GetTickCount();
+		bDoubleClick = ((dwTick - s_dwLastLTouchUp) <= s_dwDblClickMsecs);
+
+		if(bDoubleClick && msg->hwnd == s_hwndLastWindowHandle)					
+		{																		
+			PostMessage(msg->hwnd, WM_NCLBUTTONDBLCLK , msg->wParam, msg->lParam);
+		}		
+		else
+		{
+			PostMessage(msg->hwnd, WM_NCLBUTTONUP, msg->wParam, msg->lParam);
+		}
+		s_dwLastLTouchUp = dwTick;
+		s_hwndLastWindowHandle = msg->hwnd;
+	}
+	else if( msg->message == WM_TOUCH_MOVE )
+	{
+		PostMessage(msg->hwnd,WM_NCMOUSEMOVE , msg->wParam, msg->lParam);
 	}
 }
 
@@ -297,6 +275,7 @@ bool NonClient(LRESULT hittest)
 		hittest == HTBOTTOMLEFT || 
 		hittest == HTBOTTOMRIGHT || 
 		hittest == HTCAPTION || 
+		hittest == HTCLIENT || 
 		hittest == HTCLOSE ||
 		hittest == HTERROR || 
 		hittest == HTNOWHERE ||
@@ -324,51 +303,56 @@ bool NonClient(LRESULT hittest)
 
 LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 {
-	if(nCode >= 0 & nCode == HC_ACTION)
+	if(nCode >= 0 )
 	{
 		map<HWND,POINT>::iterator _iter;
-		int _mode = 1;												//WindowMessages:0 , MouseMessages:1, NonClientMouseMessages:2
+		int _mode = 1;												//WindowMessages:0 , MouseMessages:1, NonClientMouseMode:2
 		MSG* msg = (MSG*) lParam;
 
-		if(SendMessage(msg->hwnd, WM_IS_TOUCHABLE, 0, 0) == 5)
-		{
-			return CallNextHookEx(s_hook ,nCode, wParam, lParam);
-		}
-
-		POINT touchSCord = GetTouchPoint(msg->hwnd, msg->lParam);	//Convert client coordinates to screen (takes LPARAM,return POINT struct)
-		HWND currentHandle = msg->hwnd;								//Get the handle at the current touch position (Already handled in the agent)
+		POINT test = POINT();
+		POINT touchSCord = GetTouchPoint(msg->hwnd, msg->lParam);	//Convert client coordinates to screen (& from LPARAM to POINT struct)
+		HWND currentHandle = WindowFromPoint(touchSCord);			//Get the handle at the current touch position
 		HWND topLevel = GetAncestor(currentHandle, GA_ROOTOWNER );	//Get Top Level Window of the current handle
-
-		if((msg->message == WM_TOUCH_DOWN || msg->message == WM_TOUCH_MOVE) && 
-			GetForegroundWindow() != topLevel)						//If window is not currently on the top, 
-			SetForegroundWindow(topLevel);							//then bring it to the top
 
 		LRESULT hittest = DefWindowProc(topLevel, WM_NCHITTEST, msg->wParam, MAKELPARAM(touchSCord.x, touchSCord.y)); //Hit Test
 																	//HitTest lparam is in screen coordinates
 
-		if(currentHandle == NULL)									//No Window exits at current point (WindowFromPoint).. impossible case
+
+		if(currentHandle == NULL)									//No Window exits at current point
+
+
+
+
+
+
+
 		{
 			_mode = 1;												//Mouse Mode
 		}
-		else														//Else, we have 3 cases:: 1)On Title bar, 2)Client Area, 3)Non Client Area
+		else
 		{
 			if(hittest == HTCAPTION)								//On Title bar
 			{
 				if(msg->message == WM_TOUCH_DOWN)
 				{
-					_mode = 0;										//Send Window Level Messages
-					selectedHandles[topLevel] = touchSCord;			//Save Handle & current title bar touch(screen coordinates)
-					previousTouch.erase(topLevel);
+					_mode = 0;
+					selectedHandles[topLevel] = touchSCord;			//Save Handle & current touch(screen coordinates)
+
 				}
 				else if(msg->message == WM_TOUCH_MOVE)
 				{
-					_mode = 0;										//Updating the selectedHandles will happen in Posting the msg
-				}													//after knowing the type of move (resize or move(we need previous value))
+					_mode = 0;
+
+
+
+
+
+
+				}
 				else if(msg->message == WM_TOUCH_UP)
 				{
 					_mode = 1;
-					selectedHandles.erase(topLevel);				//Delete Handle from the selected handles
-					previousTouch.erase(topLevel);					//Delete any previous stored points inside window (used for resizing)
+					selectedHandles.erase(topLevel);
 				}
 			}
 			else if(NonClient(hittest))								//Non Client Area
@@ -379,38 +363,75 @@ LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 			{
 				_iter = selectedHandles.find(topLevel);
 				if(_iter != selectedHandles.end())					//topLevel Hwnd found in the selectedHandles
-					_mode = 0;										//another finger is on the title bar, therefore send Window Messages
+					_mode = 0;										//another finger is on the title bar
 				else
-					_mode = 1;										//else, send Client Mouse Messages
+					_mode = 1;
 			}
 		}
 
-		MSG twMsg = *msg;
-		switch(_mode){
-			case 0:
-				{
-					twMsg.lParam = MAKELPARAM(touchSCord.x, touchSCord.y);	//Window Level Messages are sent in screen coordinates
-					twMsg.hwnd = currentHandle;
-					PostWindowMessages(twMsg, topLevel);
-				}
-				break;
-			case 1:
-				{
-					ScreenToClient(currentHandle, &touchSCord);				//lParam should be modified to have the current handle coordinates
-					twMsg.lParam = MAKELPARAM(touchSCord.x, touchSCord.y);
-					twMsg.hwnd = currentHandle;
-					PostMouseMessages(twMsg);
-				}
-				break;
-			case 2:
-				{
-					twMsg.wParam = hittest;									//The result of hittest is placed in the wparam
-					//twMsg.lParam = MAKELPARAM(touchSCord.x, touchSCord.y);	//Non client messages are sent in screen coordinates			
-					PostNonClientMouseMessages(twMsg);
-				}
-				break;
+		/*
+		HWND test = WindowFromPoint(GetTouchPoint(msg->hwnd, msg->lParam));
+		test = GetAncestor(test, GA_ROOTOWNER);
+		if(test != GetDesktopWindow() )
+			MessageBox(0, L"Window", 0,0);
+		
+
+		if(hittest == HTCAPTION)		//On Title Bar
+		{
+			if(msg->message == WM_NCLBUTTONDOWN) // WM_TOUCH_DOWN)
+			{
+				_mode = 0;
+				selectedHandles[topLevel] = GetTouchPoint(msg->hwnd, msg->lParam);			//add hwd & current pos to the map
+			}
+			else if(msg->message == WM_TOUCH_MOVE)
+			{
+				_mode = 0;
+			}
+			else if(msg->message == WM_NCLBUTTONUP)// || msg->message == WM_NCm) //WM_TOUCH_UP)		
+			{
+				_mode = 1;
+				//selectedHandles.erase(topLevel);
+				//previousTouch.erase(topLevel);
+			}
 		}
+		else if(hittest == HTCLIENT)	//Client Area
+		{
+			_mode = 2;
+		}
+		else							//Non Client Areas
+		{
+			_iter = selectedHandles.find(topLevel);
+			if(_iter != selectedHandles.end())				//topLevel Hwnd found in the selectedHandles
+			{
+				
+				_mode = 0;									//another finger is on the title bar
+			}
+			else
+				_mode = 1;
+		}*/
+
+
+		switch(_mode)
+		{
+		case 0:
+			PostWindowMessages(msg, topLevel);
+			break;
+		case 1:
+			PostMouseMessages(msg);
+			break;
+		case 2:
+			PostNonClientMouseMessages(msg);
+			break;
+		}			
 	}
 	return CallNextHookEx(s_hook ,nCode, wParam, lParam);
 }
 
+LIB void SetMasterWindow(HHOOK hook)
+{
+	s_hook = hook;
+
+	WM_TOUCH_UP = RegisterWindowMessageA( "WM_TOUCH_UP" ) ;
+	WM_TOUCH_DOWN = RegisterWindowMessageA("WM_TOUCH_DOWN" ) ; 
+	WM_TOUCH_MOVE = RegisterWindowMessageA( "WM_TOUCH_MOVE" ) ; 
+}
