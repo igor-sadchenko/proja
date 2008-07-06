@@ -105,8 +105,9 @@ void PostWindowMessages(MSG msg, HWND topLevelWindow)
 	{
 		if(hittest == HTCAPTION)
 		{
-			PostMessage(topLevelWindow, WM_LBUTTONUP, MK_LBUTTON, msg.lParam);
+			PostMessage(topLevelWindow, WM_LBUTTONUP, 0, msg.lParam);
 			selectedHandles.erase(topLevelWindow);											//This is supposed to be done by the caller
+			previousTouch.erase(topLevelWindow);
 		}
 		else
 		{
@@ -269,14 +270,14 @@ void PostNonClientMouseMessages(MSG msg)
 			case HTCLOSE:
 				PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_CLOSE, 0);
 				break;
-			/*case HTVSCROLL:
-				PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_VSCROLL, 0);
+			case HTVSCROLL:
+				PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_VSCROLL, msg.lParam);
 				break;
 			case HTHSCROLL:
-				PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_HSCROLL, 0);
-				break;*/
+				PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_HSCROLL, msg.lParam);
+				break;
 			default:
-				PostMessage(msg.hwnd, WM_LBUTTONUP, MK_LBUTTON, msg.lParam);
+				PostMessage(msg.hwnd, WM_LBUTTONUP, 0, msg.lParam);
 				break;
 			}
 		}
@@ -357,6 +358,7 @@ LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 				{
 					_mode = 0;										//Send Window Level Messages
 					selectedHandles[topLevel] = touchSCord;			//Save Handle & current title bar touch(screen coordinates)
+					previousTouch.erase(topLevel);
 				}
 				else if(msg->message == WM_TOUCH_MOVE)
 				{
