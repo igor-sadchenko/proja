@@ -93,7 +93,7 @@ void PostWindowMessages(MSG msg, HWND topLevelWindow)
 	{
 		if(hittest == HTCAPTION)															//The Touch_Down was on the title bar
 		{
-			PostMessage(topLevelWindow, WM_NCLBUTTONDOWN, msg.wParam, msg.lParam);
+			PostMessage(topLevelWindow, WM_NCLBUTTONDOWN, hittest , msg.lParam);
 			selectedHandles[topLevelWindow] = currentTouch;									//Update point on title bar
 		}
 		else
@@ -105,8 +105,9 @@ void PostWindowMessages(MSG msg, HWND topLevelWindow)
 	{
 		if(hittest == HTCAPTION)
 		{
-			PostMessage(topLevelWindow, WM_LBUTTONUP, MK_LBUTTON, msg.lParam);
+			PostMessage(topLevelWindow, WM_LBUTTONUP, 0, msg.lParam);
 			selectedHandles.erase(topLevelWindow);											//This is supposed to be done by the caller
+			previousTouch.erase(topLevelWindow);
 		}
 		else
 		{
@@ -228,7 +229,7 @@ void PostMouseMessages(MSG msg)
 	}
 	else if( msg.message == WM_TOUCH_MOVE )
 	{
-		PostMessage(msg.hwnd,WM_MOUSEMOVE , MK_LBUTTON, msg.lParam);
+		PostMessage(msg.hwnd, WM_MOUSEMOVE , MK_LBUTTON, msg.lParam);
 	}
 }
 
@@ -239,7 +240,7 @@ void PostNonClientMouseMessages(MSG msg)
 
 	if( msg.message ==  WM_TOUCH_DOWN )
 	{
-		PostMessage(msg.hwnd, WM_NCLBUTTONDOWN, MK_LBUTTON, msg.lParam);
+		PostMessage(msg.hwnd, WM_NCLBUTTONDOWN, msg.wParam, msg.lParam);
 	}
 	else if( msg.message == WM_TOUCH_UP ) 
 	{
@@ -248,7 +249,7 @@ void PostNonClientMouseMessages(MSG msg)
 
 		if(bDoubleClick && msg.hwnd == s_hwndLastWindowHandle)					
 		{																		
-			PostMessage(msg.hwnd, WM_NCLBUTTONDBLCLK , MK_LBUTTON, msg.lParam);
+			PostMessage(msg.hwnd, WM_NCLBUTTONDBLCLK , msg.wParam, msg.lParam);
 		}		
 		else
 		{
@@ -259,6 +260,7 @@ void PostNonClientMouseMessages(MSG msg)
 					PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_RESTORE, 0);
 				else
 					PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
+				selectedHandles.erase(msg.hwnd);										//CHANGES :: ADDED
 				break;
 			case HTMAXBUTTON:
 				if(IsZoomed(msg.hwnd))
@@ -269,14 +271,8 @@ void PostNonClientMouseMessages(MSG msg)
 			case HTCLOSE:
 				PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_CLOSE, 0);
 				break;
-			/*case HTVSCROLL:
-				PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_VSCROLL, 0);
-				break;
-			case HTHSCROLL:
-				PostMessage(msg.hwnd, WM_SYSCOMMAND, SC_HSCROLL, 0);
-				break;*/
 			default:
-				PostMessage(msg.hwnd, WM_LBUTTONUP, MK_LBUTTON, msg.lParam);
+				PostMessage(msg.hwnd, WM_LBUTTONUP, 0, msg.lParam);
 				break;
 			}
 		}
@@ -285,7 +281,7 @@ void PostNonClientMouseMessages(MSG msg)
 	}
 	else if( msg.message == WM_TOUCH_MOVE )
 	{
-		PostMessage(msg.hwnd,WM_NCMOUSEMOVE , MK_LBUTTON, msg.lParam);
+		PostMessage(msg.hwnd,WM_MOUSEMOVE , MK_LBUTTON, msg.lParam);				//CHANGES :: NCMOUSEMOVE  &  WPARAM
 	}
 }
 
@@ -298,7 +294,6 @@ bool NonClient(LRESULT hittest)
 		hittest == HTCAPTION || 
 		hittest == HTCLOSE ||
 		hittest == HTERROR || 
-		hittest == HTNOWHERE ||
 		hittest == HTGROWBOX ||
 		hittest == HTHELP ||
 		hittest == HTHSCROLL ||
@@ -323,7 +318,7 @@ bool NonClient(LRESULT hittest)
 
 LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 {
-	if(nCode >= 0 & nCode == HC_ACTION)
+	if(nCode >= 0 && nCode == HC_ACTION)
 	{
 		map<HWND,POINT>::iterator _iter;
 		int _mode = 1;												//WindowMessages:0 , MouseMessages:1, NonClientMouseMessages:2
@@ -331,6 +326,7 @@ LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 
 		if(SendMessage(msg->hwnd, WM_IS_TOUCHABLE, 0, 0) == 5)
 		{
+			//MessageBox(0,L"I am touchable",0,0);
 			return CallNextHookEx(s_hook ,nCode, wParam, lParam);
 		}
 
@@ -338,12 +334,19 @@ LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 		HWND currentHandle = msg->hwnd;								//Get the handle at the current touch position (Already handled in the agent)
 		HWND topLevel = GetAncestor(currentHandle, GA_ROOTOWNER );	//Get Top Level Window of the current handle
 
+		if(msg->message == WM_TOUCH_DOWN || msg->message == WM_TOUCH_MOVE || msg->message == WM_TOUCH_UP)
+			SetCursorPos(touchSCord.x, touchSCord.y);
+
 		if((msg->message == WM_TOUCH_DOWN || msg->message == WM_TOUCH_MOVE) && 
 			GetForegroundWindow() != topLevel)						//If window is not currently on the top, 
-			SetForegroundWindow(topLevel);							//then bring it to the top
+		{															//then bring it to the top
+			SetForegroundWindow(topLevel);
+			//SetCapture(msg->hwnd);
+		}
 
-		LRESULT hittest = DefWindowProc(topLevel, WM_NCHITTEST, msg->wParam, MAKELPARAM(touchSCord.x, touchSCord.y)); //Hit Test
-																	//HitTest lparam is in screen coordinates
+		LRESULT hittest = DefWindowProc(topLevel, WM_NCHITTEST, msg->wParam, MAKELPARAM(touchSCord.x, touchSCord.y));		//Hit Test
+																										//HitTest lparam is in screen coordinates
+		LRESULT hittest_child = DefWindowProc(msg->hwnd, WM_NCHITTEST, msg->wParam, MAKELPARAM(touchSCord.x, touchSCord.y)); //Hit Test for child 
 
 		if(currentHandle == NULL)									//No Window exits at current point (WindowFromPoint).. impossible case
 		{
@@ -357,6 +360,7 @@ LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 				{
 					_mode = 0;										//Send Window Level Messages
 					selectedHandles[topLevel] = touchSCord;			//Save Handle & current title bar touch(screen coordinates)
+					previousTouch.erase(topLevel);
 				}
 				else if(msg->message == WM_TOUCH_MOVE)
 				{
@@ -371,7 +375,7 @@ LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 			}
 			else if(NonClient(hittest))								//Non Client Area
 			{
-				_mode = 2;		
+				_mode = 2;
 			}
 			else													//Client Area
 			{
@@ -379,7 +383,26 @@ LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 				if(_iter != selectedHandles.end())					//topLevel Hwnd found in the selectedHandles
 					_mode = 0;										//another finger is on the title bar, therefore send Window Messages
 				else
+				{
 					_mode = 1;										//else, send Client Mouse Messages
+					/*
+					if(hittest_child == HTVSCROLL && (msg->message == WM_TOUCH_DOWN || msg->message == WM_TOUCH_MOVE))					//Special cases, scroll bars & menu
+					{
+						PostMessage(msg->hwnd, WM_SYSCOMMAND, SC_VSCROLL, msg->lParam);
+						_mode = 3;
+					}
+					else if(hittest_child == HTHSCROLL)
+					{
+						PostMessage(topLevel, WM_SYSCOMMAND, SC_HSCROLL, MAKELPARAM(touchSCord.x, touchSCord.y));
+						_mode = 3;
+					}
+					else if(hittest_child == HTMENU && (msg->message == WM_TOUCH_DOWN || msg->message == WM_TOUCH_MOVE))
+					{
+						PostMessage(msg->hwnd, WM_SYSCOMMAND, SC_MOUSEMENU, msg->lParam);
+						MessageBox(0, L"Hello Menu",0,0);
+						_mode = 3;
+					}*/
+				}
 			}
 		}
 
@@ -402,8 +425,9 @@ LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 				break;
 			case 2:
 				{
+					twMsg.hwnd = topLevel;									//CHANGES :: ADDED
 					twMsg.wParam = hittest;									//The result of hittest is placed in the wparam
-					//twMsg.lParam = MAKELPARAM(touchSCord.x, touchSCord.y);	//Non client messages are sent in screen coordinates			
+					twMsg.lParam = MAKELPARAM(touchSCord.x, touchSCord.y);	//Non client messages are sent in screen coordinates			
 					PostNonClientMouseMessages(twMsg);
 				}
 				break;
@@ -411,3 +435,4 @@ LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 	}
 	return CallNextHookEx(s_hook ,nCode, wParam, lParam);
 }
+
