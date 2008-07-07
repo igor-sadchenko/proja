@@ -385,21 +385,15 @@ LIB LRESULT CALLBACK TWGetMsgProc(int nCode, WPARAM wParam, LPARAM lParam )
 				else
 				{
 					_mode = 1;										//else, send Client Mouse Messages
-					/*
-					if(hittest_child == HTVSCROLL && (msg->message == WM_TOUCH_DOWN || msg->message == WM_TOUCH_MOVE))					//Special cases, scroll bars & menu
+
+					/*if(hittest_child == HTVSCROLL && (msg->message == WM_TOUCH_DOWN || msg->message == WM_TOUCH_MOVE))					//Special cases, scroll bars & menu
 					{
-						PostMessage(msg->hwnd, WM_SYSCOMMAND, SC_VSCROLL, msg->lParam);
+						PostMessage(msg->hwnd, WM_VSCROLL, SC_VSCROLL, msg->lParam);
 						_mode = 3;
 					}
 					else if(hittest_child == HTHSCROLL)
 					{
 						PostMessage(topLevel, WM_SYSCOMMAND, SC_HSCROLL, MAKELPARAM(touchSCord.x, touchSCord.y));
-						_mode = 3;
-					}
-					else if(hittest_child == HTMENU && (msg->message == WM_TOUCH_DOWN || msg->message == WM_TOUCH_MOVE))
-					{
-						PostMessage(msg->hwnd, WM_SYSCOMMAND, SC_MOUSEMENU, msg->lParam);
-						MessageBox(0, L"Hello Menu",0,0);
 						_mode = 3;
 					}*/
 				}
