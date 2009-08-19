@@ -1,0 +1,68 @@
+﻿
+        public void Start()
+        {
+            try
+            {
+                // Create the Outlook application.
+                Application oApp = new Application();
+
+                // Get the NameSpace and Logon information.
+                // Outlook.NameSpace oNS = (Outlook.NameSpace)oApp.GetNamespace("mapi");
+                NameSpace oNS = oApp.GetNamespace("mapi");
+
+                //Log on by using a dialog box to choose the profile.
+                oNS.Logon(Missing.Value, Missing.Value, true, true);
+
+                //Alternate logon method that uses a specific profile.
+                // TODO: If you use this logon method, 
+                // change the profile name to an appropriate value.
+                //oNS.Logon("YourValidProfile", Missing.Value, false, true); 
+
+                // Get the Calendar folder.
+                MAPIFolder oCalendar = oNS.GetDefaultFolder(OlDefaultFolders.olFolderCalendar).Folders["AUC"];
+
+                // Get the Items (Appointments) collection from the Calendar folder.
+                Items oItems = oCalendar.Items;
+
+                // Get the first item.
+                AppointmentItem oAppt = (AppointmentItem)oItems[5];
+
+                // Show some common properties.
+                Console.WriteLine("Subject: " + oAppt.Subject);
+                Console.WriteLine("Organizer: " + oAppt.Organizer);
+                Console.WriteLine("Start: " + oAppt.Start.ToString());
+                Console.WriteLine("End: " + oAppt.End.ToString());
+                Console.WriteLine("Location: " + oAppt.Location);
+                Console.WriteLine("Recurring: " + oAppt.IsRecurring);
+
+                //Show the item to pause.
+                //oAppt.Display(false);
+
+
+
+                //AppointmentItem ai = oCalendar.Items.Application.CreateItem(OlItemType.olAppointmentItem) as AppointmentItem;
+                AppointmentItem ai = oCalendar.Items.Add(OlItemType.olAppointmentItem) as AppointmentItem;
+                ai.Subject = "Test Item from C#";
+                ai.Body = "This item was created programmatically from C#...";
+                ai.Start = DateTime.Now.AddDays(1);
+                ai.End = DateTime.Now.AddDays(2);
+                //ai.Display(false);
+                ai.Close(OlInspectorClose.olSave);
+
+                // Done. Log off.
+                oNS.Logoff();
+
+                // Clean up.
+                oAppt = null;
+                oItems = null;
+                oCalendar = null;
+                oNS = null;
+                oApp = null;
+            }
+
+                //Simple error handling.
+            catch (System.Exception e)
+            {
+                System.Windows.Forms.MessageBox.Show(e.ToString());
+            }
+        }
