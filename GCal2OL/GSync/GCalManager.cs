@@ -8,10 +8,7 @@ namespace GSync
 {
     class GCalManager
     {
-        private string USERNAME = "a.shaker.axmo@gmail.com";
-        private string PASSWORD = "qwertyui";
         private string FEED_URI = "http://www.google.com/calendar/feeds/default/private/full";
-        private string APP_NAME = "MyGSync-1.0b";
         private CalendarService m_calendarService;
         private OutlookManager m_outlookMgr;
 
@@ -21,16 +18,21 @@ namespace GSync
         }
         public void Open()
         {
+            Console.WriteLine("GCalManager Started...");
+
             try
             {
                 m_outlookMgr.Open();
 
-                m_calendarService = new CalendarService(APP_NAME);
-                m_calendarService.setUserCredentials(USERNAME, PASSWORD);
+                m_calendarService = new CalendarService(Configuration.ApplicationName);
+                m_calendarService.setUserCredentials(Configuration.Username, Configuration.Password);
 
                 CalendarQuery query = new CalendarQuery();
                 query.Uri = new Uri("http://www.google.com/calendar/feeds/default/allcalendars/full");
+
+                Console.WriteLine("GCalManager::Fetching Calendar");
                 CalendarFeed resultFeed = m_calendarService.Query(query);
+
                 //Console.WriteLine("\nYour calendars:");
                 //if (resultFeed != null)
                 //{
@@ -48,11 +50,13 @@ namespace GSync
                 equery.StartTime = DateTime.Now;
                 equery.EndTime = DateTime.Now.AddMonths(1);
 
+                Console.WriteLine("GCalManager::Fetching Events");
                 EventFeed eresultFeed = m_calendarService.Query(equery);
 
                 if (eresultFeed != null)
                 {
-                    Console.WriteLine("\nYour events:");
+                    DateTime lastSync = Configuration.LastSync;
+                    DateTime lastUpdate;
 
                     foreach (EventEntry entry in eresultFeed.Entries)
                     {
@@ -60,14 +64,26 @@ namespace GSync
                         {
                             Console.WriteLine("# " + entry.Title.Text + " : " + entry.Times[0].StartTime.ToString() + " -> " + entry.Times[0].EndTime.ToString());
 
-                            m_outlookMgr.AddAppointment(
-                                entry.Title.Text,
-                                ((Google.GData.Client.AtomEntry)(entry)).Content.Content,
-                                entry.Times[0].StartTime,
-                                entry.Times[0].EndTime,
-                                entry.Locations[0].ValueString);
+                            //==========================
+
+                            lastUpdate = ((Google.GData.Client.AtomEntry)(entry)).Updated;
+
+                            if (lastUpdate > lastSync)
+                            {
+                                m_outlookMgr.AddAppointment(
+                                    entry.Title.Text,
+                                    ((Google.GData.Client.AtomEntry)(entry)).Content.Content,
+                                    entry.Times[0].StartTime,
+                                    entry.Times[0].EndTime,
+                                    entry.Locations[0].ValueString);
+                            }
+
+                            entry.Update();
+                            lastSync = DateTime.Now;
                         }
                     }
+
+                    Configuration.LastSync = lastSync;
                 }
                 m_outlookMgr.Close();
             }

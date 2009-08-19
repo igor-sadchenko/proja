@@ -40,13 +40,13 @@ namespace GSync
                 rtfConsole.Invoke(new PrintDelegate(WriteLine), text);
                 return;
             }
-
             rtfConsole.AppendText("> " + text + "\n");
             rtfConsole.ScrollToCaret();
         }
 
         private void Console_FormClosed(object sender, FormClosedEventArgs e)
         {
+            Configuration.SaveConfiguration();
             Application.Exit();
         }
     }

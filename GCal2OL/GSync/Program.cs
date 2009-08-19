@@ -23,7 +23,7 @@ namespace GSync
             Thread th = new Thread(new ThreadStart(main.Start));
             th.IsBackground = true;
             th.Start();
-            
+            Application.ApplicationExit+=new EventHandler(main.Shutdown);
             Application.Run();
         }
     }

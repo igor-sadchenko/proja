@@ -22,6 +22,8 @@ namespace GSync
         {
             try
             {
+                Console.WriteLine("OutlookManager Started...");
+
                 oApp = new Application();
                 oNS = oApp.GetNamespace("mapi");
                 oNS.Logon(Missing.Value, Missing.Value, true, true);
@@ -44,6 +46,8 @@ namespace GSync
                 oCalendar = null;
                 oNS = null;
                 oApp = null;
+
+                Console.WriteLine("OutlookManager Stopped...");
             }
             catch (System.Exception e)
             {
@@ -61,6 +65,8 @@ namespace GSync
                 ai.End = end;
                 ai.Location = location;
                 ai.Close(OlInspectorClose.olSave);
+
+                Console.WriteLine("OutlookManager::Added - " + subject);
             }
             catch (System.Exception e)
             {

@@ -8,12 +8,18 @@ namespace GSync
     {
         public SyncMain()
         {
+            Configuration.LoadConfiguration();
         }
 
         public void Start()
         {
             GCalManager gCal = new GCalManager(new OutlookManager());
             gCal.Open();
+        }
+
+        public void Shutdown(object obj, EventArgs args)
+        {
+            //Configuration.SaveConfiguration();
         }
     }
 }
