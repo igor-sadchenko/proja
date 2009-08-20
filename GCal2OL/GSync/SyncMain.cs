@@ -13,8 +13,14 @@ namespace GSync
 
         public void Start()
         {
-            GCalManager gCal = new GCalManager(new OutlookManager());
+            OutlookManager olMgr = new OutlookManager();
+            GCalManager gCal = new GCalManager(olMgr);
+
+            olMgr.Open();
+            //olMgr.AddAppointment("ABC", "Hiiii", "ASDASDASDASDA", DateTime.Now, DateTime.Now.AddDays(1), "Here");
+            //olMgr.FindAppointment("ABD");
             gCal.Open();
+            olMgr.Close();
         }
 
         public void Shutdown(object obj, EventArgs args)
